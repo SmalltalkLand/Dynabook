@@ -1,0 +1,1 @@
+pub static mut show_boot_taskbar = false;

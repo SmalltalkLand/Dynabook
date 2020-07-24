@@ -1,0 +1,12 @@
+
+
+----STARTUP---- (21 July 2020 09:40:54) as F:\Dbs\squeak\build-0.072.image!
+
+
+----SNAPSHOT----(21 July 2020 09:41:19) build-0.072.image priorSource: 15215049!
+!EventTrack methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 09:41:31' overrides: 50652839!
+resumeUnchecked: val
+| copy |
+copy _ self shallowCopy.
+"self becomeForward: nil."
+copy resumeUncheckedSuper: val.! !

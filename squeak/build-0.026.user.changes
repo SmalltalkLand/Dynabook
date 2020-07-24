@@ -1,0 +1,41 @@
+
+
+----STARTUP---- (9 July 2020 08:29:49) as F:\Dbs\src\build-0.026.image!
+
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 08:01:40'!
+bootstrapNumericTower: base spObjs: spObjs
+| smallInteger |
+smallInteger _ SmallInteger copyForBootstrap.
+smallInteger superclass superclass instVarNamed: #superclass put: (base at: #Object).
+spObjs first at: 6 put: smallInteger.
+^{#Number -> smallInteger superclass superclass. #Integer -> smallInteger superclass. #SmallInteger -> smallInteger}! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 08:08:56'!
+bootstrapNil: base spObjs: spObjs
+| nnil nilObj |
+nnil _ UndefinedObject copyForBootstrap.
+nnil instVarNamed: #superclass put: (base at: #Object).
+nilObj _ nnil basicNew.
+spObjs at: 1 put: nilObj.
+^{#UndefinedObject -> nnil. #nil -> nilObj}! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 08:09:05' prior: 50782627!
+bootstrapNil: base spObjs: spObjs
+| nnil nilObj |
+nnil _ UndefinedObject copyForBootstrap.
+nnil instVarNamed: #superclass put: (base at: #Object).
+nilObj _ nnil basicNew.
+spObjs at: 1 put: nilObj.
+^{#UndefinedObject -> nnil. #nil -> nilObj} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 08:09:15' prior: 50782613!
+bootstrapNumericTower: base spObjs: spObjs
+| smallInteger |
+smallInteger _ SmallInteger copyForBootstrap.
+smallInteger superclass superclass instVarNamed: #superclass put: (base at: #Object).
+spObjs first at: 6 put: smallInteger.
+^{#Number -> smallInteger superclass superclass. #Integer -> smallInteger superclass. #SmallInteger -> smallInteger} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 08:21:52' prior: 50782649!
+bootstrapNumericTower: base spObjs: spObjs
+| smallInteger |
+smallInteger _ SmallInteger copyForBootstrap.
+smallInteger superclass superclass instVarNamed: #superclass put: (base at: #Object).
+spObjs first at: 6 put: smallInteger.
+^{#Number -> smallInteger superclass superclass. #Integer -> smallInteger superclass. #SmallInteger -> smallInteger} asDictionary! !

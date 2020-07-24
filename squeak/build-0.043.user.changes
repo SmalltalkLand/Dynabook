@@ -1,0 +1,12 @@
+
+
+----SNAPSHOT----(15 July 2020 07:35:24) build-0.043.image priorSource: 14540533!
+!VirtualKeyboard class methodsFor: 'as yet unclassified' stamp: 'GDK 7/15/2020 07:40:44' prior: 50786083!
+startTickler
+[[[UISupervisor ui ifNotNil: [:w|self allSubInstancesDo: [:i|i world == w ifFalse: [UISupervisor whenUIinSafeState: [w addMorph: i]]]]] repeat] ]fork! !
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/15/2020 11:42:58' prior: 50337117 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !

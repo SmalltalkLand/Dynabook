@@ -1,0 +1,138 @@
+
+
+----SNAPSHOT----(15 July 2020 11:48:09) build-0.044.image priorSource: 14542085!
+
+----SNAPSHOT----(15 July 2020 11:48:41) build-0.044.image priorSource: 14542757!
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/15/2020 11:48:45' prior: 50786104 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	((aMorph is: #SystemWindow) or: [aMorph class = MenuMorph]) ifFalse: [(aMorph valueOfProperty: #perms ifAbsent: [Dictionary new]) at: #nonSystemWindowMorphs ifAbsent: [| s |
+			s _ SystemWindow new.
+			self privateAddMorph: s atIndex: (submorphs indexOf: aMorph).
+			s addMorph: aMorph.
+			
+			]].
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !
+
+----SNAPSHOT----(15 July 2020 11:49:03) build-0.044.image priorSource: 14542839!
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/15/2020 11:50:42' prior: 50786118 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	((aMorph is: #SystemWindow) or: [aMorph class = MenuMorph]) ifFalse: [(aMorph valueOfProperty: #perms ifAbsent: [Dictionary new]) at: #nonSystemWindowMorphs ifAbsent: [| s |
+			s _ SystemWindow new.
+			self privateAddMorph: s atIndex: (submorphs indexOf: aMorph).
+			s addMorph: aMorph.
+			]].
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !
+
+257 asCharacter!
+!Character class methodsFor: 'instance creation' stamp: 'GDK 7/15/2020 11:56:44' prior: 16801011!
+numericValue: anInteger
+	"Answer the Character whose value is anInteger."
+
+	"Just use the CharacterTable. It is faster."
+	"^ Character isImmediateClass
+		ifTrue: [ self immediateNumericValue: anInteger ]
+		ifFalse: [ self nonImmediateNumericValue: anInteger ]."
+
+	^[CharacterTable at: anInteger + 1] on: Error do: [:ex|^ Character isImmediateClass
+		ifTrue: [ self immediateNumericValue: anInteger ]
+		ifFalse: [ self nonImmediateNumericValue: anInteger ]]! !
+
+257 asCharacter!
+
+257 asCharacter!
+
+self asInteger!
+
+self asciiValue!
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/15/2020 11:58:48' prior: 50786139 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	((aMorph is: #SystemWindow) or: [aMorph class = MenuMorph]) ifFalse: [(aMorph valueOfProperty: #perms ifAbsent: [Dictionary new]) at: #nonSystemWindowMorphs ifAbsent: [| s |
+			s _ SystemWindow new.
+			self privateAddMorph: s atIndex: (submorphs indexOf: aMorph).
+			s setProperty: #closeWhenMorphRemoved toValue: true.
+			s addMorph: aMorph.
+			]].
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !
+!SystemWindow methodsFor: 'events' stamp: 'GDK 7/15/2020 11:59:31' overrides: 16876964!
+removedMorph: m
+super removedMorph: m.
+((self valueOfProperty: #closeWhenMorphRemoved) ifNil: [false]) ifTrue: [self delete].! !
+
+!methodRemoval: SystemWindow #removedMorph: stamp: 'GDK 7/15/2020 12:00:47'!
+removedMorph: m
+super removedMorph: m.
+((self valueOfProperty: #closeWhenMorphRemoved) ifNil: [false]) ifTrue: [self delete].!
+!Morph methodsFor: 'submorphs-add/remove' stamp: 'GDK 7/15/2020 12:02:57' prior: 16876882!
+delete
+	"Remove the receiver as a submorph of its owner and make its 
+	new owner be nil."
+
+	| aWorld |
+	aWorld _ self world ifNil: [ self runningWorld ].
+	"Terminate genie recognition focus"
+	"I encountered a case where the hand was nil, so I put in a little 
+	protection - raa "
+	" This happens when we are in an MVC project and open
+	  a morphic window. - BG "
+	aWorld ifNotNil: [
+		aWorld activeHand ifNotNil: [ :h | h
+			releaseKeyboardFocus: self;
+			releaseMouseFocus: self ]].
+	owner ifNotNil:[ self privateDelete. (owner is: #SystemWindow) ifTrue: [(owner valueOfProperty: #closeWhenMorphRemoved) ifNotNil: [owner delete]]].! !
+!Morph methodsFor: 'submorphs-add/remove' stamp: 'GDK 7/15/2020 12:03:49' prior: 50786212!
+delete
+	"Remove the receiver as a submorph of its owner and make its 
+	new owner be nil."
+
+	| aWorld |
+	aWorld _ self world ifNil: [ self runningWorld ].
+	"Terminate genie recognition focus"
+	"I encountered a case where the hand was nil, so I put in a little 
+	protection - raa "
+	" This happens when we are in an MVC project and open
+	  a morphic window. - BG "
+	aWorld ifNotNil: [
+		aWorld activeHand ifNotNil: [ :h | h
+			releaseKeyboardFocus: self;
+			releaseMouseFocus: self ]].
+	owner ifNotNil:[ self privateDelete.].! !
+!Morph methodsFor: 'private' stamp: 'GDK 7/15/2020 12:04:31' prior: 16877213!
+privateRemove: aMorph
+	"Private!! Should only be used by methods that maintain the ower/submorph invariant."
+	self triggerEvent: #removed with: aMorph.
+	submorphs _ submorphs copyWithout: aMorph.! !
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/15/2020 12:04:58' prior: 50786179 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	((aMorph is: #SystemWindow) or: [aMorph class = MenuMorph]) ifFalse: [(aMorph valueOfProperty: #perms ifAbsent: [Dictionary new]) at: #nonSystemWindowMorphs ifAbsent: [| s |
+			s _ SystemWindow new.
+			self privateAddMorph: s atIndex: (submorphs indexOf: aMorph).
+			s when: #removed send: #delete to: s.
+			s addMorph: aMorph.
+			]].
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/15/2020 12:06:53' prior: 50786264 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	((aMorph is: #SystemWindow) or: [aMorph class = MenuMorph or: [aMorph class = HaloMorph]]) ifFalse: [(aMorph valueOfProperty: #perms ifAbsent: [Dictionary new]) at: #nonSystemWindowMorphs ifAbsent: [| s |
+			s _ SystemWindow new.
+			self privateAddMorph: s atIndex: (submorphs indexOf: aMorph).
+			s when: #removed send: #delete to: s.
+			s addMorph: aMorph.
+			]].
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !
+
+self delete!

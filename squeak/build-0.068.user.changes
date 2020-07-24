@@ -1,0 +1,82 @@
+
+
+----SNAPSHOT----(20 July 2020 17:00:24) build-0.068.image priorSource: 15178941!
+
+Object subclass: #AltMarker
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'AltGC'!
+
+!classDefinition: #AltMarker category: #AltGC stamp: 'GDK 7/20/2020 17:27:48'!
+Object subclass: #AltMarker
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'AltGC'!
+!AltMarker class methodsFor: 'no messages' stamp: 'GDK 7/20/2020 17:28:07'!
+mark
+^self subclassResponsibility! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 17:28:34'!
+markAllAndSweep
+AltMarker allSubclasses, {self} ! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 17:29:03' prior: 50806052!
+markAllAndSweep
+((AltMarker allSubclasses, {self} ) collect: [:x|x mark]) do: [:x|self sweep: x].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 17:44:34' prior: 50805652!
+isNonGCAble: obj
+| v |
+v _ false.
+obj triggerEvent: #isNonGCAble with: [v _ true].
+Smalltalk allObjects do: [:o|(self object: o includesRecursive: obj) ifTrue: [o triggerEvent: #GCBoundaryCheck withArguments: {obj.[:v2|v _ v2]}]].
+^v! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 17:52:40' prior: 50805717!
+mark
+^(Smalltalk allObjects collect: [:o|o -> ((((Smalltalk allObjects reject: [:o2|o2 == objects or: [self object: o includesRecursive: o2]]) anySatisfy: [:o2|((1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]) or: [(1 to: o2 class instVarNames size)  anySatisfy: [:f|(o2 instVarAt: f) == 0]] or: [o2 class == o]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 17:54:38' prior: 50805996!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString])].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 17:54:50' prior: 50806092!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 17:56:55' prior: 50787682 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	QuickStep == self ifTrue:
+		[QuickStep := nil.
+		^self quickSend: selector to: receiver with: arguments super: superFlag].
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+	errorPC _ oldErrorPC.
+	oldErrorPC _ nil.
+sendDictionary at: selector ifPresent: [:p|self push: pc. pc _ p] ifAbsent: [self asmError: 'Nonexistent  function'].! !

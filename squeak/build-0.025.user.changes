@@ -1,0 +1,336 @@
+
+
+----SNAPSHOT----(8 July 2020 16:58:04) build-0.025.image priorSource: 14409034!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 16:58:49' prior: 50781937 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| vp r |
+(self == Recovery) ifFalse: [Recovery ifNotNil: [r _ Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+vp _ super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [[[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	].
+r ifNotNil: [vp ifNil: [(self == Smalltalk) ifTrue: [vp _ r copy. self at: key put: vp. ]]].
+^vp! !
+
+----SNAPSHOT----(8 July 2020 16:59:57) build-0.025.image priorSource: 14410071!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 17:00:01' prior: 50781969 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| vp r |
+(self == Recovery) ifFalse: [Recovery ifNotNil: [r _ Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+vp _ super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [[[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	].
+r ifNotNil: [vp ifNil: [(self == Smalltalk) ifTrue: [vp _ r copy. self at: key put: vp. vp instVarNamed: #superclass put: (self at: (vp instVarNamed: #superclass) name ifAbsent: [vp instVarNamed: #superclass])]]].
+^vp! !
+
+ Number Number !
+
+ Number!
+
+----SNAPSHOT----(8 July 2020 17:00:13) build-0.025.image priorSource: 14411093!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 17:01:21' prior: 50782001 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| vp r |
+(self == Recovery) ifFalse: [Recovery ifNotNil: [r _ Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+vp _ super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [[[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	].
+r ifNotNil: [vp ifNil: [(self == Smalltalk) ifTrue: [vp _ r copy. self at: key put: vp. vp instVarNamed: #superclass put: (self at: (vp instVarNamed: #superclass) name ifAbsent: [vp instVarNamed: #superclass])]]].
+^vp! !
+
+----SNAPSHOT----(8 July 2020 17:11:00) build-0.025.image priorSource: 14412266!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 17:11:04' prior: 50782038 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| vp r  absent |
+absent _ false.
+(self == Recovery) ifFalse: [Recovery ifNotNil: [r _ Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+vp _ super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [absent _ true. [[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	].
+r ifNotNil: [absent ifTrue: [(self == Smalltalk) ifTrue: [vp _ r copy. self at: key put: vp. vp instVarNamed: #superclass put: (self at: (vp instVarNamed: #superclass) name ifAbsent: [vp instVarNamed: #superclass])]]].
+^vp! !
+
+ Number!
+
+----SNAPSHOT----(8 July 2020 17:11:13) build-0.025.image priorSource: 14413422!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 18:02:02' prior: 50782074 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| vp r  absent |
+absent _ false.
+(self == Recovery) ifFalse: [Recovery ifNotNil: [r _ Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+vp _ super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [absent _ true. [[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	].
+r ifNotNil: [absent ifTrue: [(self == Smalltalk) ifTrue: [vp _ r copy. self at: key put: vp. vp instVarNamed: #superclass put: (self at: (vp instVarNamed: #superclass) name ifAbsent: [vp instVarNamed: #superclass])]]].
+^vp ! !
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 18:07:07' prior: 50782112 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| vp r  absent |
+absent _ false.
+(self == Recovery) ifFalse: [Recovery ifNotNil: [r _ Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+vp _ super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [absent _ true. [[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	].
+r ifNotNil: [absent ifTrue: [(self == Smalltalk) ifTrue: [vp _ r copy. self at: key put: vp. vp instVarNamed: #superclass put: (self at: (vp instVarNamed: #superclass) name ifAbsent: [vp instVarNamed: #superclass])]]].
+^vp ! !
+!SimpleNumberEntryMorph methodsFor: 'initialization' stamp: 'GDK 7/8/2020 18:18:43' prior: 50708516!
+legalChars: legalEntryChars numCharsToHold: nilOrInteger value: initialValue validator: aClosureToValidate toString: aClosureForString
+
+	entryChars := legalEntryChars.
+	numCharsToHold := nilOrInteger.
+	theValue := initialValue.
+	validator := aClosureToValidate.
+	toString := aClosureForString.
+	self contents: (self toString value: initialValue).
+	self color: Color transparent.
+	self crAction: [ | newString newVal |
+		newString := self editor string.
+		(newString size = 0)
+			ifTrue: [ newVal := nil ] "Empty String"
+			ifFalse: [ newVal := self validator value: newString ].
+		newVal ifNil: [ self flash.  "rejected"
+						self contents: (self toString value: self value).
+				 ]
+				 ifNotNil: [ self setValue: newVal ]. "accepted"
+	].
+	self numCharsToHold 
+		ifNotNil: [ | desiredExtent |
+			desiredExtent := self measureContents + 4.
+			self layoutSpec: (LayoutSpec 
+				fixedWidth: desiredExtent x 
+				fixedHeight: desiredExtent y
+				minorDirectionPadding: #center)
+	].
+! !
+!PointEntryPanel methodsFor: 'GUI building' stamp: 'GDK 7/8/2020 18:19:12' prior: 50706665 overrides: 50706553!
+newEntryArea
+
+	| entryLayout |
+	entryLayout := LayoutMorph newRow.
+	entryLayout 
+		separation: self defaultSeparation;
+		addMorph: xEntryMorph; "set in #initialize"
+		addMorph: (LabelMorph new :: contents: '@' );
+		addMorph: yEntryMorph;
+		color: (Color transparent).
+	
+	^ entryLayout ! !
+!ValueEntryPanel methodsFor: 'GUI building' stamp: 'GDK 7/8/2020 18:19:58' prior: 50706529!
+newButtonArea
+	"Add ACCEPT and CANCEL buttons"
+
+	| buttonArea |
+	buttonArea := LayoutMorph newRow.
+	buttonArea 
+		separation: 8@0;
+		addMorph: (PluggableButtonMorph 
+				model: self 
+				action:  #accept
+				label: 'Accept')
+			layoutSpec: (LayoutSpec new ::
+							proportionalWidth: 0.4 minimum: 100;
+							proportionalHeight:  1;
+							minorDirectionPadding: #center);
+		addMorph: (PluggableButtonMorph 
+				model: self 
+				action:  #cancel
+				label: 'Cancel')
+			layoutSpec: (LayoutSpec new ::
+							proportionalWidth: 0.4 minimum: 100;
+							proportionalHeight:  1;
+						minorDirectionPadding:#center);
+		color: (Color transparent).
+		
+	^ buttonArea ! !
+!ValueEntryPanel methodsFor: 'GUI building' stamp: 'GDK 7/8/2020 18:20:08' prior: 50706520 overrides: 50705232!
+buildMorphicWindow
+
+	self layoutMorph 
+		separation: self defaultSeparation;
+		addMorph: self newEntryArea;
+		addMorph: self newButtonArea;
+		color: (Color white)! !
+
+self rotateBy: 90!
+
+self delete!
+
+Morph subclass: #DynabookWatermark
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Dynabook-Watermark'!
+
+!classDefinition: #DynabookWatermark category: #'Dynabook-Watermark' stamp: 'GDK 7/8/2020 18:23:48'!
+Morph subclass: #DynabookWatermark
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Dynabook-Watermark'!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 19:59:55' prior: 50782147 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| vp r  absent |
+absent _ false.
+(self == Recovery) ifFalse: [Recovery ifNotNil: [r _ Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+vp _ super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [absent _ true. [[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	].
+r ifNotNil: [absent ifTrue: [(self == Smalltalk) ifTrue: [vp _ r copy. self at: key put: vp. vp instVarNamed: #superclass put: (self at: (vp instVarNamed: #superclass) name ifAbsent: [vp instVarNamed: #superclass])]]].
+^vp ! !
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 20:05:47' prior: 50782276 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| vp r  absent |
+absent _ false.
+(self == Recovery) ifFalse: [Recovery ifNotNil: [r _ Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+vp _ super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [absent _ true. [[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	].
+r ifNotNil: [absent ifTrue: [(self == Smalltalk) ifTrue: [vp _ r copy. self at: key put: vp. vp instVarNamed: #superclass put: (self at: (vp instVarNamed: #superclass) name ifAbsent: [vp instVarNamed: #superclass])]]].
+^vp ! !
+
+Object subclass: #Bootstrap
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Bootstrapping'!
+
+!classDefinition: #Bootstrap category: #'System-Bootstrapping' stamp: 'GDK 7/9/2020 07:11:04'!
+Object subclass: #Bootstrap
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Bootstrapping'!
+!Bootstrap methodsFor: 'no messages' stamp: 'GDK 7/9/2020 07:13:52'!
+bootstrapBase
+| newClass newMetaclass newPrtoObject |
+newClass _ Class copy.
+newMetaclass _ Metaclass copy.
+newMetaclass instVarNamed: #superclass put: (newClass instVarNamed: #superclass).! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 07:13:58' prior: 50782356!
+bootstrapBase
+| newClass newMetaclass newProtoObject |
+newClass _ Class copy.
+newMetaclass _ Metaclass copy.
+newMetaclass instVarNamed: #superclass put: (newClass instVarNamed: #superclass).! !
+
+Class superclass superclass superclass superclass!
+!Class methodsFor: '*System-Bootstrap' stamp: 'GDK 7/9/2020 07:16:30'!
+copyForBootstrap
+	"Answer a copy of the receiver without a list of subclasses."
+	| newClass |
+	newClass := self class copyForBootstrap new
+		superclass: superclass copyForBootstrap
+		methodDict: self methodDict copy
+		format: format
+		name: name
+		organization: self organization copy
+		instVarNames: instanceVariables copy
+		classPool: classPool copy
+		sharedPools: sharedPools copy.
+	Class instSize+1 to: self class instSize do:
+		[:offset | newClass instVarAt: offset put: (self instVarAt: offset)].
+	^ newClass! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 07:16:46' prior: 50782365!
+bootstrapBase
+| newClass newMetaclass newProtoObject |
+newClass _ Class copyForBootstrap.
+newMetaclass _ Metaclass copyForBootstrap.
+newMetaclass instVarNamed: #superclass put: (newClass instVarNamed: #superclass).
+newProtoObject _ newClass superclass superclass superclass superclass.
+! !
+
+ProtoObject class superclass!
+
+ProtoObject superclass!
+!Class methodsFor: '*System-Bootstrap' stamp: 'GDK 7/9/2020 07:22:12' prior: 50782375!
+copyForBootstrap
+	"Answer a copy of the receiver without a list of subclasses."
+	| newClass |
+	newClass := (superclass ifNotNil: [self class copyForBootstrap]  ifNil: [self class copy])new
+		superclass: superclass copyForBootstrap
+		methodDict: self methodDict copy
+		format: format
+		name: name
+		organization: self organization copy
+		instVarNames: instanceVariables copy
+		classPool: classPool copy
+		sharedPools: sharedPools copy.
+	Class instSize+1 to: self class instSize do:
+		[:offset | newClass instVarAt: offset put: (self instVarAt: offset)].
+	^ newClass! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 07:31:26' prior: 50782395!
+bootstrapBase
+| newClass newMetaclass newProtoObject |
+newClass _ Class copyForBootstrap.
+newMetaclass _ Metaclass copyForBootstrap.
+newMetaclass instVarNamed: #superclass put: (newClass instVarNamed: #superclass).
+newProtoObject _ newClass superclass superclass superclass superclass.
+(newProtoObject == ProtoObject) ifFalse: [newProtoObject class instVarNamed: #superclass put: (newClass)].! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 07:33:29' prior: 50782430!
+bootstrapBase
+| newClass newMetaclass newProtoObject |
+newClass _ Class copyForBootstrap.
+newMetaclass _ Metaclass copyForBootstrap.
+newMetaclass instVarNamed: #superclass put: (newClass instVarNamed: #superclass).
+newProtoObject _ newClass superclass superclass superclass superclass.
+(newProtoObject == ProtoObject) ifFalse: [newProtoObject class instVarNamed: #superclass put: (newClass)].
+^{#Class -> newClass. #Metaclass -> newMetaclass. #ProtoObject -> newProtoObject. #Object -> newClass superclass superclass superclass. #Behavior -> newClass superclass superclass. #ClassDescription -> newClass superclass}! !
+!Class methodsFor: '*System-Bootstrap' stamp: 'GDK 7/9/2020 07:37:26' prior: 50782409!
+copyForBootstrap
+	"Answer a copy of the receiver without a list of subclasses."
+	| newClass |
+	newClass := (superclass ifNotNil: [self class copyForBootstrap]  ifNil: [self class copy])new
+		superclass: (superclass ifNotNil: #copyForBootstrap)
+		methodDict: self methodDict copy
+		format: format
+		name: name
+		organization: self organization copy
+		instVarNames: instanceVariables copy
+		classPool: classPool copy
+		sharedPools: sharedPools copy.
+	Class instSize+1 to: self class instSize do:
+		[:offset | newClass instVarAt: offset put: (self instVarAt: offset)].
+	^ newClass! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 07:40:18' prior: 50782446!
+bootstrapBase
+| newClass newMetaclass newProtoObject |
+newClass _ Class copyForBootstrap.
+newMetaclass _ Metaclass copyForBootstrap.
+newMetaclass instVarNamed: #superclass put: (newClass instVarNamed: #superclass).
+newProtoObject _ newClass superclass superclass superclass superclass.
+(newProtoObject == ProtoObject) ifFalse: [newProtoObject class instVarNamed: #superclass put: (newClass)].
+^{#Class -> newClass. #Metaclass -> newMetaclass. #ProtoObject -> newProtoObject. #Object -> newClass superclass superclass superclass. #Behavior -> newClass superclass superclass. #ClassDescription -> newClass superclass} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 07:51:36'!
+bootstrapSpecialObjects: base
+| objs |
+objs _ Smalltalk specialObjectsArray copy.
+^{objs, [:b|]}! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 07:54:31' prior: 50782514!
+bootstrapSpecialObjects: base
+| objs |
+objs _ Smalltalk specialObjectsArray copy.
+^{objs, [:b|
+	| oldArr newArr |
+	oldArr _ {Smalltalk specialObjectsArray}.
+	newArr _ {objs}.
+	]}! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 07:55:19' prior: 50782521!
+bootstrapSpecialObjects: base
+| objs |
+objs _ Smalltalk specialObjectsArray copy.
+^{objs, [:b|
+	| oldArr newArr |
+	oldArr _ {Smalltalk specialObjectsArray}.
+	newArr _ {objs}.
+	oldArr elementsExchangeIdentityWith:  newArr.
+	[b value.] ensure: [
+	oldArr elementsExchangeIdentityWith: newArr.
+	].
+	]}! !

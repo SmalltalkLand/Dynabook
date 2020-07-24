@@ -1,0 +1,265 @@
+
+
+----SNAPSHOT----(16 July 2020 08:56:09) build-0.047.image priorSource: 14556116!
+
+ContextPart subclass: #SqAsmContextPart
+	instanceVariableNames: 'sendDictionary method'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SqueakAssembly'!
+
+!classDefinition: #SqAsmContextPart category: #SqueakAssembly stamp: 'GDK 7/16/2020 09:00:55'!
+ContextPart subclass: #SqAsmContextPart
+	instanceVariableNames: 'sendDictionary method'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SqueakAssembly'!
+!SqAsmContextPart methodsFor: 'accessing' stamp: 'GDK 7/16/2020 09:00:59'!
+method: anObject
+	"Set the value of method"
+
+	method _ anObject! !
+!SqAsmContextPart methodsFor: 'accessing' stamp: 'GDK 7/16/2020 09:01:07' overrides: 16823656!
+method
+^method! !
+!ContextPart methodsFor: 'system simulation' stamp: 'GDK 7/16/2020 09:03:12'!
+runSimulatedSelfContextAtEachStep: block2
+	"Simulate the execution of the argument, aBlock, until it ends. aBlock 
+	MUST NOT contain an '^'. Evaluate block2 with the current context 
+	prior to each instruction executed. Answer the simulated value of aBlock."
+	| current |
+	current := self.
+	current pushArgs: Array new from: self sender.
+	[current == self sender]
+		whileFalse:
+			[block2 value: current.
+			current := current step].
+	^self sender pop! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 09:05:02'!
+execute
+sender _ thisContext.
+self runSimulatedSelfContextAtEachStep: [:c|].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 09:05:10' prior: 50786936!
+execute
+sender _ thisContext.
+^self runSimulatedSelfContextAtEachStep: [:c|].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 09:05:49' prior: 50786942!
+execute
+| os |
+os _ sender.
+sender _ thisContext.
+^self runSimulatedSelfContextAtEachStep: [:c|].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 09:06:05' prior: 50786948!
+execute
+| os |
+os _ sender.
+sender _ thisContext.
+^[self runSimulatedSelfContextAtEachStep: [:c|]] ensure: [sender _ os].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 09:54:50' prior: 50786888 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector to: receiver with: arguments super: superFlag]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 09:55:24' prior: 50786963 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector to: receiver with: arguments super: superFlag]].
+	self push: receiver.
+	arguments reverseDo: [:a|self push: a].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 09:56:46' prior: 50786980 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments reverseDo: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 10:02:32' prior: 50786999 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments reverseDo: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 10:07:39' prior: 50787017 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments reverseDo: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 10:24:23' prior: 50787035 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments reverseDo: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 10:30:46' prior: 50787053 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments reverseDo: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 10:35:48' prior: 50787071 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments reverseDo: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 10:47:43' prior: 50787089 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments reverseDo: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 10:48:41' prior: 50787107 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 10:57:45' prior: 50787125 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 11:16:05' prior: 50787143 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 11:31:03' prior: 50787161 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 11:36:05' prior: 50787179 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 11:41:25' prior: 50787197 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 11:46:35' prior: 50787215 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 11:51:35' prior: 50787233 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 11:56:36' prior: 50787251 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 12:13:30' prior: 50787269 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 12:25:59' prior: 50787287 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 12:31:06' prior: 50787305 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !

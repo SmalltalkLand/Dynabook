@@ -1,0 +1,104 @@
+
+
+----STARTUP---- (22 July 2020 20:39:06) as F:\dynabook\squeak\build-0.084.image!
+
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 08:46:06' prior: 50813376 overrides: 50335353!
+startUp
+self allSubInstancesDo: [:i|i report: true].
+super startUp.! !
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 08:51:11' prior: 50813460 overrides: 50335353!
+startUp
+self allSubInstancesDo: [:i|i report: true].
+super startUp.! !
+!TaskbarMorph methodsFor: 'services' stamp: 'GDK 7/23/2020 09:09:11' prior: 50692160!
+addButtonFor: aMorph
+
+	| button |
+	aMorph == self ifFalse: [
+		button _ HoverableButtonMorph
+			model: aMorph
+			stateGetter: nil
+			action: #endPreviewAndToggleCollapseOrShow
+			onMouseEnterSend: #beginPreview
+			onMouseLeaveSend: #endPreview.
+		(aMorph is: #SystemWindow) ifTrue: [
+			button
+				secondaryActionSelector: #offerWindowMenu ].
+		button
+			color: self color;
+			icon: (aMorph imageForm: 400@300 depth: 32);
+			setBalloonText: #label.
+		button icon: button magnifiedIcon.
+		viewBox
+			addMorph: button
+			layoutSpec: (LayoutSpec fixedWidth: self defaultHeight)]! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/23/2020 09:10:21' prior: 50699623!
+scale: anInteger
+| old |
+	"(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ]."
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs  do: [:s|
+	s class == UpdatingStringMorph ifTrue: [
+	s scaleBy: scale / old.
+	].
+	].! !
+
+TaskbarMorph subclass: #ShowingAllTaskbarMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Tools-Taskbar'!
+
+!classDefinition: #ShowingAllTaskbarMorph category: #'Tools-Taskbar' stamp: 'GDK 7/23/2020 09:13:23'!
+TaskbarMorph subclass: #ShowingAllTaskbarMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Tools-Taskbar'!
+!TaskbarMorph methodsFor: 'initialization' stamp: 'GDK 7/23/2020 09:14:26'!
+defaultHeightForRow
+
+	^ self defaultHeight! !
+!ShowingAllTaskbarMorph methodsFor: 'no messages' stamp: 'GDK 7/23/2020 09:15:09' overrides: 50813522!
+defaultHeightForRow
+^owner morphHeight! !
+!TaskbarMorph methodsFor: 'events' stamp: 'GDK 7/23/2020 09:15:33' prior: 50555096!
+screenSizeChanged
+	"Respond to change in screen size by repositioning self to bottom of screen"
+	
+"	Transcript newLine; print: 'Taskbar screenSizeChanged'.
+"
+	| y e |
+	UISupervisor whenUIinSafeState: [
+		self world ifNotNil: [ :w |
+			y _ w morphExtent y - self defaultHeightForRow.
+			e _ self internalizeDistance: w morphExtent x @ self defaultHeightForRow.
+			self morphPosition: 0@y extent: e ]]! !
+!ShowingAllTaskbarMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 09:22:30' prior: 50813527 overrides: 50813522!
+defaultHeightForRow
+^owner morphHeight! !
+!ShowingAllTaskbarMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 09:35:22' prior: 50813548 overrides: 50813522!
+defaultHeightForRow
+^owner morphHeight! !
+!ShowingAllTaskbarMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 09:44:31' prior: 50813554 overrides: 50813522!
+defaultHeightForRow
+^owner morphHeight! !
+!ShowingAllTaskbarMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 09:57:40' prior: 50813560 overrides: 50813522!
+defaultHeightForRow
+^owner morphHeight! !
+!ShowingAllTaskbarMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 10:02:57' prior: 50813566 overrides: 50813522!
+defaultHeightForRow
+^owner morphHeight! !
+!ShowingAllTaskbarMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 10:08:12' prior: 50813572 overrides: 50813522!
+defaultHeightForRow
+^owner morphHeight! !
+!ShowingAllTaskbarMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 10:13:18' prior: 50813578 overrides: 50813522!
+defaultHeightForRow
+^owner morphHeight! !

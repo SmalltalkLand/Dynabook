@@ -1,0 +1,63 @@
+
+
+----STARTUP---- (20 July 2020 08:40:21) as F:\Dbs\squeak\build-0.063.image!
+
+
+Object subclass: #AltGarbageCollector
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'AltGC'!
+
+!classDefinition: #AltGarbageCollector category: #AltGC stamp: 'GDK 7/20/2020 08:40:52'!
+Object subclass: #AltGarbageCollector
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'AltGC'!
+!AltGarbageCollector class methodsFor: 'no messages' stamp: 'GDK 7/20/2020 08:43:26'!
+mark
+^SystemOrganization allObjects! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 08:45:05' prior: 50805227!
+mark
+^SystemOrganization allObjects collect: [:o|o -> (SystemOrganization allObjects anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|f == o]])]! !
+
+----SNAPSHOT----(20 July 2020 08:45:10) build-0.063.image priorSource: 15153907!
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 09:03:27' prior: 50805232!
+mark
+^(SystemOrganization allObjects collect: [:o|o -> (SystemOrganization allObjects anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|f == o]])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 09:17:31' prior: 50805243!
+mark
+^(SystemOrganization allObjects collect: [:o|o -> (SystemOrganization allObjects anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]])]) asDictionary! !
+
+----SNAPSHOT----(20 July 2020 09:17:34) build-0.063.image priorSource: 15154840!
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 11:32:43' prior: 50805252!
+mark
+^(SystemOrganization allObjects collect: [:o|o -> (SystemOrganization allObjects anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 11:49:27'!
+sweep: dict
+dict associationsDo: [:a|a value].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 11:49:55' prior: 50805273!
+sweep: dict
+dict associationsDo: [:a|a value ifFalse: [a key becomeForward: nil]].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 11:55:53' prior: 50805264!
+mark
+^(SystemOrganization allObjects collect: [:o|o -> (SystemOrganization allObjects anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:11:40'!
+isNonGCAble: obj
+| v |
+v _ false.
+obj triggerEvent: #isNonGCAble with: [v _ true].
+^v! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:12:14' prior: 50805285!
+mark
+^(SystemOrganization allObjects collect: [:o|o -> ((SystemOrganization allObjects anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]]) or: [self isNonGCAble: o])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:16:35'!
+isDrum: obj
+| v |
+v _ true.
+obj triggerEvent: #isDrum with: [v _ false].
+^v! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:17:05' prior: 50805301!
+mark
+^(SystemOrganization allObjects collect: [:o|o -> (((SystemOrganization allObjects anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !

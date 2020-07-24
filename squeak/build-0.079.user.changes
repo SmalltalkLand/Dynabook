@@ -1,0 +1,390 @@
+
+
+----STARTUP---- (22 July 2020 13:07:22) as F:\dynabook\squeak\build-0.079.image!
+
+!PopUpMenu class methodsFor: 'dialogs' stamp: 'GDK 7/22/2020 13:14:15'!
+inform: aString morphTarget: m
+	"PopUpMenu inform: 'I like Cuis'"
+
+	UISupervisor whenUIinSafeState: [ (self labels: ' OK ' icons: #(emblemImportantIcon)) startUpWithCaption: aString target: m ]! !
+!PopUpMenu methodsFor: 'basic control sequence' stamp: 'GDK 7/22/2020 13:14:31'!
+startUpWithCaption: captionOrNil target: target
+	"Display the menu, slightly offset from the cursor,
+	so that a slight tweak is required to confirm any action."
+	^ self startUpWithCaption: captionOrNil at: Sensor mousePoint allowKeyboard: Preferences menuKeyboardControl target: target! !
+!PopUpMenu methodsFor: 'basic control sequence' stamp: 'GDK 7/22/2020 13:14:40'!
+startUpWithCaption: captionOrNil at: location allowKeyboard: aBoolean traget: traget
+	"Display the menu, with caption if supplied. Wait for the mouse button to go down, then track the selection as long as the button is pressed. When the button is released,
+	Answer the index of the current selection, or zero if the mouse is not released over  any menu item. Location specifies the desired topLeft of the menu body rectangle. The final argument indicates whether the menu should seize the keyboard focus in order to allow the user to navigate it via the keyboard."
+
+	| maxHeight |
+	maxHeight := Display height * 3 // 4.
+	self frameHeight > maxHeight 
+		ifTrue: [
+			^self 
+				startUpSegmented: maxHeight
+				withCaption: captionOrNil
+				at: location
+				allowKeyboard: aBoolean].
+	^(MVCMenuMorph from: self title: captionOrNil) 
+		invokeAt: location
+		allowKeyboard: aBoolean! !
+!PopUpMenu methodsFor: 'basic control sequence' stamp: 'GDK 7/22/2020 13:14:45'!
+startUpWithCaption: captionOrNil at: location allowKeyboard: aBoolean tsrget: traget
+	"Display the menu, with caption if supplied. Wait for the mouse button to go down, then track the selection as long as the button is pressed. When the button is released,
+	Answer the index of the current selection, or zero if the mouse is not released over  any menu item. Location specifies the desired topLeft of the menu body rectangle. The final argument indicates whether the menu should seize the keyboard focus in order to allow the user to navigate it via the keyboard."
+
+	| maxHeight |
+	maxHeight := Display height * 3 // 4.
+	self frameHeight > maxHeight 
+		ifTrue: [
+			^self 
+				startUpSegmented: maxHeight
+				withCaption: captionOrNil
+				at: location
+				allowKeyboard: aBoolean].
+	^(MVCMenuMorph from: self title: captionOrNil) 
+		invokeAt: location
+		allowKeyboard: aBoolean! !
+!PopUpMenu methodsFor: 'basic control sequence' stamp: 'GDK 7/22/2020 13:14:47'!
+startUpWithCaption: captionOrNil at: location allowKeyboard: aBoolean target: traget
+	"Display the menu, with caption if supplied. Wait for the mouse button to go down, then track the selection as long as the button is pressed. When the button is released,
+	Answer the index of the current selection, or zero if the mouse is not released over  any menu item. Location specifies the desired topLeft of the menu body rectangle. The final argument indicates whether the menu should seize the keyboard focus in order to allow the user to navigate it via the keyboard."
+
+	| maxHeight |
+	maxHeight := Display height * 3 // 4.
+	self frameHeight > maxHeight 
+		ifTrue: [
+			^self 
+				startUpSegmented: maxHeight
+				withCaption: captionOrNil
+				at: location
+				allowKeyboard: aBoolean].
+	^(MVCMenuMorph from: self title: captionOrNil) 
+		invokeAt: location
+		allowKeyboard: aBoolean! !
+
+!methodRemoval: PopUpMenu #startUpWithCaption:at:allowKeyboard:traget: stamp: 'GDK 7/22/2020 13:14:52'!
+startUpWithCaption: captionOrNil at: location allowKeyboard: aBoolean traget: traget
+	"Display the menu, with caption if supplied. Wait for the mouse button to go down, then track the selection as long as the button is pressed. When the button is released,
+	Answer the index of the current selection, or zero if the mouse is not released over  any menu item. Location specifies the desired topLeft of the menu body rectangle. The final argument indicates whether the menu should seize the keyboard focus in order to allow the user to navigate it via the keyboard."
+
+	| maxHeight |
+	maxHeight := Display height * 3 // 4.
+	self frameHeight > maxHeight 
+		ifTrue: [
+			^self 
+				startUpSegmented: maxHeight
+				withCaption: captionOrNil
+				at: location
+				allowKeyboard: aBoolean].
+	^(MVCMenuMorph from: self title: captionOrNil) 
+		invokeAt: location
+		allowKeyboard: aBoolean!
+
+!methodRemoval: PopUpMenu #startUpWithCaption:at:allowKeyboard:tsrget: stamp: 'GDK 7/22/2020 13:14:55'!
+startUpWithCaption: captionOrNil at: location allowKeyboard: aBoolean tsrget: traget
+	"Display the menu, with caption if supplied. Wait for the mouse button to go down, then track the selection as long as the button is pressed. When the button is released,
+	Answer the index of the current selection, or zero if the mouse is not released over  any menu item. Location specifies the desired topLeft of the menu body rectangle. The final argument indicates whether the menu should seize the keyboard focus in order to allow the user to navigate it via the keyboard."
+
+	| maxHeight |
+	maxHeight := Display height * 3 // 4.
+	self frameHeight > maxHeight 
+		ifTrue: [
+			^self 
+				startUpSegmented: maxHeight
+				withCaption: captionOrNil
+				at: location
+				allowKeyboard: aBoolean].
+	^(MVCMenuMorph from: self title: captionOrNil) 
+		invokeAt: location
+		allowKeyboard: aBoolean!
+!PopUpMenu methodsFor: 'basic control sequence' stamp: 'GDK 7/22/2020 13:15:15' prior: 16891005!
+startUpWithCaption: captionOrNil at: location allowKeyboard: aBoolean 
+	"Display the menu, with caption if supplied. Wait for the mouse button to go down, then track the selection as long as the button is pressed. When the button is released,
+	Answer the index of the current selection, or zero if the mouse is not released over  any menu item. Location specifies the desired topLeft of the menu body rectangle. The final argument indicates whether the menu should seize the keyboard focus in order to allow the user to navigate it via the keyboard."
+^self startUpWithCaption: captionOrNil at: location allowKeyboard: aBoolean target: nil! !
+
+self inform: 'test'!
+!PopUpMenu methodsFor: 'basic control sequence' stamp: 'GDK 7/22/2020 13:15:43' prior: 50812258!
+startUpWithCaption: captionOrNil at: location allowKeyboard: aBoolean target: traget
+	"Display the menu, with caption if supplied. Wait for the mouse button to go down, then track the selection as long as the button is pressed. When the button is released,
+	Answer the index of the current selection, or zero if the mouse is not released over  any menu item. Location specifies the desired topLeft of the menu body rectangle. The final argument indicates whether the menu should seize the keyboard focus in order to allow the user to navigate it via the keyboard."
+
+	| maxHeight |
+	maxHeight := Display height * 3 // 4.
+	self frameHeight > maxHeight 
+		ifTrue: [
+			^self 
+				startUpSegmented: maxHeight
+				withCaption: captionOrNil
+				at: location
+				allowKeyboard: aBoolean].
+	^(MVCMenuMorph from: self title: captionOrNil) 
+		invokeAt: location
+		allowKeyboard: aBoolean
+		target: traget! !
+!MVCMenuMorph methodsFor: 'invoking' stamp: 'GDK 7/22/2020 13:16:06'!
+invokeAt: aPoint allowKeyboard: aBoolean traget: t
+	"Add this menu to the given world centered at the given point. Wait for the user to make a selection and answer it. The selection value returned is an integer in keeping with PopUpMenu, if the menu is converted from an MVC-style menu."
+	"Details: This is invoked synchronously from the caller. In order to keep processing inputs and updating the screen while waiting for the user to respond, this method has its own version of the World's event loop." 
+	|actHand w oldFocus delay |
+	w _ self runningWorld.
+	actHand _ w activeHand.
+	oldFocus _ actHand keyboardFocus.
+	w doOneMinimalCycleNow.
+	self
+		popUpAt: aPoint
+		forHand: actHand
+		allowKeyboard: aBoolean.
+	done _ false.
+	delay _ Delay forMilliseconds: 10.
+	[ done not and: [self isInWorld] ] whileTrue: [ w doOneMinimalCycleNow. delay wait ].
+	self delete.
+	oldFocus ifNotNil: [ actHand newKeyboardFocus: oldFocus ].
+	^ mvcSelection ! !
+!MVCMenuMorph methodsFor: 'invoking' stamp: 'GDK 7/22/2020 13:16:10'!
+invokeAt: aPoint allowKeyboard: aBoolean target: t
+	"Add this menu to the given world centered at the given point. Wait for the user to make a selection and answer it. The selection value returned is an integer in keeping with PopUpMenu, if the menu is converted from an MVC-style menu."
+	"Details: This is invoked synchronously from the caller. In order to keep processing inputs and updating the screen while waiting for the user to respond, this method has its own version of the World's event loop." 
+	|actHand w oldFocus delay |
+	w _ self runningWorld.
+	actHand _ w activeHand.
+	oldFocus _ actHand keyboardFocus.
+	w doOneMinimalCycleNow.
+	self
+		popUpAt: aPoint
+		forHand: actHand
+		allowKeyboard: aBoolean.
+	done _ false.
+	delay _ Delay forMilliseconds: 10.
+	[ done not and: [self isInWorld] ] whileTrue: [ w doOneMinimalCycleNow. delay wait ].
+	self delete.
+	oldFocus ifNotNil: [ actHand newKeyboardFocus: oldFocus ].
+	^ mvcSelection ! !
+
+!methodRemoval: MVCMenuMorph #invokeAt:allowKeyboard:traget: stamp: 'GDK 7/22/2020 13:16:15'!
+invokeAt: aPoint allowKeyboard: aBoolean traget: t
+	"Add this menu to the given world centered at the given point. Wait for the user to make a selection and answer it. The selection value returned is an integer in keeping with PopUpMenu, if the menu is converted from an MVC-style menu."
+	"Details: This is invoked synchronously from the caller. In order to keep processing inputs and updating the screen while waiting for the user to respond, this method has its own version of the World's event loop." 
+	|actHand w oldFocus delay |
+	w _ self runningWorld.
+	actHand _ w activeHand.
+	oldFocus _ actHand keyboardFocus.
+	w doOneMinimalCycleNow.
+	self
+		popUpAt: aPoint
+		forHand: actHand
+		allowKeyboard: aBoolean.
+	done _ false.
+	delay _ Delay forMilliseconds: 10.
+	[ done not and: [self isInWorld] ] whileTrue: [ w doOneMinimalCycleNow. delay wait ].
+	self delete.
+	oldFocus ifNotNil: [ actHand newKeyboardFocus: oldFocus ].
+	^ mvcSelection !
+
+self inform: 'test'!
+!MVCMenuMorph methodsFor: 'invoking' stamp: 'GDK 7/22/2020 13:16:52' prior: 50657260!
+invokeAt: aPoint allowKeyboard: aBoolean
+	"Add this menu to the given world centered at the given point. Wait for the user to make a selection and answer it. The selection value returned is an integer in keeping with PopUpMenu, if the menu is converted from an MVC-style menu."
+	"Details: This is invoked synchronously from the caller. In order to keep processing inputs and updating the screen while waiting for the user to respond, this method has its own version of the World's event loop." 
+^self invokeAt: aPoint allowKeyboard: aBoolean target: nil! !
+!MenuMorph methodsFor: 'control' stamp: 'GDK 7/22/2020 13:17:31'!
+popUpAt: aPoint forHand: hand allowKeyboard: aBoolean target: target
+	"Present this menu at the given point under control of the given hand."
+
+	| evt |
+	self items isEmpty ifTrue: [^self].
+	self addBlankIconsIfNecessary.
+	(self submorphs select: [ :m | m is: #UpdatingMenuItemMorph ]) 
+		do: [ :m | m updateContents].
+	self runningWorld addMorphFront: self position: aPoint - `2 @ 8`.
+	self fitInWorld.
+	"Acquire focus for valid pop up behavior"
+	hand newMouseFocus: self.
+	aBoolean ifTrue: [ hand newKeyboardFocus: self ].
+	evt _ hand lastMouseEvent.
+	(evt isKeyboard or: [ evt isMouse and: [ evt anyButtonPressed not ]]) 
+		ifTrue: [
+			"Select first item if button not down"
+			self moveSelectionDown: 1 event: evt ]! !
+!MenuMorph methodsFor: 'control' stamp: 'GDK 7/22/2020 13:17:51' prior: 50574991!
+popUpAt: aPoint forHand: hand allowKeyboard: aBoolean 
+	"Present this menu at the given point under control of the given hand."
+^self popUpAt: aPoint forHand: hand allowKeyboard: aBoolean target: nil! !
+
+self inform: 'test'!
+!MVCMenuMorph methodsFor: 'invoking' stamp: 'GDK 7/22/2020 13:18:05' prior: 50812438!
+invokeAt: aPoint allowKeyboard: aBoolean target: t
+	"Add this menu to the given world centered at the given point. Wait for the user to make a selection and answer it. The selection value returned is an integer in keeping with PopUpMenu, if the menu is converted from an MVC-style menu."
+	"Details: This is invoked synchronously from the caller. In order to keep processing inputs and updating the screen while waiting for the user to respond, this method has its own version of the World's event loop." 
+	|actHand w oldFocus delay |
+	w _ self runningWorld.
+	actHand _ w activeHand.
+	oldFocus _ actHand keyboardFocus.
+	w doOneMinimalCycleNow.
+	self
+		popUpAt: aPoint
+		forHand: actHand
+		allowKeyboard: aBoolean
+		target: t.
+	done _ false.
+	delay _ Delay forMilliseconds: 10.
+	[ done not and: [self isInWorld] ] whileTrue: [ w doOneMinimalCycleNow. delay wait ].
+	self delete.
+	oldFocus ifNotNil: [ actHand newKeyboardFocus: oldFocus ].
+	^ mvcSelection ! !
+
+self inform: 'test'!
+!PopUpMenu class methodsFor: 'dialogs' stamp: 'GDK 7/22/2020 13:19:10' prior: 50577414 overrides: 16882670!
+inform: aString
+	"PopUpMenu inform: 'I like Cuis'"
+
+	UISupervisor whenUIinSafeState: [ (self labels: ' OK ' icons: #(emblemImportantIcon)) startUpWithCaption: aString target: nil]! !
+
+self inform: 'test'!
+!MVCMenuMorph methodsFor: 'invoking' stamp: 'GDK 7/22/2020 13:22:18' prior: 50812560!
+invokeAt: aPoint allowKeyboard: aBoolean target: t
+	"Add this menu to the given world centered at the given point. Wait for the user to make a selection and answer it. The selection value returned is an integer in keeping with PopUpMenu, if the menu is converted from an MVC-style menu."
+	"Details: This is invoked synchronously from the caller. In order to keep processing inputs and updating the screen while waiting for the user to respond, this method has its own version of the World's event loop." 
+	|actHand w oldFocus delay  v|
+	w _ self runningWorld.
+	actHand _ w activeHand.
+	oldFocus _ actHand keyboardFocus.
+	w doOneMinimalCycleNow.
+	v _ self
+		popUpAt: aPoint
+		forHand: actHand
+		allowKeyboard: aBoolean
+		target: t.
+	t ifNil: [done _ false.
+	delay _ Delay forMilliseconds: 10.
+	[ done not and: [self isInWorld] ] whileTrue: [ w doOneMinimalCycleNow. delay wait ].
+	self delete.
+	oldFocus ifNotNil: [ actHand newKeyboardFocus: oldFocus ]].
+	^ mvcSelection ! !
+!MVCMenuMorph methodsFor: 'invoking' stamp: 'GDK 7/22/2020 13:22:34' prior: 50812604!
+invokeAt: aPoint allowKeyboard: aBoolean target: t
+	"Add this menu to the given world centered at the given point. Wait for the user to make a selection and answer it. The selection value returned is an integer in keeping with PopUpMenu, if the menu is converted from an MVC-style menu."
+	"Details: This is invoked synchronously from the caller. In order to keep processing inputs and updating the screen while waiting for the user to respond, this method has its own version of the World's event loop." 
+	|actHand w oldFocus delay  v|
+	w _ self runningWorld.
+	actHand _ w activeHand.
+	oldFocus _ actHand keyboardFocus.
+	w doOneMinimalCycleNow.
+	v _ self
+		popUpAt: aPoint
+		forHand: actHand
+		allowKeyboard: aBoolean
+		target: t.
+	t ifNil: [done _ false.
+	delay _ Delay forMilliseconds: 10.
+	[ done not and: [self isInWorld] ] whileTrue: [ w doOneMinimalCycleNow. delay wait ].
+	self delete.
+	oldFocus ifNotNil: [ actHand newKeyboardFocus: oldFocus ]].
+	^ t ifNil: [mvcSelection ] ifNotNil: [v]! !
+
+self inform: 'test'!
+!MenuMorph methodsFor: 'control' stamp: 'GDK 7/22/2020 13:29:35' prior: 50812524!
+popUpAt: aPoint forHand: hand allowKeyboard: aBoolean target: target
+	"Present this menu at the given point under control of the given hand."
+
+	| evt |
+	self items isEmpty ifTrue: [^self].
+	self addBlankIconsIfNecessary.
+	(self submorphs select: [ :m | m is: #UpdatingMenuItemMorph ]) 
+		do: [ :m | m updateContents].
+	self runningWorld addMorphFront: self position: aPoint - `2 @ 8`.
+	self fitInWorld.
+	"Acquire focus for valid pop up behavior"
+	hand newMouseFocus: self.
+	aBoolean ifTrue: [ hand newKeyboardFocus: self ].
+	evt _ hand lastMouseEvent.
+	(evt isKeyboard or: [ evt isMouse and: [ evt anyButtonPressed not ]]) 
+		ifTrue: [
+			"Select first item if button not down"
+			self moveSelectionDown: 1 event: evt ]! !
+!MenuMorph methodsFor: 'control' stamp: 'GDK 7/22/2020 13:29:45' prior: 50812673!
+popUpAt: aPoint forHand: hand allowKeyboard: aBoolean target: target
+	"Present this menu at the given point under control of the given hand."
+
+	| evt |
+	self items isEmpty ifTrue: [^self].
+	self addBlankIconsIfNecessary.
+	(self submorphs select: [ :m | m is: #UpdatingMenuItemMorph ]) 
+		do: [ :m | m updateContents].
+	target ifNil: [self runningWorld addMorphFront: self position: aPoint - `2 @ 8`].
+	self fitInWorld.
+	"Acquire focus for valid pop up behavior"
+	hand newMouseFocus: self.
+	aBoolean ifTrue: [ hand newKeyboardFocus: self ].
+	evt _ hand lastMouseEvent.
+	(evt isKeyboard or: [ evt isMouse and: [ evt anyButtonPressed not ]]) 
+		ifTrue: [
+			"Select first item if button not down"
+			self moveSelectionDown: 1 event: evt ]! !
+!MenuMorph methodsFor: 'control' stamp: 'GDK 7/22/2020 13:37:10' prior: 50812699!
+popUpAt: aPoint forHand: hand allowKeyboard: aBoolean target: target
+	"Present this menu at the given point under control of the given hand."
+
+	| evt |
+	self items isEmpty ifTrue: [^self].
+	self addBlankIconsIfNecessary.
+	(self submorphs select: [ :m | m is: #UpdatingMenuItemMorph ]) 
+		do: [ :m | m updateContents].
+	target ifNil: [self runningWorld addMorphFront: self position: aPoint - `2 @ 8`]ifNotNil: [target overlay: self].
+	self fitInWorld.
+	"Acquire focus for valid pop up behavior"
+	hand newMouseFocus: self.
+	aBoolean ifTrue: [ hand newKeyboardFocus: self ].
+	evt _ hand lastMouseEvent.
+	(evt isKeyboard or: [ evt isMouse and: [ evt anyButtonPressed not ]]) 
+		ifTrue: [
+			"Select first item if button not down"
+			self moveSelectionDown: 1 event: evt ]! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 13:40:31' prior: 50812155!
+overlay: otherMorph
+| copy reported b val |
+copy _ self shallowCopy.
+otherMorph delete.
+otherMorph privateOwner: owner.
+self becomeForward: otherMorph.
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+otherMorph when: #reported send: #value: to: b.
+[reported]whileFalse: [otherMorph world doOneCycle].
+otherMorph removeActionsWithReceiver: b
+forEvent: #reported.
+otherMorph becomeForward: copy.
+^val! !
+!MVCMenuMorph methodsFor: 'private' stamp: 'GDK 7/22/2020 13:43:52' prior: 16865502!
+selectMVCItem: item
+	"Called by the MenuItemMorph that the user selects.
+	Record the selection and set the done flag to end this interaction."
+
+	mvcSelection _ item.
+	done _ true.
+	self report: item.! !
+
+self inform: 'test'!
+!MenuItemMorph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 13:45:12'!
+reportToOwner: val
+owner report: val.! !
+!MenuItemMorph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 14:51:00' prior: 50812778!
+reportToOwner: val
+(owner isKindOf: MenuMorph) ifTrue: [owner report: val].! !
+!MenuItemMorph methodsFor: 'initialization' stamp: 'GDK 7/22/2020 14:51:23' prior: 50560487 overrides: 50333120!
+initialize
+	"initialize the state of the receiver"
+	super initialize.
+	""
+	extent _ `10@10`.
+	contents _ ''.
+	isEnabled _ true.
+	subMenu _ nil.
+	isSelected _ false.
+	target _ nil.
+	selector _ nil.
+	arguments _ nil.
+	font _ Preferences standardMenuFont.
+	self when: #reported send: #reportToOwner: to: self.! !

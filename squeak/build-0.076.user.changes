@@ -1,0 +1,64 @@
+
+
+----STARTUP---- (22 July 2020 08:26:36) as F:\dynabook\squeak\build-0.076.image!
+
+!JSObjectProxy methodsFor: 'accessing' stamp: 'GDK 7/21/2020 18:11:40' overrides: 16881686!
+triggerEvent: evt withArguments: a
+super triggerEvent: evt withArguments: a! !
+!JSObjectProxy methodsFor: 'accessing' stamp: 'GDK 7/21/2020 18:11:42' prior: 50811946 overrides: 16881686!
+triggerEvent: evt withArguments: a
+super triggerEvent: evt withArguments: a.! !
+!JSObjectProxy methodsFor: 'accessing' stamp: 'GDK 7/21/2020 18:12:42' prior: 50811952 overrides: 16881686!
+triggerEvent: evt withArguments: a
+super triggerEvent: evt withArguments: a.
+evt =  #isVolatile ifTrue: [a first value].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 18:46:37' prior: 50811808 overrides: 16785023!
+shutDown
+super shutDown.
+Smalltalk allObjects do: [:o|o triggerEvent: #isVolatile with: [o becomeForward: nil]]. ! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 18:53:25' prior: 50811966 overrides: 16785023!
+shutDown
+super shutDown.
+Smalltalk allObjects do: [:o|o triggerEvent: #isVolatile with: [o becomeForward: nil]].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 18:58:29' prior: 50811974 overrides: 16785023!
+shutDown
+super shutDown.
+Smalltalk allObjects do: [:o|o triggerEvent: #isVolatile with: [o becomeForward: nil]].! !
+!JSObjectProxy methodsFor: 'accessing' stamp: 'GDK 7/21/2020 18:11:40' prior: 50811958 overrides: 16881686!
+triggerEvent: evt withArguments: a
+super triggerEvent: evt withArguments: a! !
+!JSObjectProxy methodsFor: 'accessing' stamp: 'GDK 7/21/2020 18:11:42' prior: 50811989 overrides: 16881686!
+triggerEvent: evt withArguments: a
+super triggerEvent: evt withArguments: a.! !
+!JSObjectProxy methodsFor: 'accessing' stamp: 'GDK 7/21/2020 18:12:42' prior: 50811995 overrides: 16881686!
+triggerEvent: evt withArguments: a
+super triggerEvent: evt withArguments: a.
+evt =  #isVolatile ifTrue: [a first value].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 18:46:37' prior: 50811982 overrides: 16785023!
+shutDown
+super shutDown.
+Smalltalk allObjects do: [:o|o triggerEvent: #isVolatile with: [o becomeForward: nil]]. ! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 18:53:25' prior: 50812009 overrides: 16785023!
+shutDown
+super shutDown.
+Smalltalk allObjects do: [:o|o triggerEvent: #isVolatile with: [o becomeForward: nil]].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 18:58:29' prior: 50812017 overrides: 16785023!
+shutDown
+super shutDown.
+Smalltalk allObjects do: [:o|o triggerEvent: #isVolatile with: [o becomeForward: nil]].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 19:09:15' prior: 50812025 overrides: 16785023!
+shutDown
+super shutDown.
+Smalltalk allObjects do: [:o|o triggerEvent: #isVolatile with: [o becomeForward: nil]].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 19:16:37' prior: 50812033 overrides: 16785023!
+shutDown
+super shutDown.
+Smalltalk allObjects do: [:o|o triggerEvent: #isVolatile with: [o becomeForward: nil]].! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/21/2020 21:05:43'!
+overlay: otherMorph
+| copy |
+copy _ self shallowCopy.
+otherMorph privateOwner: owner.
+self becomeForward: otherMorph.
+[otherMorph owner] whileNotNil: [otherMorph world doOneCycle].
+otherMorph becomeForward: copy.! !

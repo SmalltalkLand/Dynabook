@@ -1,0 +1,178 @@
+
+
+----SNAPSHOT----(9 July 2020 08:33:38) build-0.027.image priorSource: 14428524!
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 09:40:15' prior: 50782638!
+bootstrapNil: base spObjs: spObjs
+| nnil nilObj |
+nnil _ UndefinedObject copyForBootstrap.
+nnil instVarNamed: #superclass put: (base at: #Object).
+nilObj _ nnil basicNew.
+spObjs at: 1 put: nilObj.
+^{#UndefinedObject -> nnil. #nil -> nilObj} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 09:52:58' prior: 50782681!
+bootstrapNil: base spObjs: spObjs
+| nnil nilObj |
+nnil _ UndefinedObject copyForBootstrap.
+nnil instVarNamed: #superclass put: (base at: #Object).
+nilObj _ nnil basicNew.
+spObjs at: 1 put: nilObj.
+^{#UndefinedObject -> nnil. #nil -> nilObj} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 10:00:47' prior: 50782692!
+bootstrapNil: base spObjs: spObjs
+| nnil nilObj |
+nnil _ UndefinedObject copyForBootstrap.
+nnil instVarNamed: #superclass put: (base at: #Object).
+nilObj _ nnil basicNew.
+spObjs at: 1 put: nilObj.
+^{#UndefinedObject -> nnil. #nil -> nilObj} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 10:12:57'!
+bootstrapBooleans: base spObjs: spObjs
+| ttrue flase tru ffalse |
+ttrue _ True copyForBootstrap.
+ffalse _ False copyForBootstrap.
+ttrue superclass instVarNamed: #superclass put: (base at: #Object).
+ffalse instVarNamed: #superclass put: (ttrue superclass).
+tru _ ttrue basicNew.
+flase _ ffalse basicNew.
+spObjs at: 2 put: flase.
+spObjs at: 3 put: tru.
+^{#False -> ffalse. #True -> ttrue. #false -> flase. #true -> tru}! !
+
+----SNAPSHOT----(9 July 2020 10:13:01) build-0.027.image priorSource: 14432874!
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 10:29:20' prior: 50782714!
+bootstrapBooleans: base spObjs: spObjs
+| ttrue flase tru ffalse |
+ttrue _ True copyForBootstrap.
+ffalse _ False copyForBootstrap.
+ttrue superclass instVarNamed: #superclass put: (base at: #Object).
+ffalse instVarNamed: #superclass put: (ttrue superclass).
+tru _ ttrue basicNew.
+flase _ ffalse basicNew.
+spObjs at: 2 put: flase.
+spObjs at: 3 put: tru.
+^{#False -> ffalse. #True -> ttrue. #false -> flase. #true -> tru} asDictionary! !
+
+----SNAPSHOT----(9 July 2020 10:29:24) build-0.027.image priorSource: 14434532!
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 11:40:50' prior: 50782733!
+bootstrapBooleans: base spObjs: spObjs
+| ttrue flase tru ffalse |
+ttrue _ True copyForBootstrap.
+ffalse _ False copyForBootstrap.
+ttrue superclass instVarNamed: #superclass put: (base at: #Object).
+ffalse instVarNamed: #superclass put: (ttrue superclass).
+tru _ ttrue basicNew.
+flase _ ffalse basicNew.
+spObjs first at: 2 put: flase.
+spObjs first at: 3 put: tru.
+^{#False -> ffalse. #True -> ttrue. #false -> flase. #true -> tru} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 11:40:58' prior: 50782703!
+bootstrapNil: base spObjs: spObjs
+| nnil nilObj |
+nnil _ UndefinedObject copyForBootstrap.
+nnil instVarNamed: #superclass put: (base at: #Object).
+nilObj _ nnil basicNew.
+spObjs first at: 1 put: nilObj.
+^{#UndefinedObject -> nnil. #nil -> nilObj} asDictionary! !
+
+----SNAPSHOT----(9 July 2020 11:41:02) build-0.027.image priorSource: 14435153!
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/9/2020 11:46:39' prior: 50732101!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent.
+	self morphExtent: self morphExtent.
+	(self hasProperty: #secureFullScreen) ifTrue: [
+		(self hasProperty: #originalBounds) 
+		ifTrue: [
+			(self valueOfProperty: #secureFullScreen) activateDuring: [:w|
+				| o |
+				o _ self owner.
+				w addMorph: self. 
+				[self hasProperty: #originalBounds] whileTrue: [w doOneCycle].
+				o addMorph: self.
+				].
+			].
+		].! !
+
+2 + 2!
+
+123 * 456 - 789!
+
+true!
+
+true ifTrue: [123]!
+
+true ifTrue: [nil] ifFalse: [246]!
+
+nil ifNil: [123]!
+
+123 ifNil: [246]!
+
+1 negated!
+
+12 + 34!
+
+true ifNil: []!
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 11:53:07' prior: 50782530!
+bootstrapSpecialObjects: base
+| objs |
+objs _ Smalltalk specialObjectsArray copy.
+^{objs, [:b|
+	| oldArr newArr |
+	oldArr _ {Smalltalk specialObjectsArray}.
+	newArr _ {objs}.
+	oldArr elementsExchangeIdentityWith:  newArr.
+	[b value] ensure: [
+	oldArr elementsExchangeIdentityWith: newArr.
+	].
+	]}! !
+
+Symbol!
+
+ProtoObject class class!
+
+Object class class!
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 12:06:06' prior: 50782752!
+bootstrapBooleans: base spObjs: spObjs
+| ttrue flase tru ffalse |
+ttrue _ True copyForBootstrap.
+ffalse _ False copyForBootstrap.
+ttrue superclass instVarNamed: #superclass put: (base at: #Object).
+ffalse instVarNamed: #superclass put: (ttrue superclass).
+tru _ ttrue basicNew.
+flase _ ffalse basicNew.
+spObjs first at: 2 put: flase.
+spObjs first at: 3 put: tru.
+^{#False -> ffalse. #True -> ttrue. #false -> flase. #true -> tru} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 12:06:18'!
+bootstrapCollections: base spObjs: spObjs
+! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 12:11:23' prior: 50782857!
+bootstrapCollections: base spObjs: spObjs
+| ra |
+ra _ Array copyForBootstrap.
+ra superclass superclass superclass superclass instVarNamed: #superclass put: (base at: #Object).
+spObjs first at: 8 put: ra.
+^{#Array -> ra. #ArrayedCollection -> ra superclass. #SequencableCollection -> ra superclass superclass. #Collection -> ra superclass superclass superclass}! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 12:11:35' prior: 50782862!
+bootstrapCollections: base spObjs: spObjs
+| ra |
+ra _ Array copyForBootstrap.
+ra superclass superclass superclass superclass instVarNamed: #superclass put: (base at: #Object).
+spObjs first at: 8 put: ra.
+^{#Array -> ra. #ArrayedCollection -> ra superclass. #SequencableCollection -> ra superclass superclass. #Collection -> ra superclass superclass superclass} asDictionary! !

@@ -1,0 +1,4 @@
+*.image
+*.changes
+!*.user.changes
+*.mcr

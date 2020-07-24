@@ -1,0 +1,153 @@
+
+
+----SNAPSHOT----(5 July 2020 16:40:54) build-0.011.image priorSource: 12802741!
+
+Object subclass: #AltDotTrap
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+
+!classDefinition: #AltDotTrap category: #'System-AltDot' stamp: 'GDK 7/5/2020 16:44:24'!
+Object subclass: #AltDotTrap
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+
+Semaphore new!
+
+Object subclass: #AltDotTrap
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+
+!classDefinition: #AltDotTrap category: #'System-AltDot' stamp: 'GDK 7/5/2020 16:45:03'!
+Object subclass: #AltDotTrap
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+
+Morph subclass: #AltDotMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+
+!classDefinition: #AltDotMorph category: #'System-AltDot' stamp: 'GDK 7/5/2020 16:45:22'!
+Morph subclass: #AltDotMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+!AltDotMorph class methodsFor: 'no messages' stamp: 'GDK 7/5/2020 16:46:26'!
+open
+SecureWorld new activateDuring: [:w|| o | (o _ self new) openInWorld. [o owner] whileNotNil: [w doOneCycle]].! !
+
+!classRemoval: #AltDotTrap stamp: 'GDK 7/5/2020 16:48:57'!
+Object subclass: #AltDotTrap
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+!SystemDictionary methodsFor: 'miscellaneous' stamp: 'GDK 7/5/2020 16:49:52' prior: 50554019!
+handleUserInterrupt
+	"Preferences cmdDotEnabled" true "never!!!!!!" ifTrue: [
+		[ UISupervisor userInterrupt ] fork]! !
+!UISupervisor class methodsFor: 'gui process' stamp: 'GDK 7/5/2020 16:52:13' prior: 50554822!
+userInterrupt
+	"Create a Notifier on the active scheduling process with the given label."
+! !
+!UISupervisor class methodsFor: 'gui process' stamp: 'GDK 7/5/2020 16:52:25' prior: 50731796!
+userInterrupt
+	"Create a Notifier on the active scheduling process with the given label."
+AltDotMorph open.! !
+!AltDotMorph methodsFor: 'no messages' stamp: 'GDK 7/5/2020 16:52:42'!
+debug
+	| preemptedProcess  |
+	preemptedProcess _ Processor preemptedProcess.
+
+	"Only debug preempted process if its priority is >= UIProcess' priority"
+	"UIProcess ifNotNil: [
+		preemptedProcess priority < UIProcess priority ifTrue: [
+			preemptedProcess _ UIProcess ]]."
+
+	Debugger interruptProcess: preemptedProcess label: 'User Interrupt'! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 16:53:18' prior: 50731808!
+debug
+
+	"Only debug preempted process if its priority is >= UIProcess' priority"
+	"UIProcess ifNotNil: [
+		preemptedProcess priority < UIProcess priority ifTrue: [
+			preemptedProcess _ UIProcess ]]."
+
+	Debugger interruptProcess: "preemptedProcess" nil label: 'User Interrupt'! !
+
+!classDefinition: #AltDotMorph category: #'System-AltDot' stamp: 'GDK 7/5/2020 16:53:27'!
+Morph subclass: #AltDotMorph
+	instanceVariableNames: 'preemptedProcess'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 16:53:26' prior: 50731822!
+debug
+
+	"Only debug preempted process if its priority is >= UIProcess' priority"
+	"UIProcess ifNotNil: [
+		preemptedProcess priority < UIProcess priority ifTrue: [
+			preemptedProcess _ UIProcess ]]."
+
+	Debugger interruptProcess: preemptedProcess label: 'User Interrupt'! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 16:54:12' overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+super initialize.! !
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 16:55:18' prior: 50731776!
+open
+| o |
+o _ self new.
+SecureWorld new activateDuring: [:w|"| o | (o _ self new) " o openInWorld. [o owner] whileNotNil: [w doOneCycle]].! !
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 16:55:41' prior: 50731860!
+open
+| o |
+o _ self new.
+UISupervisor whenUIinSafeState: [SecureWorld new activateDuring: [:w|"| o | (o _ self new) " o openInWorld. [o owner] whileNotNil: [w doOneCycle]]].! !
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 16:56:12' prior: 50731868!
+open
+| o v |
+o _ self new.
+v _ false.
+UISupervisor whenUIinSafeState: [SecureWorld new activateDuring: [:w|"| o | (o _ self new) " o openInWorld. [o owner] whileNotNil: [w doOneCycle]]. v _ true].
+[v] whileFalse: [].! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 17:01:32' prior: 50731842!
+debug
+
+	"Only debug preempted process if its priority is >= UIProcess' priority"
+	"UIProcess ifNotNil: [
+		preemptedProcess priority < UIProcess priority ifTrue: [
+			preemptedProcess _ UIProcess ]]."
+
+	Debugger interruptProcess: preemptedProcess label: 'User Interrupt' ! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 17:06:49' prior: 50731887!
+debug
+
+	"Only debug preempted process if its priority is >= UIProcess' priority"
+	"UIProcess ifNotNil: [
+		preemptedProcess priority < UIProcess priority ifTrue: [
+			preemptedProcess _ UIProcess ]]."
+
+	Debugger interruptProcess: preemptedProcess label: 'User Interrupt' ! !
+!Categorizer methodsFor: '*system-environments' stamp: 'GDK 7/5/2020 17:11:01' prior: 50698894!
+listAtCategoryNamed: categoryName
+	"Answer the array of elements associated with the name, categoryName."
+	"Nota Bene: I replace a base system method"
+	| environment |
+	environment  _ Smalltalk at: ((categoryName asIdentifier: true) asSymbol) ifAbsent: [nil].
+	((environment notNil and: [environment is: #Environment] ) and: [self isKindOf: SystemOrganizer])
+		ifTrue: [ ^ environment keys ]
+		ifFalse: [| index | 
+			index _ categoryArray indexOf: categoryName ifAbsent: [^Array new].
+			^ self listAtCategoryNumber: index
+			]! !

@@ -1,0 +1,183 @@
+
+
+----SNAPSHOT----(9 July 2020 19:18:01) build-0.035.image priorSource: 14456943!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:23:08' prior: 50783477 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray.
+		varyBlock ifNotNil: [
+			| vs |
+			vs _ os select: (varyBlock value: 0).
+			vs asArray elementsForwardIdentityTo: (vs collect: (varyBlock value: 1)).
+			].
+		]] ifNil: [enabled _ false].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:28:25' prior: 50783499 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray.
+		varyBlock ifNotNil: [
+			| vs |
+			vs _ os select: (varyBlock value: 0).
+			vs asArray elementsForwardIdentityTo: (vs collect: (varyBlock value: 1)).
+			].
+		]] ifNil: [enabled _ false].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 20:32:34' prior: 50783251!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )]. Smalltalk processStartUpList: true].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 20:39:04' prior: 50783537!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 21:08:07' prior: 50783548!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 21:13:17' prior: 50783559!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 21:18:34' prior: 50783570!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:36:27' prior: 50783581!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:39:12' prior: 50783593!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: []].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:43:44' prior: 50783605!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook') ifTrue: [theMap _ nil] ifFalse: [enabled _ true].]].! !
+
+SqueakFreeze class
+	instanceVariableNames: 'enabled theMap disabledObjects varyBlock password'!
+
+!classDefinition: 'SqueakFreeze class' category: #'System-SqueakFreeze' stamp: 'GDK 7/10/2020 07:43:55'!
+SqueakFreeze class
+	instanceVariableNames: 'enabled theMap disabledObjects varyBlock password'!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:44:00'!
+theMap
+	"Answer the value of theMap"
+
+	^ theMap! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:44:00'!
+theMap: anObject
+	"Set the value of theMap"
+
+	theMap _ anObject! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:44:00'!
+password
+	"Answer the value of password"
+
+	^ password! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:44:00'!
+password: anObject
+	"Set the value of password"
+
+	password _ anObject! !
+
+!methodRemoval: SqueakFreeze class #theMap stamp: 'GDK 7/10/2020 07:44:03'!
+theMap
+	"Answer the value of theMap"
+
+	^ theMap!
+
+!methodRemoval: SqueakFreeze class #theMap: stamp: 'GDK 7/10/2020 07:44:08'!
+theMap: anObject
+	"Set the value of theMap"
+
+	theMap _ anObject!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:44:21' prior: 50783658!
+password: anObject
+	"Set the value of password"
+enabled ifTrue: [^self].
+	password _ anObject! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:45:08' prior: 50783618!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook') ifTrue: [password value: [:c|self request: c initialAnswer: '']. theMap _ nil] ifFalse: [enabled _ true].]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:46:13' prior: 50783678!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook') ifTrue: [((password ifNil: [[:b|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [enabled _ true]] ifFalse: [enabled _ true].]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:48:02' prior: 50783697!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [enabled _ true]] ifFalse: [enabled _ true].]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:49:41' prior: 50783718!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [enabled _ true]] ifFalse: [enabled _ true].]. Smalltalk processStartUpList: true].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:51:10' prior: 50783740!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 07:59:44' prior: 50783763!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]]. ! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 08:05:01' prior: 50783788!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]]. ! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/10/2020 08:44:40' prior: 50783813!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]]. ! !

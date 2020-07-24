@@ -1,0 +1,328 @@
+
+
+----STARTUP---- (21 July 2020 08:26:55) as F:\Dbs\squeak\build-0.070.image!
+
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 18:02:56' prior: 50806125!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $#.
+	stream nextPutAll: object asString.
+		^self.
+	].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 18:04:58' prior: 50806400!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $#.
+	stream nextPutAll: object asString.
+	stream nextPut: $].
+		^self.
+	].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 18:05:23' prior: 50806441!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	stream nextPutAll: object asString.
+	stream nextPut: $].
+		^self.
+	].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 18:06:43' prior: 50806483!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	stream nextPutAll: object asString.
+	stream nextPut: $].
+track add: object.
+		^self.
+	].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 18:09:46' prior: 50806525!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	stream nextPutAll: object asString.
+	stream nextPut: $].
+track add: object.
+		^self.
+	].
+
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 08:32:47' prior: 50806076!
+mark
+^(Smalltalk allObjects collect: [:o|o -> ((((Smalltalk allObjects reject: [:o2|o2 == objects or: [self object: o includesRecursive: o2]]) anySatisfy: [:o2|((1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]) or: [(1 to: o2 class instVarNames size)  anySatisfy: [:f|(o2 instVarAt: f) == 0]] or: [o2 class == o]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 08:33:28' prior: 50806568!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	stream nextPutAll: object asString.
+	stream nextPut: $].
+track add: object.
+		^self.
+	].
+({} includes: object) ifTrue: [].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 08:33:42' prior: 50806627!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	stream nextPutAll: object asString.
+	stream nextPut: $].
+track add: object.
+		^self.
+	].
+({Class. Metaclass} includes: object) ifTrue: [].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 08:33:54' prior: 50806671!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	stream nextPutAll: object asString.
+	stream nextPut: $].
+track add: object.
+		^self.
+	].
+({Class. Metaclass. Object. ProtoObject. Behavior} includes: object) ifTrue: [].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 08:36:06' prior: 50806715!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	stream nextPutAll: object asString.
+	stream nextPut: $].
+track add: object.
+		^self.
+	].
+({Class. Metaclass. Object. ProtoObject. Behavior. ClassDescription. SmallInteger} includes: object) ifTrue: [
+	stream nextPut: $[.
+	stream nextPutAll: object name.
+	stream nextPut: $#.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $].
+^self
+	].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 08:45:45' prior: 50806760!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+(object class == SmallInteger) ifTrue: [
+	stream nextPutAll: '[smallInteger#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	stream nextPutAll: object asString.
+	stream nextPut: $].
+track add: object.
+		^self.
+	].
+({Class. Metaclass. Object. ProtoObject. Behavior. ClassDescription. SmallInteger} includes: object) ifTrue: [
+	stream nextPut: $[.
+	stream nextPutAll: object name.
+	stream nextPut: $#.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $].
+^self
+	].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString]). stream nextPut: $,].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+
+Notification subclass: #EventTrack
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'EventTracking'!
+
+!classDefinition: #EventTrack category: #EventTracking stamp: 'GDK 7/21/2020 08:49:56'!
+Notification subclass: #EventTrack
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'EventTracking'!
+!HandMorph methodsFor: 'event handling' stamp: 'GDK 7/21/2020 08:53:41' prior: 50785933!
+processEventQueue
+	"Process user input events from the local input devices."
+
+	| evt evtBuf type hadAny mcs |
+	mcs _ mouseClickState.
+	hadAny := false.
+	VirtualKeyboard allSubInstancesDo: [:i|i targetHand == self ifTrue: [i processEvents: [:evt2|self startEventDispatch: evt2]]].
+	[ (evtBuf := Sensor nextEvent) isNil ] whileFalse: [
+		type := evtBuf first.
+		evt := self createEventFrom: evtBuf ofType: type.
+		evt
+			ifNil: [ 
+				"I have to consume all eventTypeDragDropFiles of type 2 quicky, that is why
+				I check if it was an eventTypeDragDropFiles to continue in the loop - Hernan"
+				type ~= EventSensor eventTypeDragDropFiles ifTrue: [^hadAny]]
+			ifNotNil: [
+				"Finally, handle it"
+				[self startEventDispatch: evt] on: EventTrack do: [:ex|ex resumeUnchecked: self].
+				hadAny := true.
+				"For better user feedback, return immediately after a mouse event has been processed."
+				evt isMouse ifTrue: [ ^hadAny ]]].
+	"note: if we come here we didn't have any mouse events"
+	mcs 
+		ifNotNil: [ 
+			"No mouse events during this cycle. Make sure click states time out accordingly"
+			mcs
+				handleEvent: (self lastMouseEvent asMouseMove: (Time localMillisecondClock - self lastMouseEventTime max: 0))
+				from: self ].
+	^hadAny! !
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/21/2020 08:55:22' prior: 50789139 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	EventTrack signal ifNil: [((aMorph is: #SystemWindow) or: [aMorph class = MenuMorph or: [aMorph class = HaloMorph] or: [aMorph class == MVCMenuMorph]]) ifFalse: [(aMorph valueOfProperty: #perms ifAbsent: [Dictionary new]) at: #nonSystemWindowMorphs ifAbsent: [| s |
+			s _ SystemWindow new.
+			self privateAddMorph: s atIndex: (submorphs indexOf: aMorph).
+			s when: #removed send: #delete to: s.
+			s addMorph: aMorph.
+			]]].
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !

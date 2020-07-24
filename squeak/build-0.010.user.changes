@@ -1,0 +1,143 @@
+
+
+----SNAPSHOT----(5 July 2020 15:54:18) build-0.010.image priorSource: 12795068!
+!SecureWorld methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 16:03:07' prior: 50731554 overrides: 16896425!
+initialize
+| b |
+super initialize.
+world _ PasteUpMorph new.
+self runningWorld ifNotNil: (b _ [
+world worldState: (self runningWorld instVarNamed: 'worldState') shallowCopy.
+]) ifNil: [
+UISupervisor whenUIinSafeState: b.
+].
+"world addMorph: (SystemWindow new)."! !
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/5/2020 16:12:30' prior: 50699566!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent.
+	(self hasProperty: #secureFullScreen) ifTrue: [
+		(self hasProperty: #originalBounds)
+		ifFalse: [
+			(self valueOfProperty: #secureFullScreen) activateDuring: [].
+			].
+		].! !
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/5/2020 16:14:11' prior: 50731580!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent.
+	(self hasProperty: #secureFullScreen) ifTrue: [
+		(self hasProperty: #originalBounds)
+		ifFalse: [
+			(self valueOfProperty: #secureFullScreen) activateDuring: [:w|
+				| o |
+				o _ self owner.
+				w addMorph: self. 
+				[self hasProperty: #originalBounds] whileFalse: [w doOneCycle].
+				o addMorph: self.
+				].
+			].
+		].! !
+
+----SNAPSHOT----(5 July 2020 16:14:15) build-0.010.image priorSource: 12797256!
+!Debugger methodsFor: 'initialization' stamp: 'GDK 7/5/2020 16:14:42' prior: 50731400!
+openNotifierContents: msgString label: label
+	"Create and schedule a notifier view with the given label and message. A notifier view shows just the message or the first several lines of the stack, with a menu that allows the user to open a full debugger if so desired."
+	"NOTE: When this method returns, a new process has been scheduled to run the windows, and thus this notifier, but the previous active porcess has not been suspended.  The sender will do this."
+	| msg |
+	Sensor flushKeyboard.
+	savedCursor _ Cursor currentCursor.
+	Cursor defaultCursor activateCursor.
+	msg _ (label beginsWith: 'Space is low')
+		ifTrue: [ self lowSpaceChoices , (msgString ifNil: [ '' ]) ]
+		ifFalse: [ msgString ].
+	interruptedProcessUI _ UISupervisor newProcessIfUI: interruptedProcess.
+	UISupervisor whenUIinSafeState: [
+		| b |
+		"[Debugger secureDesktop activateDuring: (b _ [:w|"PreDebugWindow
+			forceOpen: self
+			label: label
+			message: msg" ])] on: Error do: [:ex|b value: self runningWorld]"].! !
+!Debugger methodsFor: 'initialization' stamp: 'GDK 7/5/2020 16:15:29' prior: 50731434!
+openFullMorphicLabel: aLabelString
+	"Open a full morphic debugger with the given label"
+
+	| oldContextStackIndex b |
+	oldContextStackIndex _ contextStackIndex.
+	self expandStack. "Sets contextStackIndex to zero."
+
+	b _ [:w|DebuggerWindow open: self label: aLabelString].
+	"[Debugger secureDesktop activateDuring:" b value: self runningWorld "] on: Error do: [:ex|b value].".
+	self toggleContextStackIndex: oldContextStackIndex! !
+
+----SNAPSHOT----(5 July 2020 16:15:32) build-0.010.image priorSource: 12799808!
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/5/2020 16:22:30' prior: 50731610!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent.
+	(self hasProperty: #secureFullScreen) ifTrue: [
+		(self hasProperty: #originalBounds)
+		ifFalse: [
+			(self valueOfProperty: #secureFullScreen) activateDuring: [:w|
+				| o |
+				o _ self owner.
+				w addMorph: self. 
+				[self hasProperty: #originalBounds] whileFalse: [w doOneCycle].
+				o addMorph: self.
+				].
+			].
+		].! !
+
+interruptSemaphore!
+
+----SNAPSHOT----(5 July 2020 16:40:43) build-0.010.image priorSource: 12801517!
+
+SecureWorld new activateDuring: [:w|]!

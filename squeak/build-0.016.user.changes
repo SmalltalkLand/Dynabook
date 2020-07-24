@@ -1,0 +1,15 @@
+
+
+----SNAPSHOT----(6 July 2020 18:09:50) build-0.016.image priorSource: 12850781!
+!LinkDomain methodsFor: 'accessing' stamp: 'GDK 7/6/2020 18:12:54' prior: 50733396 overrides: 50733130!
+exists
+^exists ! !
+!LinkDomain methodsFor: 'accessing' stamp: 'GDK 7/6/2020 18:13:16' prior: 50733384!
+exists: anObject
+	"Set the value of exists"
+(thisContext sender receiver class == DomainLink) ifFalse: [^self].
+	exists _ anObject! !
+
+----SNAPSHOT----(6 July 2020 18:13:19) build-0.016.image priorSource: 12856546!
+
+----End fileIn of F:\Dbs\src\JSBridge.st----!

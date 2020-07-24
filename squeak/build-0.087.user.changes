@@ -1,0 +1,65 @@
+
+
+----STARTUP---- (24 July 2020 09:10:31) as F:\dynabook\squeak\build-0.087.image!
+
+!Sound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 08:45:34' prior: 50813903 overrides: 50813821!
+emit: val
+| v2 |
+v2 _ super emit: (self buffer at: (index _ (index + 1) mod: self buffer size)).
+
+^v2! !
+!Sound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 08:46:23' prior: 50827664 overrides: 50813821!
+emit: val
+| v2 oi |
+oi _ index.
+v2 _ super emit: (self buffer at: (index _ (index + 1) mod: self buffer size)).
+index < oi ifTrue: [self triggerEvent: #iterated].
+^v2! !
+!Sound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 08:51:56' prior: 50827671 overrides: 50813821!
+emit: val
+| v2 oi |
+oi _ index.
+v2 _ super emit: (self buffer at: (index _ (index + 1) mod: self buffer size)).
+index < oi ifTrue: [self triggerEvent: #iterated].
+^v2! !
+!Sound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 08:45:34' prior: 50827680 overrides: 50813821!
+emit: val
+| v2 |
+v2 _ super emit: (self buffer at: (index _ (index + 1) mod: self buffer size)).
+
+^v2! !
+!Sound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 08:46:23' prior: 50827689 overrides: 50813821!
+emit: val
+| v2 oi |
+oi _ index.
+v2 _ super emit: (self buffer at: (index _ (index + 1) mod: self buffer size)).
+index < oi ifTrue: [self triggerEvent: #iterated].
+^v2! !
+!Sound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 08:51:56' prior: 50827696 overrides: 50813821!
+emit: val
+| v2 oi |
+oi _ index.
+v2 _ super emit: (self buffer at: (index _ (index + 1) mod: self buffer size)).
+index < oi ifTrue: [self triggerEvent: #iterated].
+^v2! !
+
+----SNAPSHOT----(24 July 2020 09:11:04) build-0.087.image priorSource: 15432247!
+!Sound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:12:12' prior: 50827705 overrides: 50813821!
+emit: val
+| v2 oi |
+oi _ index.
+v2 _ super emit: (self buffer at: (index _ (index + 1) mod: self buffer size)).
+index < oi ifTrue: [self triggerEvent: #iterated].
+^v2! !
+!Sound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:12:14' prior: 50827717 overrides: 50813821!
+emit: val
+| v2 oi |
+oi _ index.
+v2 _ super emit: (self buffer at: (index _ (index + 1) mod: self buffer size)).
+index < oi ifTrue: [self triggerEvent: #iterated].
+^v2
+! !
+
+Feature require: 'Sound'!
+
+----End fileIn of F:\dynabook\squeak\Packages\Features\Sound.pck.st----!

@@ -1,0 +1,137 @@
+
+
+----SNAPSHOT----(15 July 2020 12:08:07) build-0.045.image priorSource: 14543504!
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/15/2020 12:17:22' prior: 50786284 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	((aMorph is: #SystemWindow) or: [aMorph class = MenuMorph or: [aMorph class = HaloMorph]]) ifFalse: [(aMorph valueOfProperty: #perms ifAbsent: [Dictionary new]) at: #nonSystemWindowMorphs ifAbsent: [| s |
+			s _ SystemWindow new.
+			self privateAddMorph: s atIndex: (submorphs indexOf: aMorph).
+			s when: #removed send: #delete to: s.
+			s addMorph: aMorph.
+			]].
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/15/2020 12:25:55' prior: 50786308 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	((aMorph is: #SystemWindow) or: [aMorph class = MenuMorph or: [aMorph class = HaloMorph]]) ifFalse: [(aMorph valueOfProperty: #perms ifAbsent: [Dictionary new]) at: #nonSystemWindowMorphs ifAbsent: [| s |
+			s _ SystemWindow new.
+			self privateAddMorph: s atIndex: (submorphs indexOf: aMorph).
+			s when: #removed send: #delete to: s.
+			s addMorph: aMorph.
+			]].
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !
+!Morph methodsFor: 'private' stamp: 'GDK 7/15/2020 12:26:31' prior: 16877049!
+privateAddAllMorphs: aCollection atIndex: index
+	"Private. Add aCollection of morphs to the receiver"
+	| myWorld itsWorld otherSubmorphs |
+	myWorld _ self world.
+	otherSubmorphs _ submorphs copyWithoutAll: aCollection.
+	(index between: 0 and: otherSubmorphs size)
+		ifFalse: [^ self error: 'index out of range'].
+	index = 0
+		ifTrue:[	submorphs _ aCollection asArray, otherSubmorphs]
+		ifFalse:[	index = otherSubmorphs size
+			ifTrue:[	submorphs _ otherSubmorphs, aCollection]
+			ifFalse:[	submorphs _ otherSubmorphs copyReplaceFrom: index + 1 to: index with: aCollection ]].
+	aCollection do: [:m | | itsOwner |
+		itsOwner _ m owner.
+		itsOwner ifNotNil: [
+			itsWorld _ m world.
+			(itsWorld == myWorld) ifFalse: [
+				itsWorld ifNotNil: [m redrawNeeded]].
+			(itsOwner ~~ self) ifTrue: [
+				m owner privateRemove: m.
+				m owner removedMorph: m ]].
+		m privateOwner: self.
+		myWorld ifNotNil: [m redrawNeeded].
+		(myWorld == itsWorld) ifFalse: [m intoWorld: myWorld].
+		itsOwner == self ifFalse: [
+			self addedMorph: m.
+			self triggerEvent: #added with: m.
+			m noteNewOwner: self ].
+	].
+	self someSubmorphPositionOrExtentChanged! !
+!Morph methodsFor: 'private' stamp: 'GDK 7/15/2020 12:27:00' prior: 16877086!
+privateAddMorph: aMorph atIndex: index
+
+	| oldIndex myWorld itsWorld oldOwner |
+	((index >= 1) and: [index <= (submorphs size + 1)])
+		ifFalse: [^ self error: 'index out of range'].
+	myWorld _ self world.
+	oldOwner _ aMorph owner.
+	(oldOwner == self and: [(oldIndex _ submorphs indexOf: aMorph) > 0]) ifTrue:[
+		"aMorph's position changes within in the submorph chain"
+		oldIndex < index ifTrue:[
+			"moving aMorph to back"
+			submorphs replaceFrom: oldIndex to: index-2 with: submorphs startingAt: oldIndex+1.
+			submorphs at: index-1 put: aMorph.
+		] ifFalse:[
+			"moving aMorph to front"
+			oldIndex-1 to: index by: -1 do:[:i|
+				submorphs at: i+1 put: (submorphs at: i)].
+			submorphs at: index put: aMorph.
+		].
+	] ifFalse:[
+		"adding a new morph"
+		oldOwner ifNotNil:[
+			itsWorld _ aMorph world.
+			itsWorld ifNotNil: [aMorph redrawNeeded].
+			oldOwner privateRemove: aMorph.
+			oldOwner removedMorph: aMorph.
+		].
+		aMorph privateOwner: self.
+		submorphs _ submorphs copyReplaceFrom: index to: index-1 with: (Array with: aMorph).
+		(itsWorld == myWorld) ifFalse: [aMorph intoWorld: myWorld].
+	].
+	myWorld ifNotNil:[aMorph redrawNeeded].
+	self someSubmorphPositionOrExtentChanged.
+	oldOwner == self ifFalse: [
+		self addedMorph: aMorph.
+		self triggerEvent: #added with: aMorph.
+		aMorph noteNewOwner: self ].
+! !
+!Morph methodsFor: 'private' stamp: 'GDK 7/15/2020 12:27:21' prior: 16877128!
+privateAddMorph: aMorph atIndex: index position: aPoint
+
+	| oldIndex myWorld itsWorld oldOwner |
+	((index >= 1) and: [index <= (submorphs size + 1)])
+		ifFalse: [^ self error: 'index out of range'].
+	myWorld _ self world.
+	oldOwner _ aMorph owner.
+	(oldOwner == self and: [(oldIndex _ submorphs indexOf: aMorph) > 0]) ifTrue: [
+		"aMorph's position changes within in the submorph chain"
+		oldIndex < index ifTrue:[
+			"moving aMorph to back"
+			submorphs replaceFrom: oldIndex to: index-2 with: submorphs startingAt: oldIndex+1.
+			submorphs at: index-1 put: aMorph.
+		] ifFalse:[
+			"moving aMorph to front"
+			oldIndex-1 to: index by: -1 do:[:i|
+				submorphs at: i+1 put: (submorphs at: i)].
+			submorphs at: index put: aMorph.
+		].
+		aMorph privatePosition: aPoint.
+	] ifFalse: [
+		"adding a new morph"
+		oldOwner ifNotNil: [
+			itsWorld _ aMorph world.
+			itsWorld ifNotNil: [aMorph redrawNeeded].
+			oldOwner privateRemove: aMorph.
+			oldOwner removedMorph: aMorph.
+		].
+		aMorph privateOwner: self.
+		submorphs _ submorphs copyReplaceFrom: index to: index-1 with: (Array with: aMorph).
+		aMorph privatePosition: aPoint.
+		(itsWorld == myWorld) ifFalse: [aMorph intoWorld: myWorld].
+	].
+	myWorld ifNotNil: [aMorph redrawNeeded].
+	self someSubmorphPositionOrExtentChanged.
+	oldOwner == self ifFalse: [
+		self addedMorph: aMorph.
+		self triggerEvent: #added with: aMorph.
+		aMorph noteNewOwner: self ]! !

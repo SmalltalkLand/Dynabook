@@ -1,0 +1,76 @@
+
+
+----SNAPSHOT----(20 July 2020 12:54:07) build-0.065.image priorSource: 15157647!
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:20:01' prior: 50805384!
+mark
+^(Smalltalk allObjects collect: [:o|o -> ((((Smalltalk allObjects reject: [:o2|o2 == objects]) anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:22:50'!
+object: o includesRecursive: o2
+o class == o2 ifTrue: [^true].
+(self object: o class includesRecursive: o2) ifTrue: [^true].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:27:10' prior: 50805398!
+mark
+^(Smalltalk allObjects collect: [:o|o -> ((((Smalltalk allObjects reject: [:o2|o2 == objects]) anySatisfy: [:o2|((1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]) or: [(1 to: o2 class instVarNames size)  anySatisfy: [:f|(o2 instVarAt: f) == 0]]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:28:08' prior: 50805417!
+mark
+^(Smalltalk allObjects collect: [:o|o -> ((((Smalltalk allObjects reject: [:o2|o2 == objects]) anySatisfy: [:o2|((1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]) or: [(1 to: o2 class instVarNames size)  anySatisfy: [:f|(o2 instVarAt: f) == 0]]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:28:28' prior: 50805431!
+mark
+^(Smalltalk allObjects collect: [:o|o -> ((((Smalltalk allObjects reject: [:o2|o2 == objects]) anySatisfy: [:o2|((1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]) or: [(1 to: o2 class instVarNames size)  anySatisfy: [:f|(o2 instVarAt: f) == 0]] or: [o2 class == o]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:32:05' prior: 50805409!
+object: o includesRecursive: o2
+o class == o2 ifTrue: [^true].
+(self object: o class includesRecursive: o2) ifTrue: [^true].
+o class instVarNames doWithIndex: [:pr :i|
+	(o instVarAt: i) == 02 ifTrue: [^true].
+	].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:33:12' prior: 50805460!
+object: o includesRecursive: o2
+o class == o2 ifTrue: [^true].
+(self object: o class includesRecursive: o2) ifTrue: [^true].
+o class instVarNames doWithIndex: [:pr :i|
+	(o instVarAt: i) == o2 ifTrue: [^true].
+(self object: (o instVarAt: i) includesRecursive: o2) ifTrue: [^true].
+	].
+1 to: o basicSize do: [:bi|
+	(o basicAt: bi)== o2 ifTrue: [^true].
+	].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:33:39' prior: 50805471!
+object: o includesRecursive: o2
+o class == o2 ifTrue: [^true].
+(self object: o class includesRecursive: o2) ifTrue: [^true].
+o class instVarNames doWithIndex: [:pr :i|
+	(o instVarAt: i) == o2 ifTrue: [^true].
+(self object: (o instVarAt: i) includesRecursive: o2) ifTrue: [^true].
+	].
+1 to: o basicSize do: [:bi|
+	(o basicAt: bi)== o2 ifTrue: [^true].
+(self object: (o basicAt: bi) includesRecursive: o2) ifTrue: [^true].
+	].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:33:44' prior: 50805486!
+object: o includesRecursive: o2
+o class == o2 ifTrue: [^true].
+(self object: o class includesRecursive: o2) ifTrue: [^true].
+o class instVarNames doWithIndex: [:pr :i|
+	(o instVarAt: i) == o2 ifTrue: [^true].
+(self object: (o instVarAt: i) includesRecursive: o2) ifTrue: [^true].
+	].
+1 to: o basicSize do: [:bi|
+	(o basicAt: bi)== o2 ifTrue: [^true].
+(self object: (o basicAt: bi) includesRecursive: o2) ifTrue: [^true].
+	].
+^false! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:35:13' prior: 50805294!
+isNonGCAble: obj
+| v |
+v _ false.
+obj triggerEvent: #isNonGCAble with: [v _ true].
+Smalltalk allObjects do: [:o|o triggerEvent: #boundary with: [:v2|v _ v2]].
+^v! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 13:36:12' prior: 50805521!
+isNonGCAble: obj
+| v |
+v _ false.
+obj triggerEvent: #isNonGCAble with: [v _ true].
+Smalltalk allObjects do: [:o|(self object: o includesRecursive: obj) ifTrue: [o triggerEvent: #boundary withArguments: {obj.[:v2|v _ v2]}]].
+^v! !

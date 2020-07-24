@@ -1,0 +1,528 @@
+
+
+----STARTUP---- (19 July 2020 08:47:03) as F:\Dbs\squeak\build-0.060.image!
+
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:20:26'!
+diff: snapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:21:29' prior: 50804044!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations.! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:22:03' prior: 50804048!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i ifPresent: [true] ifAbsent: [:v|]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:22:15' prior: 50804055!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i ifPresent: [:v|true] ifAbsent: [true]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:26:53' prior: 50804064!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:27:24' prior: 50804073!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:32:53' prior: 50804086!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:33:20' prior: 50804101!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect].
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:38:35' prior: 50804116!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:44:00' prior: 50803045!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:54:23' prior: 50804148!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 19:01:25' prior: 50804156!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:01:42' prior: 50804164!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:11:31' prior: 50804172!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:17:09' prior: 50804180!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:25:34' prior: 50804188!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:30:38' prior: 50804196!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:35:54' prior: 50804204!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:41:36' prior: 50804212!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:46:49' prior: 50804132!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+
+!classDefinition: #SITSnapshotter category: #Squit stamp: 'GDK 7/19/2020 08:47:12'!
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: 'Instance'
+	poolDictionaries: ''
+	category: 'Squit'!
+
+!classDefinition: #SITSnapshotter category: #Squit stamp: 'GDK 7/19/2020 08:47:12'!
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: 'Instance'
+	poolDictionaries: ''
+	category: 'Squit'!
+!SITSnapshotter class methodsFor: 'no messages' stamp: 'GDK 7/18/2020 20:49:58'!
+instance
+^Instance ifNil: [Instance _ SITSnapshotter new]! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:55:29' prior: 50804228!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:20:26' prior: 50804262!
+diff: snapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:21:29' prior: 50804278!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations.! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:22:03' prior: 50804282!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i ifPresent: [true] ifAbsent: [:v|]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:22:15' prior: 50804289!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i ifPresent: [:v|true] ifAbsent: [true]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:26:53' prior: 50804298!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:27:24' prior: 50804307!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:32:53' prior: 50804320!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:33:20' prior: 50804335!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect].
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:38:35' prior: 50804350!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:44:00' prior: 50804220!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:54:23' prior: 50804382!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 19:01:25' prior: 50804390!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:01:42' prior: 50804398!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:11:31' prior: 50804406!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:17:09' prior: 50804414!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:25:34' prior: 50804422!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:30:38' prior: 50804430!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:35:54' prior: 50804438!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:41:36' prior: 50804446!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:46:49' prior: 50804366!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+
+!classDefinition: #SITSnapshotter category: #Squit stamp: 'GDK 7/19/2020 08:47:13'!
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: 'Instance'
+	poolDictionaries: ''
+	category: 'Squit'!
+
+!classDefinition: #SITSnapshotter category: #Squit stamp: 'GDK 7/19/2020 08:47:13'!
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: 'Instance'
+	poolDictionaries: ''
+	category: 'Squit'!
+!SITSnapshotter class methodsFor: 'no messages' stamp: 'GDK 7/18/2020 20:49:58' prior: 50804257!
+instance
+^Instance ifNil: [Instance _ SITSnapshotter new]! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:55:29' prior: 50804462!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:20:26' prior: 50804497!
+diff: snapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:21:29' prior: 50804513!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations.! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:22:03' prior: 50804517!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i ifPresent: [true] ifAbsent: [:v|]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:22:15' prior: 50804524!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i ifPresent: [:v|true] ifAbsent: [true]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:26:53' prior: 50804533!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:27:24' prior: 50804542!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:32:53' prior: 50804555!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:33:20' prior: 50804570!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect].
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:38:35' prior: 50804585!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:44:00' prior: 50804454!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:54:23' prior: 50804617!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 19:01:25' prior: 50804625!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:01:42' prior: 50804633!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:11:31' prior: 50804641!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:17:09' prior: 50804649!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:25:34' prior: 50804657!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:30:38' prior: 50804665!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:35:54' prior: 50804673!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:41:36' prior: 50804681!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:46:49' prior: 50804601!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+
+!classDefinition: #SITSnapshotter category: #Squit stamp: 'GDK 7/19/2020 08:47:15'!
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: 'Instance'
+	poolDictionaries: ''
+	category: 'Squit'!
+
+!classDefinition: #SITSnapshotter category: #Squit stamp: 'GDK 7/19/2020 08:47:15'!
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: 'Instance'
+	poolDictionaries: ''
+	category: 'Squit'!
+!SITSnapshotter class methodsFor: 'no messages' stamp: 'GDK 7/18/2020 20:49:58' prior: 50804492!
+instance
+^Instance ifNil: [Instance _ SITSnapshotter new]! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:55:29' prior: 50804697!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:20:26' prior: 50804732!
+diff: snapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:21:29' prior: 50804748!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations.! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:22:03' prior: 50804752!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i ifPresent: [true] ifAbsent: [:v|]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:22:15' prior: 50804759!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i ifPresent: [:v|true] ifAbsent: [true]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:26:53' prior: 50804768!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:27:24' prior: 50804777!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:32:53' prior: 50804790!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:33:20' prior: 50804805!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect].
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:38:35' prior: 50804820!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:44:00' prior: 50804689!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:54:23' prior: 50804852!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 19:01:25' prior: 50804860!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:01:42' prior: 50804868!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:11:31' prior: 50804876!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:17:09' prior: 50804884!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:25:34' prior: 50804892!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:30:38' prior: 50804900!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:35:54' prior: 50804908!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:41:36' prior: 50804916!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:46:49' prior: 50804836!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+
+!classDefinition: #SITSnapshotter category: #Squit stamp: 'GDK 7/19/2020 08:47:16'!
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: 'Instance'
+	poolDictionaries: ''
+	category: 'Squit'!
+
+!classDefinition: #SITSnapshotter category: #Squit stamp: 'GDK 7/19/2020 08:47:16'!
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: 'Instance'
+	poolDictionaries: ''
+	category: 'Squit'!
+!SITSnapshotter class methodsFor: 'no messages' stamp: 'GDK 7/18/2020 20:49:58' prior: 50804727!
+instance
+^Instance ifNil: [Instance _ SITSnapshotter new]! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 20:55:29' prior: 50804932!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: true into: [:carry :v2|carry and: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/19/2020 08:35:15' prior: 50804967!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: false into: [:carry :v2|carry or: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/19/2020 08:40:23' prior: 50804983!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: false into: [:carry :v2|carry or: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/19/2020 08:45:28' prior: 50804999!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: false into: [:carry :v2|carry or: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !

@@ -1,0 +1,54 @@
+
+
+----STARTUP---- (5 July 2020 15:41:15) as F:\Dbs\src\build-0.009.image!
+
+!SecureWorld methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 15:49:55' prior: 50731471 overrides: 16896425!
+initialize.
+super initialize.
+world _ PasteUpMorph new.
+world worldState: (self runningWorld instVarNamed: 'worldState') shallowCopy.
+! !
+!SecureWorld methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 15:50:02' prior: 50731504 overrides: 16896425!
+initialize.
+super initialize.
+world _ PasteUpMorph new.
+world worldState: (self runningWorld instVarNamed: 'worldState') shallowCopy.
+world addMorph: (SystemWindow new).! !
+!SecureWorld methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 15:51:35' prior: 50731512 overrides: 16896425!
+initialize.
+super initialize.
+world _ PasteUpMorph new.
+world worldState: (self runningWorld instVarNamed: 'worldState') shallowCopy.
+"world addMorph: (SystemWindow new)."! !
+!SecureWorld methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 15:52:03' prior: 50731521 overrides: 16896425!
+initialize.
+super initialize.
+world _ PasteUpMorph new.
+self runningWorld ifNotNil: [
+world worldState: (self runningWorld instVarNamed: 'worldState') shallowCopy.
+].
+"world addMorph: (SystemWindow new)."! !
+!SecureWorld methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 15:52:26' prior: 50731531 overrides: 16896425!
+initialize
+| b |
+super initialize.
+world _ PasteUpMorph new.
+self runningWorld ifNotNil: (b _ [
+world worldState: (self runningWorld instVarNamed: 'worldState') shallowCopy.
+]) ifNil: [
+
+].
+"world addMorph: (SystemWindow new)."! !
+
+UISupervisor!
+!SecureWorld methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 15:54:07' prior: 50731542 overrides: 16896425!
+initialize
+| b |
+super initialize.
+world _ PasteUpMorph new.
+self runningWorld ifNotNil: (b _ [
+world worldState: (self runningWorld instVarNamed: 'worldState') shallowCopy.
+]) ifNil: [
+UISupervisor whenUIinSafeState: b.
+].
+"world addMorph: (SystemWindow new)."! !

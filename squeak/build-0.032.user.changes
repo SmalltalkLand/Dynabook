@@ -1,0 +1,45 @@
+
+
+----SNAPSHOT----(9 July 2020 17:47:05) build-0.032.image priorSource: 14454031!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:52:20' prior: 50783327 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray
+		]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:57:25' prior: 50783358 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray
+		]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 18:02:28' prior: 50783371 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray
+		]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:12:57' prior: 50783384 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray
+		]]. ! !
+
+----SNAPSHOT----(9 July 2020 19:13:45) build-0.032.image priorSource: 14454497!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:13:49' prior: 50783397 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray
+		]] ifNil: [enabled _ false] .! !

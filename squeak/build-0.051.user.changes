@@ -1,0 +1,17 @@
+
+
+----SNAPSHOT----(18 July 2020 13:23:28) build-0.051.image priorSource: 14593638!
+
+self inform: 'test'!
+!PasteUpMorph methodsFor: 'change reporting' stamp: 'GDK 7/18/2020 13:25:14' prior: 50786505 overrides: 16874142!
+addedMorph: aMorph
+	"Notify the receiver that the given morph was just added."
+	((aMorph is: #SystemWindow) or: [aMorph class = MenuMorph or: [aMorph class = HaloMorph] or: [aMorph class == MVCMenuMorph]]) ifFalse: [(aMorph valueOfProperty: #perms ifAbsent: [Dictionary new]) at: #nonSystemWindowMorphs ifAbsent: [| s |
+			s _ SystemWindow new.
+			self privateAddMorph: s atIndex: (submorphs indexOf: aMorph).
+			s when: #removed send: #delete to: s.
+			s addMorph: aMorph.
+			]].
+	super addedMorph: aMorph.
+	self taskbar ifNotNil: [ :tb |
+		tb wasOpened: aMorph ]! !

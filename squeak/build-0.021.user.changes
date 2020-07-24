@@ -1,0 +1,21 @@
+
+
+----SNAPSHOT----(8 July 2020 09:19:00) build-0.021.image priorSource: 14365266!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 09:51:54' prior: 50735310 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: [:v|presentBlock value: (EnvironmentUserMode signal ifNotNil: [copyDict at: v ifAbsentPut: [v copy]] ifNil: [v])] ifAbsent: [absentBlock on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]]! !
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 09:58:38' prior: 50780572 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: [:v|presentBlock value: (EnvironmentUserMode signal ifNotNil: [copyDict at: v ifAbsentPut: [v copy]] ifNil: [v])] ifAbsent: [| b |
+	b _ [absentBlock on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]] ifAbsent: b
+	]! !
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 09:59:01' prior: 50780588 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: [:v|presentBlock value: (EnvironmentUserMode signal ifNotNil: [copyDict at: v ifAbsentPut: [v copy]] ifNil: [v])] ifAbsent: [| b |
+	b _ [absentBlock on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	]! !
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 10:01:25' overrides: 16833495!
+includesKey: k
+^(super includesKey: k) or: [(super at: #Pools ifPresent: [:pa|(pa detect: [:p|p includesKey: k] ifNone: [nil]) notNil] ifAbsent: [false])]! !

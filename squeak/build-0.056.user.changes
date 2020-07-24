@@ -1,0 +1,43 @@
+
+
+----SNAPSHOT----(18 July 2020 14:54:47) build-0.056.image priorSource: 14737760!
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 14:58:55' prior: 50787884!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+
+	^
+'
+Dynabook Smalltalk is based on Cuis. The parts of it that are unique from Cuis are copyright (c) 2020 Contributors to Dynabook Smalltalk.
+Portions of Cuis are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.'! !
+
+----SNAPSHOT----(18 July 2020 14:58:59) build-0.056.image priorSource: 14738844!
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 15:03:11' prior: 50792243!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c)' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^
+'
+Dynabook Smalltalk is based on Cuis. The parts of it that are unique from Cuis are copyright (c) 2020 Contributors to Dynabook Smalltalk.
+Portions of Cuis are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.'! !
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 15:03:20' prior: 50792263!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c)' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^s,
+'
+Dynabook Smalltalk is based on Cuis. The parts of it that are unique from Cuis are copyright (c) 2020 Contributors to Dynabook Smalltalk.
+Portions of Cuis are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.'! !

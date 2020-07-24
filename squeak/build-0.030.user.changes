@@ -1,0 +1,117 @@
+
+
+----SNAPSHOT----(9 July 2020 15:10:18) build-0.030.image priorSource: 14448238!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:18:34' prior: 50783149 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [Object allSubInstances asArray elementsForwardIdentityTo: (Object allSubInstances collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:18:57' prior: 50783141!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy)]].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:24:13' prior: 50783175!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )]].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:29:18' prior: 50783184!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )]].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:44:53' prior: 50783193!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )]].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 16:08:49' prior: 50783165 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [Object allSubInstances asArray elementsForwardIdentityTo: (Object allSubInstances collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 16:20:39' prior: 50783212 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [Object allSubInstances asArray elementsForwardIdentityTo: (Object allSubInstances collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 16:25:48' prior: 50783222 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [Object allSubInstances asArray elementsForwardIdentityTo: (Object allSubInstances collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:22:43' prior: 50783202!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )]].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:31:24' prior: 50783242!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [theMap _ Object allSubInstances collect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )]].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:37:26' prior: 50783232 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances.
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray
+		]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:39:04' prior: 50783261 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray
+		]].! !
+
+SqueakFreeze class
+	instanceVariableNames: 'enabled theMap disabledObjects'!
+
+!classDefinition: 'SqueakFreeze class' category: #'System-SqueakFreeze' stamp: 'GDK 7/9/2020 17:39:20'!
+SqueakFreeze class
+	instanceVariableNames: 'enabled theMap disabledObjects'!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:39:25'!
+theMap
+	"Answer the value of theMap"
+
+	^ theMap! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:39:25'!
+theMap: anObject
+	"Set the value of theMap"
+
+	theMap _ anObject! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:39:25'!
+disabledObjects
+	"Answer the value of disabledObjects"
+
+	^ disabledObjects! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:39:25'!
+disabledObjects: anObject
+	"Set the value of disabledObjects"
+
+	disabledObjects _ anObject! !
+
+!methodRemoval: SqueakFreeze class #theMap stamp: 'GDK 7/9/2020 17:39:28'!
+theMap
+	"Answer the value of theMap"
+
+	^ theMap!
+
+!methodRemoval: SqueakFreeze class #theMap: stamp: 'GDK 7/9/2020 17:39:34'!
+theMap: anObject
+	"Set the value of theMap"
+
+	theMap _ anObject!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:39:44' prior: 50783304!
+disabledObjects: anObject
+	"Set the value of disabledObjects"
+enabled ifTrue: [^self].
+	disabledObjects _ anObject! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 17:40:17' prior: 50783272 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray
+		]].! !

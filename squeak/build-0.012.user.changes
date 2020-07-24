@@ -1,0 +1,92 @@
+
+
+----STARTUP---- (6 July 2020 09:14:39) as F:\Dbs\src\build-0.012.image!
+
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/6/2020 08:50:39' prior: 50731934 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+super initialize.
+self addMorph: (PluggableButtonMorph model: self action: #debug label: 'Debug')! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/6/2020 08:50:42' prior: 50732026 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+super initialize.
+self addMorph: (PluggableButtonMorph model: self action: #debug label: 'Debug').! !
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/6/2020 09:08:51' prior: 50731701!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent.
+	(self hasProperty: #secureFullScreen) ifTrue: [
+		(self hasProperty: #originalBounds) 
+		ifFalse: [
+			(self valueOfProperty: #secureFullScreen) activateDuring: [:w|
+				| o |
+				o _ self owner.
+				w addMorph: self. 
+				[self hasProperty: #originalBounds] whileFalse: [w doOneCycle].
+				o addMorph: self.
+				].
+			].
+		].! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/6/2020 09:11:39'!
+createCloseButton
+	^ (PluggableButtonMorph model: self action: #delete)
+		icon: Theme current closeIcon;
+		iconName: #drawCloseIcon;
+		setBalloonText: 'close this window';
+		morphExtent: (self withArgs: {} executeMethod: SystemWindow >> #titleBarButtonsExtent)! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/6/2020 09:11:54' prior: 50732078!
+createCloseButton
+	^ (PluggableButtonMorph model: self action: #delete)
+		icon: Theme current closeIcon;
+		iconName: #drawCloseIcon;
+		setBalloonText: 'exit AltDot';
+		morphExtent: (self withArgs: {} executeMethod: SystemWindow >> #titleBarButtonsExtent)! !
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/6/2020 09:42:47' prior: 50732043!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent.
+	(self hasProperty: #secureFullScreen) ifTrue: [
+		(self hasProperty: #originalBounds) 
+		ifTrue: [
+			(self valueOfProperty: #secureFullScreen) activateDuring: [:w|
+				| o |
+				o _ self owner.
+				w addMorph: self. 
+				[self hasProperty: #originalBounds] whileTrue: [w doOneCycle].
+				o addMorph: self.
+				].
+			].
+		].! !

@@ -1,0 +1,397 @@
+
+
+----STARTUP---- (4 July 2020 10:40:11) as F:\Dbs\src\build-0.001.image!
+
+!SystemWindow methodsFor: 'drawing' stamp: 'GDK 7/4/2020 10:41:15' prior: 50337736 overrides: 16790395!
+drawOn: aCanvas
+
+	| titleColor roundCorners |
+
+	titleColor _ self widgetsColor.
+	self isTopWindow
+		ifTrue: [ titleColor _ titleColor lighter ].
+
+[(owner ifNotNil: [:o|o hasTabs] ifNil: [false]) ifTrue: [^self]] on: MessageNotUnderstood do: [:ex|].
+	roundCorners _ Theme current roundWindowCorners.
+	roundCorners
+		ifTrue: [
+			"Round corners. Optional title gradient."
+			self drawRoundedFrameOn: aCanvas color: titleColor ]
+		ifFalse: [
+			"No round corners. No title gradient."
+			self drawClassicFrameOn: aCanvas color: titleColor ].
+	Theme current minimalWindows
+		ifFalse: [
+			labelString ifNotNil: [self drawLabelOn: aCanvas]]! !
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/4/2020 10:08:01' prior: 16926478!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:17:18' prior: 50692089!
+scale: anInteger
+
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:18:40' prior: 50699263!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|
+	s scaleBy: scale / old.
+	].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:20:00' prior: 50699278!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs  do: [:s|
+	s class == UpdatingStringMorph ifTrue: [
+	s scaleBy: scale / old.
+	].
+	].! !
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/4/2020 10:08:01' prior: 50699238!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:17:18' prior: 50699295!
+scale: anInteger
+
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:18:40' prior: 50699336!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|
+	s scaleBy: scale / old.
+	].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:20:00' prior: 50699351!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs  do: [:s|
+	s class == UpdatingStringMorph ifTrue: [
+	s scaleBy: scale / old.
+	].
+	].! !
+!SystemWindow methodsFor: 'tabs' stamp: 'GDK 7/4/2020 10:37:31'!
+hasTabs
+^(self submorphs reject: [:s|(s is: #PluggableButtonMorph )or: [s is: #SystemWindow]]) isEmpty not! !
+!SystemWindow methodsFor: 'tabs' stamp: 'GDK 7/4/2020 10:38:01' prior: 50699384!
+hasTabs
+^(self submorphs reject: [:s|(s is: #PluggableButtonMorph )or: [s is: #SystemWindow]]) isEmpty ! !
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/4/2020 10:08:01' prior: 50699311!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:17:18' prior: 50699368!
+scale: anInteger
+
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:18:40' prior: 50699421!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|
+	s scaleBy: scale / old.
+	].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:20:00' prior: 50699436!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs  do: [:s|
+	s class == UpdatingStringMorph ifTrue: [
+	s scaleBy: scale / old.
+	].
+	].! !
+!SystemWindow methodsFor: 'tabs' stamp: 'GDK 7/4/2020 10:37:31' prior: 50699390!
+hasTabs
+^(self submorphs reject: [:s|(s is: #PluggableButtonMorph )or: [s is: #SystemWindow]]) isEmpty not! !
+!SystemWindow methodsFor: 'tabs' stamp: 'GDK 7/4/2020 10:38:01' prior: 50699469!
+hasTabs
+^(self submorphs reject: [:s|(s is: #PluggableButtonMorph )or: [s is: #SystemWindow]]) isEmpty ! !
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/4/2020 10:08:01' prior: 50699396!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:17:18' prior: 50699453!
+scale: anInteger
+
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:18:40' prior: 50699506!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|
+	s scaleBy: scale / old.
+	].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:20:00' prior: 50699521!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs  do: [:s|
+	s class == UpdatingStringMorph ifTrue: [
+	s scaleBy: scale / old.
+	].
+	].! !
+!SystemWindow methodsFor: 'tabs' stamp: 'GDK 7/4/2020 10:37:31' prior: 50699475!
+hasTabs
+^(self submorphs reject: [:s|(s is: #PluggableButtonMorph )or: [s is: #SystemWindow]]) isEmpty not! !
+!SystemWindow methodsFor: 'tabs' stamp: 'GDK 7/4/2020 10:38:01' prior: 50699554!
+hasTabs
+^(self submorphs reject: [:s|(s is: #PluggableButtonMorph )or: [s is: #SystemWindow]]) isEmpty ! !
+!SystemWindow methodsFor: 'menu' stamp: 'GDK 7/4/2020 10:08:01' prior: 50699481!
+fullScreen
+	"Zoom Window to Full World size with possible DeskMargins"
+
+	"SystemWindow fullScreen"
+
+	| left right possibleBounds |
+	(self hasProperty: #originalBounds)
+		ifFalse: [ "Expand"
+			self setProperty: #originalBounds toValue: self morphBoundsInWorld.
+			left := right := 0.
+			possibleBounds := (RealEstateAgent maximumUsableAreaInWorld: self world) 
+				insetBy: (left @ 0 corner: right @ 0).
+			"possibleBounds := possibleBounds insetBy: Theme current fullScreenDeskMargin"
+		] 
+		ifTrue: [ "Contract"
+			possibleBounds := self valueOfProperty: #originalBounds.
+			self removeProperty: #originalBounds.
+		].
+	self morphPosition: possibleBounds topLeft extent: possibleBounds extent! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:17:18' prior: 50699538!
+scale: anInteger
+
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:18:40' prior: 50699591!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs select: [:s|s class == UpdatingStringMorph] thenDo: [:s|
+	s scaleBy: scale / old.
+	].! !
+!TaskbarMorph methodsFor: 'resize' stamp: 'GDK 7/4/2020 10:20:00' prior: 50699606!
+scale: anInteger
+| old |
+	(anInteger between: 1/2 and: 4) ifFalse: [ self error: 'scale should be 1/2, 1, 2 or 4' ].
+	old _ scale.
+	scale := anInteger.
+	self screenSizeChanged. "rescale self"
+	viewBox ifNotNil: [ "rescale buttons"
+		viewBox submorphs do: [ :button | 
+			button layoutSpec fixedWidth: self defaultHeight
+		]
+	].
+self submorphs  do: [:s|
+	s class == UpdatingStringMorph ifTrue: [
+	s scaleBy: scale / old.
+	].
+	].! !
+!SystemWindow methodsFor: 'tabs' stamp: 'GDK 7/4/2020 10:37:31' prior: 50699560!
+hasTabs
+^(self submorphs reject: [:s|(s is: #PluggableButtonMorph )or: [s is: #SystemWindow]]) isEmpty not! !
+!SystemWindow methodsFor: 'tabs' stamp: 'GDK 7/4/2020 10:38:01' prior: 50699639!
+hasTabs
+^(self submorphs reject: [:s|(s is: #PluggableButtonMorph )or: [s is: #SystemWindow]]) isEmpty ! !
+
+----SNAPSHOT----(4 July 2020 10:42:32) build-0.001.image priorSource: 11758364!
+!Environment methodsFor: 'accessing' stamp: 'GDK 7/4/2020 10:51:11' overrides: 16833313!
+at: key ifAbsent: absentBlock
+^self at: key ifPresent: [:x|x] ifAbsent: absentBlock! !
+
+!classDefinition: #OnBreak category: #'System-Environments' stamp: 'GDK 7/4/2020 10:53:15'!
+Notification subclass: #OnBreak
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+!Environment methodsFor: 'accessing' stamp: 'GDK 7/4/2020 10:52:52' overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: presentBlock ifAbsent: [absentBlock on: OnBreak do: [:ex|self class break: ex]]! !
+!Environment methodsFor: 'accessing' stamp: 'GDK 7/4/2020 10:54:07' prior: 50699667 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: presentBlock ifAbsent: [absentBlock on: OnBreak do: [:ex|self class break: ex. ex pass]]! !
+!Environment methodsFor: 'accessing' stamp: 'GDK 7/4/2020 10:54:31' prior: 50699676 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: presentBlock ifAbsent: [absentBlock on: OnBreak do: [:ex|ex resumeUnchecked: (self class break: ex outer)]]! !
+!SystemDictionary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 10:55:32' overrides: 16833313!
+at: key ifAbsent: absentBlock
+^self at: key ifPresent: [:x|x] ifAbsent: absentBlock! !
+!SystemDictionary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 10:55:52' overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+OnBreak signal.
+^super at: key ifPresent: presentBlock ifAbsent: absentBlock! !

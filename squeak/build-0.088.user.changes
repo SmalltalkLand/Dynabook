@@ -1,0 +1,96 @@
+
+
+----SNAPSHOT----(24 July 2020 09:15:03) build-0.088.image priorSource: 15873993!
+
+!classRenamed: #Sound as: #SoundLike stamp: 'GDK 7/24/2020 09:16:27'!
+Smalltalk renameClassNamed: #Sound as: #SoundLike!
+
+SoundLike subclass: #AbstractSound
+	instanceVariableNames: 'envelopes mSecsSinceStart samplesUntilNextControl scaledVol scaledVolIncr scaledVolLimit'
+	classVariableNames: 'FloatScaleFactor MaxScaledValue PitchesForBottomOctave ScaleFactor Sounds TopOfBottomOctave UnloadedSnd'
+	poolDictionaries: ''
+	category: 'Sound-Synthesis'!
+
+SoundLike subclass: #AbstractSound
+	instanceVariableNames: 'envelopes mSecsSinceStart samplesUntilNextControl scaledVol scaledVolIncr scaledVolLimit'
+	classVariableNames: 'FloatScaleFactor MaxScaledValue PitchesForBottomOctave ScaleFactor Sounds TopOfBottomOctave UnloadedSnd'
+	poolDictionaries: ''
+	category: 'Sound-Synthesis'!
+
+AudioObject subclass: #SoundLike
+	instanceVariableNames: 'bufferIndex'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #SoundLike category: #Audio stamp: 'GDK 7/24/2020 09:17:10'!
+AudioObject subclass: #SoundLike
+	instanceVariableNames: 'bufferIndex'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!SoundLike methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:17:49' prior: 50827726 overrides: 50813821!
+emit: val
+| v2 oi |
+oi _ bufferIndex.
+v2 _ super emit: (self buffer at: (bufferIndex _ (bufferIndex + 1) mod: self buffer size)).
+bufferIndex < oi ifTrue: [self triggerEvent: #iterated].
+^v2
+! !
+
+SoundLike subclass: #AbstractSound
+	instanceVariableNames: 'envelopes mSecsSinceStart samplesUntilNextControl scaledVol scaledVolIncr scaledVolLimit'
+	classVariableNames: 'FloatScaleFactor MaxScaledValue PitchesForBottomOctave ScaleFactor Sounds TopOfBottomOctave UnloadedSnd'
+	poolDictionaries: ''
+	category: 'Sound-Synthesis'!
+
+AudioObject subclass: #SoundLike
+	instanceVariableNames: 'playingBufferIndex'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #SoundLike category: #Audio stamp: 'GDK 7/24/2020 09:18:46'!
+AudioObject subclass: #SoundLike
+	instanceVariableNames: 'playingBufferIndex'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!SoundLike methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:19:19' prior: 50842934 overrides: 50813821!
+emit: val
+| v2 oi |
+oi _ playingBufferIndex.
+v2 _ super emit: (self buffer at: (playingBufferIndex _ (playingBufferIndex + 1) mod: self buffer size)).
+playingBufferIndex < oi ifTrue: [self triggerEvent: #iterated].
+^v2
+! !
+
+SoundLike subclass: #AbstractSound
+	instanceVariableNames: 'envelopes mSecsSinceStart samplesUntilNextControl scaledVol scaledVolIncr scaledVolLimit'
+	classVariableNames: 'FloatScaleFactor MaxScaledValue PitchesForBottomOctave ScaleFactor Sounds TopOfBottomOctave UnloadedSnd'
+	poolDictionaries: ''
+	category: 'Sound-Synthesis'!
+
+!classDefinition: #AbstractSound category: #'Sound-Synthesis' stamp: 'GDK 7/24/2020 09:19:30'!
+SoundLike subclass: #AbstractSound
+	instanceVariableNames: 'envelopes mSecsSinceStart samplesUntilNextControl scaledVol scaledVolIncr scaledVolLimit'
+	classVariableNames: 'FloatScaleFactor MaxScaledValue PitchesForBottomOctave ScaleFactor Sounds TopOfBottomOctave UnloadedSnd'
+	poolDictionaries: ''
+	category: 'Sound-Synthesis'!
+!SoundPlayer class methodsFor: 'accessing' stamp: 'GDK 7/24/2020 09:23:10'!
+buffer
+^Buffer! !
+!AbstractSound class methodsFor: 'utilities' stamp: 'GDK 7/24/2020 09:23:25'!
+buffer
+	| aSound buf totalSamples |
+	totalSamples _ SoundPlayer buffer stereoSampleCount * 2.  "two buffer's worth"
+	buf _ SoundBuffer newStereoSampleCount: totalSamples.
+	aSound playSampleCount: totalSamples into: buf startingAt: 1.
+	^buf! !
+!AbstractSound class methodsFor: 'utilities' stamp: 'GDK 7/24/2020 09:23:37' prior: 50843002!
+buffer
+	| buf totalSamples |
+	totalSamples _ SoundPlayer buffer stereoSampleCount * 2.  "two buffer's worth"
+	buf _ SoundBuffer newStereoSampleCount: totalSamples.
+	self playSampleCount: totalSamples into: buf startingAt: 1.
+	^buf! !

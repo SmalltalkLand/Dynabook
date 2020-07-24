@@ -1,0 +1,72 @@
+
+
+----SNAPSHOT----(9 July 2020 13:59:18) build-0.029.image priorSource: 14439704!
+!JSProtoCloner class methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 14:17:05' prior: 50783073 overrides: 50783013!
+setProto: obj toValue: v
+(self toJS: obj) __proto__: (self toJS: v).! !
+!JSProtoCloner class methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 14:59:12' prior: 50783082 overrides: 50783013!
+setProto: obj toValue: v
+(self toJS: obj) __proto__: (self toJS: v).! !
+
+Object subclass: #SqueakFreeze
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-SqueakFreeze'!
+
+!classDefinition: #SqueakFreeze category: #'System-SqueakFreeze' stamp: 'GDK 7/9/2020 15:02:09'!
+Object subclass: #SqueakFreeze
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-SqueakFreeze'!
+
+SqueakFreeze class
+	instanceVariableNames: 'enabled theMap'!
+
+!classDefinition: 'SqueakFreeze class' category: #'System-SqueakFreeze' stamp: 'GDK 7/9/2020 15:02:17'!
+SqueakFreeze class
+	instanceVariableNames: 'enabled theMap'!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:02:21'!
+enabled
+	"Answer the value of enabled"
+
+	^ enabled! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:02:21'!
+enabled: anObject
+	"Set the value of enabled"
+
+	enabled _ anObject! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:02:21'!
+theMap
+	"Answer the value of theMap"
+
+	^ theMap! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:02:21'!
+theMap: anObject
+	"Set the value of theMap"
+
+	theMap _ anObject! !
+
+!methodRemoval: SqueakFreeze class #theMap stamp: 'GDK 7/9/2020 15:02:24'!
+theMap
+	"Answer the value of theMap"
+
+	^ theMap!
+
+!methodRemoval: SqueakFreeze class #theMap: stamp: 'GDK 7/9/2020 15:02:28'!
+theMap: anObject
+	"Set the value of theMap"
+
+	theMap _ anObject!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:07:03' prior: 50783118!
+enabled: anObject
+	"Set the value of enabled"
+anObject ifTrue: [theMap _ Object allSubInstances collect: [:i|i -> ([i shallowCopy])]].
+	enabled _ anObject.! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 15:09:55' overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [Object allSubInstances asArray elementsForwardIdentityTo: (Object allSubInstances collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray]].! !
+
+----SNAPSHOT----(9 July 2020 15:10:08) build-0.029.image priorSource: 14445671!

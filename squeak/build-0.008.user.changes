@@ -1,0 +1,27 @@
+
+
+----STARTUP---- (4 July 2020 18:34:08) as F:\Dbs\src\build-0.008.image!
+
+
+Object subclass: #SecureWorld
+	instanceVariableNames: 'world'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-SecureWorld'!
+
+!classDefinition: #SecureWorld category: #'System-SecureWorld' stamp: 'GDK 7/5/2020 09:57:52'!
+Object subclass: #SecureWorld
+	instanceVariableNames: 'world'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-SecureWorld'!
+!SecureWorld methodsFor: 'no messages' stamp: 'GDK 7/5/2020 09:58:32' overrides: 16896425!
+initialize.
+super initialize.
+world _ PasteUpMorph new.
+world worldState: self runningWorld worldState.! !
+!SecureWorld methodsFor: 'as yet unclassified' stamp: 'GDK 7/5/2020 09:59:09' prior: 50731186 overrides: 16896425!
+initialize.
+super initialize.
+world _ PasteUpMorph new.
+world worldState: (self runningWorld instVarNamed: 'worldState').! !

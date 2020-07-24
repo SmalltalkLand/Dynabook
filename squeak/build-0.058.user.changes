@@ -1,0 +1,118 @@
+
+
+----STARTUP---- (18 July 2020 16:39:03) as F:\Dbs\squeak\build-0.058.image!
+
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 17:24:16' prior: 50792433!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^
+'
+Portions of Dynabook Smalltalk are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.
+Copyright (c) Contributors to Dynabook Smalltalk 2020' , s, '
+Dynabook Smalltalk is licensed using the GPLv3+ license.
+Evaluate "Utilities license" to get the license.
+'! !
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 17:25:54' prior: 50802843!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]) concatenation ,' ',Date today year.
+	^
+'
+Portions of Dynabook Smalltalk are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.
+Copyright (c) Contributors to Dynabook Smalltalk 2020' , s, '
+Dynabook Smalltalk is licensed using the GPLv3+ license.
+Evaluate "Utilities license" to get the license.
+'! !
+
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Squit'!
+
+!classDefinition: #SITSnapshotter category: #Squit stamp: 'GDK 7/18/2020 17:27:40'!
+Object subclass: #SITSnapshotter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Squit'!
+!SITSnapshotter methodsFor: 'no messages' stamp: 'GDK 7/18/2020 17:30:21'!
+snapshot
+^(Object allSubInstances select: [:i|
+	| nv |
+	nv _ true.
+	i triggerEvent: #squitMark with: [:v|nv _ v].
+	nv
+	]) collect: [:i|i shallowCopy when: #squitMark send: #value: to: [:b|b value: false]]! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:32:15'!
+restore: snapshot! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:32:32' prior: 50802899!
+snapshot
+^(Object allSubInstances select: [:i|
+	| nv |
+	nv _ true.
+	i triggerEvent: #squitMark with: [:v|nv _ v].
+	nv
+	]) collect: [:i|i -> (i shallowCopy when: #squitMark send: #value: to: [:b|b value: false];yourself)]! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:32:38' prior: 50802909!
+restore: snapshot
+! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:32:52' prior: 50802913!
+snapshot
+^((Object allSubInstances select: [:i|
+	| nv |
+	nv _ true.
+	i triggerEvent: #squitMark with: [:v|nv _ v].
+	nv
+	]) collect: [:i|i -> (i shallowCopy when: #squitMark send: #value: to: [:b|b value: false];yourself)]) asDictionary! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:33:37' prior: 50802924!
+restore: snapshot
+snapshot values! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:33:52' prior: 50802939!
+restore: snapshot
+snapshot values do: [:i|].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:36:09' prior: 50802944!
+restore: snapshot
+snapshot values do: [:i|i removeActionsForEvent: #squit].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:36:16' prior: 50802949!
+restore: snapshot
+snapshot values do: [:i|i removeActionsForEvent: #squitMark].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:36:49' prior: 50802955!
+restore: snapshot
+snapshot values do: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:39:12' prior: 50802961!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:49:14' prior: 50802969!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 17:55:50' prior: 50802977!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:02:31' prior: 50802928!
+snapshot
+^((Object allSubInstances select: [:i|
+	| nv |
+	nv _ true.
+	i triggerEvent: #squitMark with: [:v|nv _ v].
+	nv
+	]) collect: [:i|
+	| bp |
+	bp _ [:b|b value: false].
+	bp when: #squitMark send: #value: to: bp.
+	(i -> (i shallowCopy when: #squitMark send: #value: to: bp;yourself)) when: #squitMark send: #value: to: bp;yourself]) asDictionary! !

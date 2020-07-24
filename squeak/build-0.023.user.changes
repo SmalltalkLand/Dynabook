@@ -1,0 +1,274 @@
+
+
+----STARTUP---- (8 July 2020 16:18:21) as F:\Dbs\src\build-0.023.image!
+
+!Environment methodsFor: 'as yet unclassified' stamp: 'GDK 7/8/2020 14:29:04' prior: 50781118 overrides: 50780285!
+fromCodePackage: aCodePackage
+	"Convert from an already filed in Feature/Package.
+	 Answer a new Environment."
+	
+	| pkgReqNames otherEnironments |
+	packageName := aCodePackage packageName.
+	name := packageName asEnvironmentName asSymbol.
+	"The basic difference is registration of Classes; remove Classes from Smalltalk"
+	aCodePackage classesDo: [ :cls |
+		self declare: cls name from: Smalltalk. "transfer association"
+		cls addSharedPool:  self. "Add me to my Classes shared pool"
+	].
+	"Any requirement which is an Environment should be added to my Classes shared pools"
+	pkgReqNames := self requirementNamesFromCodePackage: aCodePackage.
+	otherEnironments := OrderedCollection new.
+	pkgReqNames do: [ :pkgName | | possibleEnvironment |
+		possibleEnvironment := Smalltalk at: pkgName asEnvironmentName asSymbol
+											ifAbsent: [nil].
+		(possibleEnvironment is: #HookDictionary)
+			ifTrue: [ otherEnironments addLast: possibleEnvironment ]
+	].
+	(otherEnironments size > 0) ifTrue: [
+		self classesDo: [ :aClass |
+			otherEnironments do: [ :env | aClass addSharedPool: (HookDictionaryUserProxy new xxxdict: env;yourself)]
+		]
+	].
+	self classesDo: [ :aClass |
+			(aClass environmentsExportMe) ifTrue: [ Smalltalk at: aClass name put: aClass ]
+	].
+	Smalltalk at: name put: self.
+	self at: #Pools put: {(HookDictionaryUserProxy new xxxdict: Smalltalk;yourself)}.
+	CodeWindow allSubInstancesDo: [ :b | b updateListsAndCode ] "Keep UI up to date"
+! !
+!Environment methodsFor: 'as yet unclassified' stamp: 'GDK 7/8/2020 14:34:11' prior: 50781486 overrides: 50780285!
+fromCodePackage: aCodePackage
+	"Convert from an already filed in Feature/Package.
+	 Answer a new Environment."
+	
+	| pkgReqNames otherEnironments |
+	packageName := aCodePackage packageName.
+	name := packageName asEnvironmentName asSymbol.
+	"The basic difference is registration of Classes; remove Classes from Smalltalk"
+	aCodePackage classesDo: [ :cls |
+		self declare: cls name from: Smalltalk. "transfer association"
+		cls addSharedPool:  self. "Add me to my Classes shared pool"
+	].
+	"Any requirement which is an Environment should be added to my Classes shared pools"
+	pkgReqNames := self requirementNamesFromCodePackage: aCodePackage.
+	otherEnironments := OrderedCollection new.
+	pkgReqNames do: [ :pkgName | | possibleEnvironment |
+		possibleEnvironment := Smalltalk at: pkgName asEnvironmentName asSymbol
+											ifAbsent: [nil].
+		(possibleEnvironment is: #HookDictionary)
+			ifTrue: [ otherEnironments addLast: possibleEnvironment ]
+	].
+	(otherEnironments size > 0) ifTrue: [
+		self classesDo: [ :aClass |
+			otherEnironments do: [ :env | aClass addSharedPool: (HookDictionaryUserProxy new xxxdict: env;yourself)]
+		]
+	].
+	self classesDo: [ :aClass |
+			(aClass environmentsExportMe) ifTrue: [ Smalltalk at: aClass name put: aClass ]
+	].
+	Smalltalk at: name put: self.
+	self at: #Pools put: {(HookDictionaryUserProxy new xxxdict: Smalltalk;yourself)}.
+	CodeWindow allSubInstancesDo: [ :b | b updateListsAndCode ] "Keep UI up to date"
+! !
+!Environment methodsFor: 'as yet unclassified' stamp: 'GDK 7/8/2020 14:40:11' prior: 50781535 overrides: 50780285!
+fromCodePackage: aCodePackage
+	"Convert from an already filed in Feature/Package.
+	 Answer a new Environment."
+	
+	| pkgReqNames otherEnironments |
+	packageName := aCodePackage packageName.
+	name := packageName asEnvironmentName asSymbol.
+	"The basic difference is registration of Classes; remove Classes from Smalltalk"
+	aCodePackage classesDo: [ :cls |
+		self declare: cls name from: Smalltalk. "transfer association"
+		cls addSharedPool:  self. "Add me to my Classes shared pool"
+	].
+	"Any requirement which is an Environment should be added to my Classes shared pools"
+	pkgReqNames := self requirementNamesFromCodePackage: aCodePackage.
+	otherEnironments := OrderedCollection new.
+	pkgReqNames do: [ :pkgName | | possibleEnvironment |
+		possibleEnvironment := Smalltalk at: pkgName asEnvironmentName asSymbol
+											ifAbsent: [nil].
+		(possibleEnvironment is: #HookDictionary)
+			ifTrue: [ otherEnironments addLast: possibleEnvironment ]
+	].
+	(otherEnironments size > 0) ifTrue: [
+		self classesDo: [ :aClass |
+			otherEnironments do: [ :env | aClass addSharedPool: (HookDictionaryUserProxy new xxxdict: env;yourself)]
+		]
+	].
+	self classesDo: [ :aClass |
+			(aClass environmentsExportMe) ifTrue: [ Smalltalk at: aClass name put: aClass ]
+	].
+	Smalltalk at: name put: self.
+	self at: #Pools put: {(HookDictionaryUserProxy new xxxdict: Smalltalk;yourself)}.
+	CodeWindow allSubInstancesDo: [ :b | b updateListsAndCode ] "Keep UI up to date"
+! !
+
+!methodRemoval: HookDictionary #fromCodePackage: stamp: 'GDK 7/8/2020 16:18:34'!
+fromCodePackage: aCodePackage
+	"Convert from an already filed in Feature/Package.
+	 Answer a new Environment."
+	
+	| pkgReqNames otherEnironments |
+	packageName := aCodePackage packageName.
+	name := packageName asEnvironmentName asSymbol.
+	"The basic difference is registration of Classes; remove Classes from Smalltalk"
+	aCodePackage classesDo: [ :cls |
+		self declare: cls name from: Smalltalk. "transfer association"
+		cls addSharedPool: self. "Add me to my Classes shared pool"
+	].
+	"Any requirement which is an Environment should be added to my Classes shared pools"
+	pkgReqNames := self requirementNamesFromCodePackage: aCodePackage.
+	otherEnironments := OrderedCollection new.
+	pkgReqNames do: [ :pkgName | | possibleEnvironment |
+		possibleEnvironment := Smalltalk at: pkgName asEnvironmentName asSymbol
+											ifAbsent: [nil].
+		(possibleEnvironment is: #HookDictionary)
+			ifTrue: [ otherEnironments addLast: possibleEnvironment ]
+	].
+	(otherEnironments size > 0) ifTrue: [
+		self classesDo: [ :aClass |
+			otherEnironments do: [ :env | aClass addSharedPool: env]
+		]
+	].
+	self classesDo: [ :aClass |
+			(aClass environmentsExportMe) ifTrue: [ Smalltalk at: aClass name put: aClass ]
+	].
+	Smalltalk at: name put: self.
+	CodeWindow allSubInstancesDo: [ :b | b updateListsAndCode ] "Keep UI up to date"
+!
+!Environment methodsFor: 'as yet unclassified' stamp: 'GDK 7/8/2020 15:44:47' prior: 50781584!
+fromCodePackage: aCodePackage
+	"Convert from an already filed in Feature/Package.
+	 Answer a new Environment."
+	
+	| pkgReqNames otherEnironments |
+	packageName := aCodePackage packageName.
+	name := packageName asEnvironmentName asSymbol.
+	"The basic difference is registration of Classes; remove Classes from Smalltalk"
+	aCodePackage classesDo: [ :cls |
+		self declare: cls name from: Smalltalk. "transfer association"
+		cls addSharedPool:  self. "Add me to my Classes shared pool"
+	].
+	"Any requirement which is an Environment should be added to my Classes shared pools"
+	pkgReqNames := self requirementNamesFromCodePackage: aCodePackage.
+	otherEnironments := OrderedCollection new.
+	pkgReqNames do: [ :pkgName | | possibleEnvironment |
+		possibleEnvironment := Smalltalk at: pkgName asEnvironmentName asSymbol
+											ifAbsent: [nil].
+		(possibleEnvironment is: #HookDictionary)
+			ifTrue: [ otherEnironments addLast: possibleEnvironment ]
+	].
+	(otherEnironments size > 0) ifTrue: [
+		self classesDo: [ :aClass |
+			otherEnironments do: [ :env | aClass addSharedPool: (HookDictionaryUserProxy new xxxdict: env;yourself)]
+		]
+	].
+	self classesDo: [ :aClass |
+			(aClass environmentsExportMe) ifTrue: [ Smalltalk at: aClass name put: aClass ]
+	].
+	Smalltalk at: name put: self.
+	self at: #Pools put: {(HookDictionaryUserProxy new xxxdict: Smalltalk;yourself)}.
+	CodeWindow allSubInstancesDo: [ :b | b updateListsAndCode ] "Keep UI up to date"
+! !
+!Environment methodsFor: 'as yet unclassified' stamp: 'GDK 7/8/2020 15:49:55' prior: 50781676!
+fromCodePackage: aCodePackage
+	"Convert from an already filed in Feature/Package.
+	 Answer a new Environment."
+	
+	| pkgReqNames otherEnironments |
+	packageName := aCodePackage packageName.
+	name := packageName asEnvironmentName asSymbol.
+	"The basic difference is registration of Classes; remove Classes from Smalltalk"
+	aCodePackage classesDo: [ :cls |
+		self declare: cls name from: Smalltalk. "transfer association"
+		cls addSharedPool:  self. "Add me to my Classes shared pool"
+	].
+	"Any requirement which is an Environment should be added to my Classes shared pools"
+	pkgReqNames := self requirementNamesFromCodePackage: aCodePackage.
+	otherEnironments := OrderedCollection new.
+	pkgReqNames do: [ :pkgName | | possibleEnvironment |
+		possibleEnvironment := Smalltalk at: pkgName asEnvironmentName asSymbol
+											ifAbsent: [nil].
+		(possibleEnvironment is: #HookDictionary)
+			ifTrue: [ otherEnironments addLast: possibleEnvironment ]
+	].
+	(otherEnironments size > 0) ifTrue: [
+		self classesDo: [ :aClass |
+			otherEnironments do: [ :env | aClass addSharedPool: (HookDictionaryUserProxy new xxxdict: env;yourself)]
+		]
+	].
+	self classesDo: [ :aClass |
+			(aClass environmentsExportMe) ifTrue: [ Smalltalk at: aClass name put: aClass ]
+	].
+	Smalltalk at: name put: self.
+	self at: #Pools put: {(HookDictionaryUserProxy new xxxdict: Smalltalk;yourself)}.
+	CodeWindow allSubInstancesDo: [ :b | b updateListsAndCode ] "Keep UI up to date"! !
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 16:17:22'!
+isRecovery
+^false! !
+
+----SNAPSHOT----(8 July 2020 16:18:59) build-0.023.image priorSource: 14384489!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 16:19:02' prior: 50780879 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: [:v|presentBlock value: (EnvironmentUserMode signal isNil ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [[[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	]! !
+
+Number!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 16:19:31' prior: 50781780 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil or: [self isRecovery]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [[[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	]! !
+
+Number!
+
+IdentityDictionary subclass: #HookDictionary
+	instanceVariableNames: 'copyDict'
+	classVariableNames: 'EnvironmentUserMode OnBreakEnvironmentBoundary Recovery'
+	poolDictionaries: ''
+	category: 'System-Environments'!
+
+!classDefinition: #HookDictionary category: #'System-Environments' stamp: 'GDK 7/8/2020 16:20:09'!
+IdentityDictionary subclass: #HookDictionary
+	instanceVariableNames: 'copyDict'
+	classVariableNames: 'EnvironmentUserMode OnBreakEnvironmentBoundary Recovery'
+	poolDictionaries: ''
+	category: 'System-Environments'!
+!HookDictionary class methodsFor: 'instance creation' stamp: 'GDK 7/8/2020 16:20:42' prior: 50780207!
+initializeClassVars
+EnvironmentUserMode _ Smalltalk at: #EnvironmentUserMode.
+OnBreakEnvironmentBoundary _ Smalltalk at: #OnBreakEnvironmentBoundary.
+Recovery _ Environment newNamed: 'System-Recovery1'.! !
+!Environment methodsFor: 'as yet unclassified' stamp: 'GDK 7/8/2020 16:22:52' overrides: 50781773!
+isRecovery
+^name beginsWith: 'SystemRecovery'! !
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 16:23:57' prior: 50781802 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+(self == Recovery) ifFalse: [Recovery ifNotNil: [Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+^super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil or: [self isRecovery]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [[[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	]! !
+
+Class!
+
+----SNAPSHOT----(8 July 2020 16:24:34) build-0.023.image priorSource: 14404020!
+
+HookDictionary initializeClassVars!
+!HookDictionary class methodsFor: 'instance creation' stamp: 'GDK 7/8/2020 16:25:05' prior: 50698397!
+newNamed: aString
+	"Answer a new Environment with packageName aString and enter into Smalltalk"
+	| envName newEnv |
+	envName := aString asEnvironmentName ifNil: [^ self error: 'invalid environment name'].
+	(Smalltalk includesKey: envName asSymbol) ifTrue: [^ self error: 'global ', envName, 'already exists'].
+	newEnv := self new name: envName asSymbol packageName: aString.
+	^ Smalltalk at: envName put: newEnv! !
+
+Number!
+
+Class!

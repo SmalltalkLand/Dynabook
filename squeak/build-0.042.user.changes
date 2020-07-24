@@ -1,0 +1,28 @@
+
+
+----STARTUP---- (15 July 2020 07:04:28) as F:\Dbs\squeak\build-0.042.image!
+
+!Domain class methodsFor: 'as yet unclassified' stamp: 'GDK 7/15/2020 07:13:57' prior: 50786019!
+forcesInputMethod: i
+^self allExisting inject: false into: [:o :v|o or: [v forcesInputMethod: i]]! !
+!Domain class methodsFor: 'as yet unclassified' stamp: 'GDK 7/15/2020 07:22:47' prior: 50786048!
+forcesInputMethod: i
+^self allExisting inject: false into: [:o :v|o or: [v forcesInputMethod: i]]! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/15/2020 07:32:14' prior: 50785912!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'. '.()'. '^[]'. ' '} collect: [:str|
+	i _ 1.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i - 1.
+				self emitIt: c.
+				i _ 1]. str2 _ str. [|ci |ci _ i.(Delay forMilliseconds: 750) wait. (str2 = str and: [ci = 1]) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value label: str
+	], {PluggableButtonMorph model: [capital _ capital not] action: #value label: '^'}.
+buttons do: [:b|self addMorph: b].! !
+!VirtualKeyboard class methodsFor: 'no messages' stamp: 'GDK 7/15/2020 07:35:12'!
+startTickler
+[[[UISupervisor ui ifNotNil: [:w|self allSubInstancesDo: [:i|i world == w ifFalse: [UISupervisor whenUIinSafeState: [w addMorph: i]]]]] repeat] ]fork! !

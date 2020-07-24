@@ -1,0 +1,90 @@
+
+
+----SNAPSHOT----(6 July 2020 09:43:03) build-0.013.image priorSource: 12809310!
+
+Object subclass: #Project
+	instanceVariableNames: 'world'
+	classVariableNames: 'Current'
+	poolDictionaries: ''
+	category: 'Projects'!
+
+!classDefinition: #Project category: #Projects stamp: 'GDK 7/6/2020 09:58:59'!
+Object subclass: #Project
+	instanceVariableNames: 'world'
+	classVariableNames: 'Current'
+	poolDictionaries: ''
+	category: 'Projects'!
+!Project methodsFor: 'accessing' stamp: 'GDK 7/6/2020 09:59:10'!
+world
+	"Answer the value of world"
+
+	^ world! !
+!Project methodsFor: 'accessing' stamp: 'GDK 7/6/2020 09:59:10'!
+world: anObject
+	"Set the value of world"
+
+	world _ anObject! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 10:01:25' overrides: 16896425!
+initialize
+super initialize.
+world _ PasteUpMorph new.
+world worldState: ((Current ifNotNil: [:c|c world] ifNil: [|w |UISupervisor whenUIinSafeState: [w _ self runningWorld]. [w] whileNil: []. w]) instVarNamed: #worldState) shallowCopy! !
+
+----SNAPSHOT----(6 July 2020 10:01:30) build-0.013.image priorSource: 12815519!
+
+Object subclass: #Project
+	instanceVariableNames: 'world initials name'
+	classVariableNames: 'Current'
+	poolDictionaries: ''
+	category: 'Projects'!
+
+!classDefinition: #Project category: #Projects stamp: 'GDK 7/6/2020 10:09:40'!
+Object subclass: #Project
+	instanceVariableNames: 'world initials name'
+	classVariableNames: 'Current'
+	poolDictionaries: ''
+	category: 'Projects'!
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 10:10:05' prior: 50732158 overrides: 16896425!
+initialize
+super initialize.
+world _ PasteUpMorph new.
+world worldState: ((Current ifNotNil: [:c|c world] ifNil: [|w |UISupervisor whenUIinSafeState: [w _ self runningWorld]. [w] whileNil: []. w]) instVarNamed: #worldState) shallowCopy.
+initials _ Utilities authorInitials.
+name _ Utilities authorName.! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 10:11:36'!
+enter
+{(Current ifNil: [Current _ Project new]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}! !
+
+----SNAPSHOT----(6 July 2020 10:11:39) build-0.013.image priorSource: 12816558!
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 10:31:16' prior: 50732196!
+enter
+{(Current ifNil: [Current _ Project new]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}.! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 10:32:15' prior: 50732207!
+enter
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}.! !
+!Project methodsFor: 'accessing' stamp: 'GDK 7/6/2020 11:11:59'!
+initials
+	"Answer the value of initials"
+
+	^ initials! !
+!Project methodsFor: 'accessing' stamp: 'GDK 7/6/2020 11:11:59'!
+initials: anObject
+	"Set the value of initials"
+
+	initials _ anObject! !
+!Project methodsFor: 'accessing' stamp: 'GDK 7/6/2020 11:11:59'!
+name: anObject
+	"Set the value of name"
+
+	name _ anObject! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 11:52:08' prior: 50732216!
+enter
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}.! !
+
+----SNAPSHOT----(6 July 2020 12:02:50) build-0.013.image priorSource: 12817714!
+
+----End fileIn of F:\Dbs\src\4253-AutoCompleterNotSmalltalkSpecific-JuanVuletich-2020Jul06-09h21m-jmv.001.cs.st----!
+
+Smalltalk!

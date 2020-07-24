@@ -1,0 +1,111 @@
+
+
+----STARTUP---- (23 July 2020 16:02:42) as F:\dynabook\squeak\build-0.085.image!
+
+
+Object subclass: #Pipe
+	instanceVariableNames: 'source traget'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Pipes'!
+
+!classDefinition: #Pipe category: #Pipes stamp: 'GDK 7/23/2020 17:10:23'!
+Object subclass: #Pipe
+	instanceVariableNames: 'source traget'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Pipes'!
+
+Object subclass: #Pipe
+	instanceVariableNames: 'source target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Pipes'!
+
+!classDefinition: #Pipe category: #Pipes stamp: 'GDK 7/23/2020 17:10:27'!
+Object subclass: #Pipe
+	instanceVariableNames: 'source target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Pipes'!
+!Pipe methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:10:32'!
+source
+	"Answer the value of source"
+
+	^ source! !
+!Pipe methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:10:32'!
+source: anObject
+	"Set the value of source"
+
+	source _ anObject! !
+!Pipe methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:10:32'!
+target
+	"Answer the value of target"
+
+	^ target! !
+!Pipe methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:10:32'!
+target: anObject
+	"Set the value of target"
+
+	target _ anObject! !
+!Pipe class methodsFor: 'no messages' stamp: 'GDK 7/23/2020 17:10:58'!
+sFor: val
+^self allSubInstances select: [:i|i source == val]! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:11:32' overrides: 50690694!
+delete
+super delete.
+self triggerEvent: #eDelete.! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:13:16' overrides: 16876016!
+acceptDroppingMorph: aMorph event: evt
+	"This message is sent when a morph is dropped onto a morph that has agreed to accept the dropped morph by responding 'true' to the wantsDroppedMorph:Event: message. This default implementation just adds the given morph to the receiver."
+	
+	^super acceptDroppingMorph: aMorph event: evt! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:13:53' prior: 50813642 overrides: 16876016!
+acceptDroppingMorph: aMorph event: evt
+	"This message is sent when a morph is dropped onto a morph that has agreed to accept the dropped morph by responding 'true' to the wantsDroppedMorph:Event: message. This default implementation just adds the given morph to the receiver."
+	(aMorph class == self class) ifTrue: [self when.].
+	^super acceptDroppingMorph: aMorph event: evt! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:15:09' prior: 50813656 overrides: 16876016!
+acceptDroppingMorph: aMorph event: evt
+	"This message is sent when a morph is dropped onto a morph that has agreed to accept the dropped morph by responding 'true' to the wantsDroppedMorph:Event: message. This default implementation just adds the given morph to the receiver."
+	(aMorph class == self class) ifTrue: [self when: #eDelete send: #becomeForward: to: (Pipe new source: self target ;target: aMorph target;yourself) with: nil.].
+	^super acceptDroppingMorph: aMorph event: evt! !
+!Inspector methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:16:15'!
+object
+^object! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:16:32' prior: 50813672 overrides: 16876016!
+acceptDroppingMorph: aMorph event: evt
+	"This message is sent when a morph is dropped onto a morph that has agreed to accept the dropped morph by responding 'true' to the wantsDroppedMorph:Event: message. This default implementation just adds the given morph to the receiver."
+	(aMorph class == self class) ifTrue: [self when: #eDelete send: #becomeForward: to: (Pipe new source: self model object ;target: aMorph model object;yourself) with: nil.].
+	^super acceptDroppingMorph: aMorph event: evt! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:17:03' overrides: 16874409!
+wantsDroppedMorph: aMorph event: evt
+	"This message is sent when a morph is dropped onto a morph that has agreed to accept the dropped morph by responding 'true' to the wantsDroppedMorph:Event: message. This default implementation just adds the given morph to the receiver."
+	(aMorph class == self class) ifTrue: [^true].
+	^super wantsDroppedMorph: aMorph event: evt! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:18:14' overrides: 50700091!
+wantsToBeDroppedInto: aMorph
+	"This message is sent when a morph is dropped onto a morph that has agreed to accept the dropped morph by responding 'true' to the wantsDroppedMorph:Event: message. This default implementation just adds the given morph to the receiver."
+	(aMorph class == self class) ifTrue: [^true].
+	^super wantsToBeDroppedInto: aMorph! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:33:02' prior: 50813728 overrides: 50700091!
+wantsToBeDroppedInto: aMorph
+	"This message is sent when a morph is dropped onto a morph that has agreed to accept the dropped morph by responding 'true' to the wantsDroppedMorph:Event: message. This default implementation just adds the given morph to the receiver."
+	(aMorph class == self class) ifTrue: [^true].
+	^super wantsToBeDroppedInto: aMorph! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 17:38:42' prior: 50813743 overrides: 50700091!
+wantsToBeDroppedInto: aMorph
+	"This message is sent when a morph is dropped onto a morph that has agreed to accept the dropped morph by responding 'true' to the wantsDroppedMorph:Event: message. This default implementation just adds the given morph to the receiver."
+	(aMorph class == self class) ifTrue: [^true].
+	^super wantsToBeDroppedInto: aMorph! !
+!Pipe class methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 18:01:47' prior: 50813632!
+sFor: val
+^(self allSubInstances select: [:i|i source == val]) collect: [:x|x target]! !
+!Pipe class methodsFor: 'as yet unclassified' stamp: 'GDK 7/23/2020 18:14:16' prior: 50813773!
+sFor: val
+^(self allSubInstances select: [:i|i source == val]) collect: [:x|x target]! !
+!InspectorWindow methodsFor: 'accessing' stamp: 'GDK 7/23/2020 20:31:42' prior: 50813758 overrides: 50700091!
+wantsToBeDroppedInto: aMorph
+	"This message is sent when a morph is dropped onto a morph that has agreed to accept the dropped morph by responding 'true' to the wantsDroppedMorph:Event: message. This default implementation just adds the given morph to the receiver."
+	(aMorph class == self class) ifTrue: [^true].
+	^super wantsToBeDroppedInto: aMorph! !

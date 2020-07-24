@@ -1,0 +1,184 @@
+
+
+----STARTUP---- (22 July 2020 17:38:54) as F:\dynabook\squeak\build-0.080.image!
+
+!MenuMorph methodsFor: 'control' stamp: 'GDK 7/22/2020 15:07:00' prior: 50812725!
+popUpAt: aPoint forHand: hand allowKeyboard: aBoolean target: target
+	"Present this menu at the given point under control of the given hand."
+
+	| evt |
+	self items isEmpty ifTrue: [^self].
+	self addBlankIconsIfNecessary.
+	(self submorphs select: [ :m | m is: #UpdatingMenuItemMorph ]) 
+		do: [ :m | m updateContents].
+	target ifNil: [self runningWorld addMorphFront: self position: aPoint - `2 @ 8`]ifNotNil: [^target overlay: self].
+	self fitInWorld.
+	"Acquire focus for valid pop up behavior"
+	hand newMouseFocus: self.
+	aBoolean ifTrue: [ hand newKeyboardFocus: self ].
+	evt _ hand lastMouseEvent.
+	(evt isKeyboard or: [ evt isMouse and: [ evt anyButtonPressed not ]]) 
+		ifTrue: [
+			"Select first item if button not down"
+			self moveSelectionDown: 1 event: evt ]! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 15:37:49'!
+overlayAsWorld: world
+| copy reported b val |
+copy _ self shallowCopy.
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 15:37:58' prior: 50813051!
+overlayAsWorld: world
+| reported b val |
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val! !
+!MenuMorph methodsFor: 'control' stamp: 'GDK 7/22/2020 15:43:30' prior: 50813024!
+popUpAt: aPoint forHand: hand allowKeyboard: aBoolean target: target
+	"Present this menu at the given point under control of the given hand."
+
+	| evt |
+	self items isEmpty ifTrue: [^self].
+	self addBlankIconsIfNecessary.
+	(self submorphs select: [ :m | m is: #UpdatingMenuItemMorph ]) 
+		do: [ :m | m updateContents].
+	target ifNil: [self runningWorld addMorphFront: self position: aPoint - `2 @ 8`]ifNotNil: [^target overlay: self].
+	self fitInWorld.
+	"Acquire focus for valid pop up behavior"
+	hand newMouseFocus: self.
+	aBoolean ifTrue: [ hand newKeyboardFocus: self ].
+	evt _ hand lastMouseEvent.
+	(evt isKeyboard or: [ evt isMouse and: [ evt anyButtonPressed not ]]) 
+		ifTrue: [
+			"Select first item if button not down"
+			self moveSelectionDown: 1 event: evt ]! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 15:44:22'!
+overlayNoBecome
+| reported b val |
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val! !
+
+!methodRemoval: Morph #overlayAsWorld: stamp: 'GDK 7/22/2020 17:38:57'!
+overlayAsWorld: world
+| reported b val |
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val!
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 15:55:55' prior: 50813101!
+overlayNoBecome
+| reported b val |
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val! !
+!MenuMorph methodsFor: 'control' stamp: 'GDK 7/22/2020 15:07:00' prior: 50813074!
+popUpAt: aPoint forHand: hand allowKeyboard: aBoolean target: target
+	"Present this menu at the given point under control of the given hand."
+
+	| evt |
+	self items isEmpty ifTrue: [^self].
+	self addBlankIconsIfNecessary.
+	(self submorphs select: [ :m | m is: #UpdatingMenuItemMorph ]) 
+		do: [ :m | m updateContents].
+	target ifNil: [self runningWorld addMorphFront: self position: aPoint - `2 @ 8`]ifNotNil: [^target overlay: self].
+	self fitInWorld.
+	"Acquire focus for valid pop up behavior"
+	hand newMouseFocus: self.
+	aBoolean ifTrue: [ hand newKeyboardFocus: self ].
+	evt _ hand lastMouseEvent.
+	(evt isKeyboard or: [ evt isMouse and: [ evt anyButtonPressed not ]]) 
+		ifTrue: [
+			"Select first item if button not down"
+			self moveSelectionDown: 1 event: evt ]! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 15:37:49'!
+overlayAsWorld: world
+| copy reported b val |
+copy _ self shallowCopy.
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 15:37:58' prior: 50813159!
+overlayAsWorld: world
+| reported b val |
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val! !
+!MenuMorph methodsFor: 'control' stamp: 'GDK 7/22/2020 15:43:30' prior: 50813132!
+popUpAt: aPoint forHand: hand allowKeyboard: aBoolean target: target
+	"Present this menu at the given point under control of the given hand."
+
+	| evt |
+	self items isEmpty ifTrue: [^self].
+	self addBlankIconsIfNecessary.
+	(self submorphs select: [ :m | m is: #UpdatingMenuItemMorph ]) 
+		do: [ :m | m updateContents].
+	target ifNil: [self runningWorld addMorphFront: self position: aPoint - `2 @ 8`]ifNotNil: [^target overlay: self].
+	self fitInWorld.
+	"Acquire focus for valid pop up behavior"
+	hand newMouseFocus: self.
+	aBoolean ifTrue: [ hand newKeyboardFocus: self ].
+	evt _ hand lastMouseEvent.
+	(evt isKeyboard or: [ evt isMouse and: [ evt anyButtonPressed not ]]) 
+		ifTrue: [
+			"Select first item if button not down"
+			self moveSelectionDown: 1 event: evt ]! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 15:44:22' prior: 50813121!
+overlayNoBecome
+| reported b val |
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val! !
+
+!methodRemoval: Morph #overlayAsWorld: stamp: 'GDK 7/22/2020 17:38:57'!
+overlayAsWorld: world
+| reported b val |
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val!
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 15:55:55' prior: 50813209!
+overlayNoBecome
+| reported b val |
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+self when: #reported send: #value: to: b.
+[reported]whileFalse: [self world doOneCycle].
+self removeActionsWithReceiver: b
+forEvent: #reported.
+^val! !

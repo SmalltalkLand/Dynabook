@@ -1,0 +1,151 @@
+
+
+----SNAPSHOT----(6 July 2020 14:52:33) build-0.015.image priorSource: 12846605!
+!Domain methodsFor: 'as yet unclassified' stamp: 'GDK 7/6/2020 14:59:29'!
+forceProtectedMode
+^false! !
+!Domain class methodsFor: 'as yet unclassified' stamp: 'GDK 7/6/2020 15:00:22'!
+forceProtectedMode
+^self allExisting inject: false into: [:o :v|o or: [v forceProtectedMode]]! !
+!Preferences class methodsFor: 'as yet unclassified' stamp: 'GDK 7/6/2020 15:00:40' prior: 50733113!
+protectedMode
+^(self valueOfFlag: #protectedMode) or: [Project ifNotNil: [Project current ifNotNil: #protected ifNil: [false]] ifNil: [false]] or: [Domain forceProtectedMode]! !
+!Domain methodsFor: '*Projects' stamp: 'GDK 7/6/2020 15:02:38'!
+blocksProject: p
+^false! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 15:03:13' prior: 50733004!
+enter
+Domain allExisting do: [:d|(d)].
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}.! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 15:03:35' prior: 50733213!
+enter
+Domain allExisting do: [:d|(d blocksProject: self) ifTrue: [^self]].
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}.! !
+
+----SNAPSHOT----(6 July 2020 15:03:43) build-0.015.image priorSource: 12849157!
+!Domain methodsFor: 'as yet unclassified' stamp: 'GDK 7/6/2020 15:32:39' prior: 50733190!
+forceProtectedMode
+^false! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 16:33:25' prior: 50733225!
+enter
+Domain allExisting do: [:d|(d blocksProject: self) ifTrue: [^self]].
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}.! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 16:38:29' prior: 50733245!
+enter
+Domain allExisting do: [:d|(d blocksProject: self) ifTrue: [^self]].
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}. ! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 16:43:45' prior: 50733258!
+enter
+Domain allExisting do: [:d|(d blocksProject: self) ifTrue: [^self]].
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}. ! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 16:48:54' prior: 50733271!
+enter
+Domain allExisting do: [:d|(d blocksProject: self) ifTrue: [^self]].
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}. ! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 16:53:58' prior: 50733284!
+enter
+Domain allExisting do: [:d|(d blocksProject: self) ifTrue: [^self]].
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}. ! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 17:19:17' prior: 50733297!
+enter
+Domain allExisting do: [:d|(d blocksProject: self) ifTrue: [^self]].
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}. ! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/6/2020 17:26:07' prior: 50733310!
+enter
+Domain allExisting do: [:d|(d blocksProject: self) ifTrue: [^self]].
+Current ifNotNil: #enter.
+{(Current ifNil: [Current _ Project new. Current world: self runningWorld. Current]). self runningWorld. Utilities authorName. Utilities authorInitials} elementsExchangeIdentityWith: {self. world. name. initials}. ! !
+
+2 + 2!
+
+FeatureRequirement subclass: #DomainRequirement
+	instanceVariableNames: 'domain'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+
+!classDefinition: #DomainRequirement category: #Domains stamp: 'GDK 7/6/2020 18:04:15'!
+FeatureRequirement subclass: #DomainRequirement
+	instanceVariableNames: 'domain'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+!DomainRequirement methodsFor: 'no messages' stamp: 'GDK 7/6/2020 18:05:01' overrides: 50680174!
+checkRequirement
+^super checkRequirement and: [domain exists]! !
+!DomainRequirement methodsFor: 'accessing' stamp: 'GDK 7/6/2020 18:05:06'!
+domain
+	"Answer the value of domain"
+
+	^ domain! !
+!DomainRequirement methodsFor: 'accessing' stamp: 'GDK 7/6/2020 18:05:07'!
+domain: anObject
+	"Set the value of domain"
+
+	domain _ anObject! !
+
+Domain subclass: #LinkDomain
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+
+!classDefinition: #LinkDomain category: #Domains stamp: 'GDK 7/6/2020 18:06:01'!
+Domain subclass: #LinkDomain
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+
+Domain subclass: #LinkDomain
+	instanceVariableNames: 'exists'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+
+!classDefinition: #LinkDomain category: #Domains stamp: 'GDK 7/6/2020 18:06:08'!
+Domain subclass: #LinkDomain
+	instanceVariableNames: 'exists'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+!LinkDomain methodsFor: 'accessing' stamp: 'GDK 7/6/2020 18:06:14'!
+exists: anObject
+	"Set the value of exists"
+
+	exists _ anObject! !
+
+!classDefinition: #DomainLink category: #Domains stamp: 'GDK 7/6/2020 18:07:15'!
+TextAction subclass: #DomainLink
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+!LinkDomain methodsFor: 'accessing' stamp: 'GDK 7/6/2020 18:06:56' overrides: 50733130!
+exists
+^exists and: [thisContext sender receiver class == DomainLink]! !
+
+TextAction subclass: #DomainLink
+	instanceVariableNames: 'domain'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+
+!classDefinition: #DomainLink category: #Domains stamp: 'GDK 7/6/2020 18:07:58'!
+TextAction subclass: #DomainLink
+	instanceVariableNames: 'domain'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+!DomainLink methodsFor: 'no messages' stamp: 'GDK 7/6/2020 18:08:22' overrides: 16930191!
+actOnClickFor: anObject
+domain exists: domain exists not.
+^true! !

@@ -1,0 +1,22 @@
+
+
+----SNAPSHOT----(20 July 2020 16:36:56) build-0.067.image priorSource: 15164453!
+!ObjectFileOut class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 16:53:55' prior: 50805961!
+fileOut: object onto: stream idDictionary: dict track: track
+| staging |
+(track includes: object) ifTrue: [^self].
+staging _ OrderedCollection new.
+stream nextPutAll: '[object#'.
+	stream nextPutAll: (dict at: object ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	staging add: (object class).
+	stream nextPutAll:  (dict at: object class ifAbsentPut: [(1 to: 10000000000) atRandom asString]).
+	stream nextPut: $:.
+	object class instVarNames doWithIndex: [:v :i|staging add: (object instVarAt: i).  stream nextPutAll: (dict at: (object instVarAt: i) ifAbsentPut: [(1 to: 10000000000) atRandom asString])].
+	stream nextPut: $:.
+	1 to: object basicSize do: [:v|staging add: (object basicAt: v). stream nextPutAll: (dict at: (object basicAt: v) ifAbsentPut: [(1 to: 10000000000) atRandom asString])].
+	stream nextPut: $].
+track add: object.
+staging do: [:s|self fileOut: s onto: stream idDictionary: dict track: track].! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 17:00:13' prior: 50805278!
+sweep: dict
+dict associationsDo: [:a|a value ifFalse: [a key finalize;becomeForward: nil]].! !

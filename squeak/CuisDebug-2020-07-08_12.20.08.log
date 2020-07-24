@@ -1,0 +1,290 @@
+UnhandledError
+8 July 2020 12:20:08.795813 pm
+
+VM: Win32 - Open Smalltalk Cog[Spur] VM [CoInterpreterPrimitives VMMaker.oscog-nice.2715]
+Image: Cuis 5.0 [latest update: #4253]
+
+Error(Exception)>>noHandler
+	Receiver: Error: key not found
+	Arguments and temporary variables: 
+
+	Receiver's instance variables: 
+		messageText: 	'key not found'
+		tag: 	nil
+		signalContext: 	Error(Exception)>>signal
+		handlerContexts: 	an OrderedCollection()
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	true
+
+Error>>defaultAction
+	Receiver: Error: key not found
+	Arguments and temporary variables: 
+
+	Receiver's instance variables: 
+		messageText: 	'key not found'
+		tag: 	nil
+		signalContext: 	Error(Exception)>>signal
+		handlerContexts: 	an OrderedCollection()
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	true
+
+UndefinedObject>>handleSignal:
+	Receiver: nil
+	Arguments and temporary variables: 
+		exception: 	Error: key not found
+	Receiver's instance variables: 
+nil
+Error(Exception)>>pass
+	Receiver: Error: key not found
+	Arguments and temporary variables: 
+		nextHandler: 	nil
+	Receiver's instance variables: 
+		messageText: 	'key not found'
+		tag: 	nil
+		signalContext: 	Error(Exception)>>signal
+		handlerContexts: 	an OrderedCollection()
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	true
+
+[] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+	Receiver: UnhandledError
+	Arguments and temporary variables: 
+<<error during printing>
+	Receiver's instance variables: 
+		messageText: 	nil
+		tag: 	nil
+		signalContext: 	UnhandledError(Exception)>>signal
+		handlerContexts: 	an OrderedCollection(BlockClosure>>on:do:)
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	false
+		exception: 	Error: key not found
+
+BlockClosure>>valueWithPossibleArgument:
+	Receiver: [closure] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+	Arguments and temporary variables: 
+		anArg: 	Error: key not found
+	Receiver's instance variables: 
+		outerContext: 	[] in UnhandledError(Exception)>>evaluateHandlerBlock:
+		startpc: 	212
+		numArgs: 	1
+
+[] in [] in Error(Exception)>>evaluateHandlerBlock:
+	Receiver: Error: key not found
+	Arguments and temporary variables: 
+<<error during printing>
+	Receiver's instance variables: 
+		messageText: 	'key not found'
+		tag: 	nil
+		signalContext: 	Error(Exception)>>signal
+		handlerContexts: 	an OrderedCollection()
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	true
+
+BlockClosure>>on:do:
+	Receiver: [closure] in [] in Error(Exception)>>evaluateHandlerBlock:
+	Arguments and temporary variables: 
+		exception: 	Exception
+		handlerAction: 	[closure] in [] in Error(Exception)>>evaluateHandlerBlock:
+	Receiver's instance variables: 
+		outerContext: 	[] in Error(Exception)>>evaluateHandlerBlock:
+		startpc: 	202
+		numArgs: 	0
+
+[] in Error(Exception)>>evaluateHandlerBlock:
+	Receiver: Error: key not found
+	Arguments and temporary variables: 
+		aBlock: 	[closure] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+		handlerEx: 	#(UnhandledError)
+		answer: 	nil
+	Receiver's instance variables: 
+		messageText: 	'key not found'
+		tag: 	nil
+		signalContext: 	Error(Exception)>>signal
+		handlerContexts: 	an OrderedCollection()
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	true
+
+BlockClosure>>ifCurtailed:
+	Receiver: [closure] in Error(Exception)>>evaluateHandlerBlock:
+	Arguments and temporary variables: 
+		aBlock: 	[closure] in Error(Exception)>>evaluateHandlerBlock:
+		complete: 	nil
+		result: 	nil
+	Receiver's instance variables: 
+		outerContext: 	Error(Exception)>>evaluateHandlerBlock:
+		startpc: 	196
+		numArgs: 	0
+
+Error(Exception)>>evaluateHandlerBlock:
+	Receiver: Error: key not found
+	Arguments and temporary variables: 
+		aBlock: 	[closure] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+		handlerEx: 	#(UnhandledError)
+	Receiver's instance variables: 
+		messageText: 	'key not found'
+		tag: 	nil
+		signalContext: 	Error(Exception)>>signal
+		handlerContexts: 	an OrderedCollection()
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	true
+
+MethodContext(ContextPart)>>evaluateSignal:
+	Receiver: BlockClosure>>on:do:
+	Arguments and temporary variables: 
+		exception: 	Error: key not found
+		value: 	nil
+	Receiver's instance variables: 
+		sender: 	[] in UnhandledError(Exception)>>evaluateHandlerBlock:
+		pc: 	30
+		stackp: 	2
+		method: 	(BlockClosure>>#on:do: "a CompiledMethod(354107)")
+		closureOrNil: 	nil
+		receiver: 	[closure] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+
+MethodContext(ContextPart)>>handleSignal:
+	Receiver: BlockClosure>>on:do:
+	Arguments and temporary variables: 
+		exception: 	Error: key not found
+	Receiver's instance variables: 
+		sender: 	[] in UnhandledError(Exception)>>evaluateHandlerBlock:
+		pc: 	30
+		stackp: 	2
+		method: 	(BlockClosure>>#on:do: "a CompiledMethod(354107)")
+		closureOrNil: 	nil
+		receiver: 	[closure] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+
+Error(Exception)>>pass
+	Receiver: Error: key not found
+	Arguments and temporary variables: 
+		nextHandler: 	BlockClosure>>on:do:
+	Receiver's instance variables: 
+		messageText: 	'key not found'
+		tag: 	nil
+		signalContext: 	Error(Exception)>>signal
+		handlerContexts: 	an OrderedCollection()
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	true
+
+[] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+	Receiver: UnhandledError
+	Arguments and temporary variables: 
+<<error during printing>
+	Receiver's instance variables: 
+		messageText: 	nil
+		tag: 	nil
+		signalContext: 	UnhandledError(Exception)>>signal
+		handlerContexts: 	an OrderedCollection(BlockClosure>>on:do:)
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	false
+		exception: 	Error: key not found
+
+BlockClosure>>valueWithPossibleArgument:
+	Receiver: [closure] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+	Arguments and temporary variables: 
+		anArg: 	Error: key not found
+	Receiver's instance variables: 
+		outerContext: 	[] in UnhandledError(Exception)>>evaluateHandlerBlock:
+		startpc: 	212
+		numArgs: 	1
+
+[] in [] in Error(Exception)>>evaluateHandlerBlock:
+	Receiver: Error: key not found
+	Arguments and temporary variables: 
+<<error during printing>
+	Receiver's instance variables: 
+		messageText: 	'key not found'
+		tag: 	nil
+		signalContext: 	Error(Exception)>>signal
+		handlerContexts: 	an OrderedCollection()
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	true
+
+BlockClosure>>on:do:
+	Receiver: [closure] in [] in Error(Exception)>>evaluateHandlerBlock:
+	Arguments and temporary variables: 
+		exception: 	Exception
+		handlerAction: 	[closure] in [] in Error(Exception)>>evaluateHandlerBlock:
+	Receiver's instance variables: 
+		outerContext: 	[] in Error(Exception)>>evaluateHandlerBlock:
+		startpc: 	202
+		numArgs: 	0
+
+[] in Error(Exception)>>evaluateHandlerBlock:
+	Receiver: Error: key not found
+	Arguments and temporary variables: 
+		aBlock: 	[closure] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+		handlerEx: 	#(UnhandledError)
+		answer: 	nil
+	Receiver's instance variables: 
+		messageText: 	'key not found'
+		tag: 	nil
+		signalContext: 	Error(Exception)>>signal
+		handlerContexts: 	an OrderedCollection()
+		outerContext: 	nil
+		handlerBlockNotCurtailed: 	true
+
+
+--- The full stack ---
+Error(Exception)>>noHandler
+Error>>defaultAction
+UndefinedObject>>handleSignal:
+Error(Exception)>>pass
+[] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+BlockClosure>>valueWithPossibleArgument:
+[] in [] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>on:do:
+[] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>ifCurtailed:
+Error(Exception)>>evaluateHandlerBlock:
+MethodContext(ContextPart)>>evaluateSignal:
+MethodContext(ContextPart)>>handleSignal:
+Error(Exception)>>pass
+[] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+BlockClosure>>valueWithPossibleArgument:
+[] in [] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>on:do:
+[] in Error(Exception)>>evaluateHandlerBlock:
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+BlockClosure>>ifCurtailed:
+Error(Exception)>>evaluateHandlerBlock:
+MethodContext(ContextPart)>>evaluateSignal:
+MethodContext(ContextPart)>>handleSignal:
+Error(Exception)>>pass
+[] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+BlockClosure>>valueWithPossibleArgument:
+[] in [] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>on:do:
+[] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>ifCurtailed:
+Error(Exception)>>evaluateHandlerBlock:
+MethodContext(ContextPart)>>evaluateSignal:
+MethodContext(ContextPart)>>handleSignal:
+Error(Exception)>>pass
+[] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+BlockClosure>>valueWithPossibleArgument:
+[] in [] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>on:do:
+[] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>ifCurtailed:
+Error(Exception)>>evaluateHandlerBlock:
+MethodContext(ContextPart)>>evaluateSignal:
+MethodContext(ContextPart)>>handleSignal:
+Error(Exception)>>pass
+[] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+BlockClosure>>valueWithPossibleArgument:
+[] in [] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>on:do:
+[] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>ifCurtailed:
+Error(Exception)>>evaluateHandlerBlock:
+MethodContext(ContextPart)>>evaluateSignal:
+MethodContext(ContextPart)>>handleSignal:
+Error(Exception)>>pass
+[] in [] in UnhandledError(Exception)>>evaluateHandlerBlock:
+BlockClosure>>valueWithPossibleArgument:
+[] in [] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>on:do:
+[] in Error(Exception)>>evaluateHandlerBlock:
+BlockClosure>>ifCurtailed:
+Error(Exception)>>evaluateHandlerBlock:
+-- and more not shown --

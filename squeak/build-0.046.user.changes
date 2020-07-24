@@ -1,0 +1,180 @@
+
+
+----STARTUP---- (15 July 2020 15:16:06) as F:\Dbs\squeak\build-0.046.image!
+
+
+InnerTextMorph!
+
+LabelMorph!
+!MorphicCanvas methodsFor: 'drawing-text' stamp: 'GDK 7/15/2020 15:34:31' prior: 16877608!
+drawString: s at: pt font: fontOrNil color: aColor
+	"Answer last affected pixel position
+	Answer nil if nothing was done"
+
+	^self drawString: s from: 1 to: s size at: pt font: fontOrNil color: aColor! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/15/2020 15:42:51' prior: 50784942!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances select: [:i|(i isKindOf: VirtualKeyboard) not] thenCollect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )].  Smalltalk snapshotPrimitive. Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/15/2020 15:49:58' prior: 50786546!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances selectorAutoCompleterDocumentationAppendingTo: [:i|((i isKindOf: VirtualKeyboard) or: [i isKindOf: InputMethod]) not] using: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )], (VirtualKeyboard allSubInstances, InputMethod allSubInstances) appendingToParameter: [:i|i -> i].  Smalltalk snapshotPrimitive. Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/15/2020 15:50:51' prior: 50786573!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances select: [:i|((i isKindOf: VirtualKeyboard) or: [i isKindOf: InputMethod]) not] thenCollect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )], ((VirtualKeyboard allSubInstances, InputMethod allSubInstances) collect: [:i|i -> i]).  Smalltalk snapshotPrimitive. Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/15/2020 17:47:05' prior: 50786605!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances select: [:i|((i isKindOf: VirtualKeyboard) or: [i isKindOf: InputMethod]) not] thenCollect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )], ((VirtualKeyboard allSubInstances, InputMethod allSubInstances) collect: [:i|i -> i]).  Smalltalk snapshotPrimitive. Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/15/2020 17:47:13' prior: 50786636!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances select: [:i|((i isKindOf: VirtualKeyboard) or: [i isKindOf: InputMethod]) not] thenCollect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )], ((VirtualKeyboard allSubInstances, InputMethod allSubInstances) collect: [:i|i -> [i]]).  Smalltalk snapshotPrimitive. Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/15/2020 17:52:45' prior: 50786667!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances select: [:i|((i isKindOf: VirtualKeyboard) or: [i isKindOf: InputMethod]) not] thenCollect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )], ((VirtualKeyboard allSubInstances, InputMethod allSubInstances) collect: [:i|i -> [i]]).  Smalltalk snapshotPrimitive. Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]].! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/15/2020 18:02:15' prior: 50786698!
+enabled: anObject
+	"Set the value of enabled"
+	| oe |
+anObject ifTrue: [Smalltalk processShutDownList: true. theMap _ Object allSubInstances select: [:i|((i isKindOf: VirtualKeyboard) or: [i isKindOf: InputMethod]) not] thenCollect: [:i|i -> ([:v|[v shallowCopy]] value: i shallowCopy )], ((VirtualKeyboard allSubInstances, InputMethod allSubInstances) collect: [:i|i -> [i]]).  Smalltalk snapshotPrimitive. Smalltalk processStartUpList: true].
+oe _ enabled.
+	enabled _ anObject.
+	oe ifTrue: [anObject ifFalse: [|se |se _ false. Smalltalk processShutDownList: true.  (self confirm: 'Unlock this Dynabook from class SqueakFreeze') ifTrue: [((password ifNil: [[:b2|true]]) value: [:c|self request: c initialAnswer: '']) ifTrue: [ theMap _ nil] ifFalse: [se _ enabled _ true]] ifFalse: [se _ enabled _ true]. enabled _ false. Smalltalk processStartUpList: true. enabled _ se]].! !
+
+Object subclass: #StackPart
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Stack'!
+
+!classDefinition: #StackPart category: #'System-Stack' stamp: 'GDK 7/16/2020 07:56:43'!
+Object subclass: #StackPart
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Stack'!
+
+!classRenamed: #StackPart as: #StackPartContinuation stamp: 'GDK 7/16/2020 07:57:01'!
+Smalltalk renameClassNamed: #StackPart as: #StackPartContinuation!
+
+Object subclass: #StackPartContinuation
+	instanceVariableNames: 'source target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Stack'!
+
+!classDefinition: #StackPartContinuation category: #'System-Stack' stamp: 'GDK 7/16/2020 07:57:12'!
+Object subclass: #StackPartContinuation
+	instanceVariableNames: 'source target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Stack'!
+!StackPartContinuation methodsFor: 'accessing' stamp: 'GDK 7/16/2020 07:57:16'!
+source
+	"Answer the value of source"
+
+	^ source! !
+!StackPartContinuation methodsFor: 'accessing' stamp: 'GDK 7/16/2020 07:57:16'!
+source: anObject
+	"Set the value of source"
+
+	source _ anObject! !
+!StackPartContinuation methodsFor: 'accessing' stamp: 'GDK 7/16/2020 07:57:16'!
+target
+	"Answer the value of target"
+
+	^ target! !
+!StackPartContinuation methodsFor: 'accessing' stamp: 'GDK 7/16/2020 07:57:16'!
+target: anObject
+	"Set the value of target"
+
+	target _ anObject! !
+!StackPartContinuation methodsFor: 'accessing' stamp: 'GDK 7/16/2020 07:59:59'!
+snapshot: it
+source _ OrderedCollection new.
+1 to: it do: [:n|source add: (source last sender)].! !
+!StackPartContinuation methodsFor: 'accessing' stamp: 'GDK 7/16/2020 08:07:47'!
+restore
+source with: target do: [:s :t|t becomeForward: s].! !
+
+ContextPart subclass: #SqAsmContextPart
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SqueakAssembly'!
+
+!classDefinition: #SqAsmContextPart category: #SqueakAssembly stamp: 'GDK 7/16/2020 08:23:38'!
+ContextPart subclass: #SqAsmContextPart
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SqueakAssembly'!
+!SqAsmContextPart methodsFor: 'no messages' stamp: 'GDK 7/16/2020 08:23:48' overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs! !
+
+ContextPart subclass: #SqAsmContextPart
+	instanceVariableNames: 'sendDictionary'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SqueakAssembly'!
+
+!classDefinition: #SqAsmContextPart category: #SqueakAssembly stamp: 'GDK 7/16/2020 08:23:57'!
+ContextPart subclass: #SqAsmContextPart
+	instanceVariableNames: 'sendDictionary'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SqueakAssembly'!
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 08:24:33' prior: 50786831 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 08:24:57' overrides: 16896425!
+initialize
+super initialize.
+sendDictionary _ Dictionary new.! !
+!SqAsmContextPart class methodsFor: 'no messages' stamp: 'GDK 7/16/2020 08:25:43' overrides: 16825476!
+newForMethod: aMethod
+^(super newForMethod: aMethod) initialize;yourself! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 08:34:12' prior: 50786850 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !
+!SqAsmContextPart methodsFor: 'accessing' stamp: 'GDK 7/16/2020 08:34:18'!
+sendDictionary
+	"Answer the value of sendDictionary"
+
+	^ sendDictionary! !
+!SqAsmContextPart methodsFor: 'accessing' stamp: 'GDK 7/16/2020 08:34:19'!
+sendDictionary: anObject
+	"Set the value of sendDictionary"
+
+	sendDictionary _ anObject! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/16/2020 08:54:12' prior: 50786870 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+sendDictionary at: selector ifPresent: [:p|pc _ p].! !

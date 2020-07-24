@@ -1,0 +1,75 @@
+
+
+----SNAPSHOT----(14 July 2020 20:10:06) build-0.040.image priorSource: 14508121!
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:16:18' prior: 50785817!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'. '.()[]'. ' '} collect: [:str|
+	i _ 1.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i - 1.
+				self emitIt: c.
+				i _ 1]. str2 _ str. [|ci |ci _ i.(Delay forMilliseconds: 750) wait. (str2 = str and: [ci = 1]) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value label: str
+	], {PluggableButtonMorph model: [capital _ capital not] action: #value label: '^'}.
+buttons do: [:b|self addMorph: b].! !
+!HandMorph methodsFor: 'event handling' stamp: 'GDK 7/14/2020 20:24:44' prior: 50785464!
+processEventQueue
+	"Process user input events from the local input devices."
+
+	| evt evtBuf type hadAny mcs |
+	mcs _ mouseClickState.
+	hadAny := false.
+	VirtualKeyboard allSubInstancesDo: [:i|i targetHand == self ifTrue: [i processEvents: [:evt2|self startEventDispatch: evt2]]].
+	[ (evtBuf := Sensor nextEvent) isNil ] whileFalse: [
+		type := evtBuf first.
+		evt := self createEventFrom: evtBuf ofType: type.
+		evt
+			ifNil: [ 
+				"I have to consume all eventTypeDragDropFiles of type 2 quicky, that is why
+				I check if it was an eventTypeDragDropFiles to continue in the loop - Hernan"
+				type ~= EventSensor eventTypeDragDropFiles ifTrue: [^hadAny]]
+			ifNotNil: [
+				"Finally, handle it"
+				self startEventDispatch: evt.
+				hadAny := true.
+				"For better user feedback, return immediately after a mouse event has been processed."
+				evt isMouse ifTrue: [ ^hadAny ]]].
+	"note: if we come here we didn't have any mouse events"
+	mcs 
+		ifNotNil: [ 
+			"No mouse events during this cycle. Make sure click states time out accordingly"
+			mcs
+				handleEvent: (self lastMouseEvent asMouseMove: (Time localMillisecondClock - self lastMouseEventTime max: 0))
+				from: self ].
+	^hadAny! !
+
+Object subclass: #InputMethod
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-InputMethods'!
+
+!classDefinition: #InputMethod category: #'System-InputMethods' stamp: 'GDK 7/14/2020 20:26:50'!
+Object subclass: #InputMethod
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-InputMethods'!
+!InputMethod methodsFor: 'no messages' stamp: 'GDK 7/14/2020 20:26:59'!
+process: evt
+^evt! !
+!InputMethod methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:28:52'!
+enabled! !
+!HandMorph methodsFor: 'events-processing' stamp: 'GDK 7/14/2020 20:29:13' prior: 50622350!
+startKeyboardDispatch: aKeyboardEvent
+
+	| focusedElement |
+	InputMethod allSubInstancesDo: [:i|[:ne|(ne == aKeyboardEvent or: [i enabled not]) ifFalse: [aKeyboardEvent becomeForward: ne]] value: (i process: aKeyboardEvent) ].
+	focusedElement _ self keyboardFocus ifNil: [ self world ].
+	focusedElement handleFocusEvent: aKeyboardEvent.
+	
+	self mouseOverHandler processMouseOver: self lastMouseEvent! !

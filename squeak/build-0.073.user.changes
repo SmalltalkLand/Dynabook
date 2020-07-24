@@ -1,0 +1,29 @@
+
+
+----STARTUP---- (21 July 2020 10:11:09) as F:\Dbs\squeak\build-0.073.image!
+
+!EventTrack methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 10:11:34' prior: 50807252 overrides: 50652839!
+resumeUnchecked: val
+| copy |
+copy _ self shallowCopy.
+"self becomeForward: nil."
+"self topHandlerContext ifNotNil: [[self outerSafe ifNil: [val ifNotNil: []]] on: Error do: [:ex|]]."
+"thisContext isSEcure ifFalse: [^self]."
+copy resumeUncheckedSuper: val.! !
+
+thisContext isSecure!
+!MethodContext methodsFor: 'accessing' stamp: 'GDK 7/21/2020 10:12:15' prior: 50807262!
+isSecure
+^((self receiver class class class isKindOf: Metaclass) or: [self receiver class class class isKindOf: Metaclass class]) and: [sender ifNotNil: [:s|s isSecure] ifNil: [true]]! !
+
+thisContext isSecure!
+
+----SNAPSHOT----(21 July 2020 10:12:22) build-0.073.image priorSource: 15219810!
+!EventTrack methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 10:12:29' prior: 50807289 overrides: 50652839!
+resumeUnchecked: val
+| copy |
+copy _ self shallowCopy.
+"self becomeForward: nil."
+"self topHandlerContext ifNotNil: [[self outerSafe ifNil: [val ifNotNil: []]] on: Error do: [:ex|]]."
+thisContext isSecure ifFalse: [^self].
+copy resumeUncheckedSuper: val.! !

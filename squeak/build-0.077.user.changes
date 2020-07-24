@@ -1,0 +1,43 @@
+
+
+----SNAPSHOT----(22 July 2020 08:26:55) build-0.077.image priorSource: 15365478!
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 08:33:28' prior: 50812047!
+overlay: otherMorph
+| copy reported b|
+copy _ self shallowCopy.
+otherMorph privateOwner: owner.
+self becomeForward: otherMorph.
+reported _ false.
+b _ [reported _ true].
+otherMorph when: #reported send: #value to: b.
+[reported]whileFalse: [otherMorph world doOneCycle].
+otherMorph removeActionsWithReceiver: b
+forEvent: #reported.
+otherMorph becomeForward: copy.! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 08:45:58' prior: 50812059!
+overlay: otherMorph
+| copy reported b|
+copy _ self shallowCopy.
+otherMorph privateOwner: owner.
+self becomeForward: otherMorph.
+reported _ false.
+b _ [reported _ true].
+otherMorph when: #reported send: #value to: b.
+[reported]whileFalse: [otherMorph world doOneCycle].
+otherMorph removeActionsWithReceiver: b
+forEvent: #reported.
+otherMorph becomeForward: copy.! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 08:51:50' prior: 50812073!
+overlay: otherMorph
+| copy reported b val |
+copy _ self shallowCopy.
+otherMorph privateOwner: owner.
+self becomeForward: otherMorph.
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+otherMorph when: #reported send: #value: to: b.
+[reported]whileFalse: [otherMorph world doOneCycle].
+otherMorph removeActionsWithReceiver: b
+forEvent: #reported.
+otherMorph becomeForward: copy.
+^val! !

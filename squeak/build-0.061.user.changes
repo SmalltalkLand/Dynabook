@@ -1,0 +1,59 @@
+
+
+----SNAPSHOT----(19 July 2020 08:47:30) build-0.061.image priorSource: 15084839!
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/19/2020 14:30:45' prior: 50804924!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/19/2020 14:45:14'!
+bootstrapCompiledMethods: base splObjs: spObjs! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/19/2020 14:45:25' prior: 50805041!
+bootstrapCompiledMethods: base splObjs: spObjs
+^{} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/19/2020 14:47:11'!
+bootstrapCompiledMethods: base splObjs: spObjs colls: colls
+| cm |
+cm _ CompiledMethod copyForBootstrap.
+cm superclass instVarNamed: #superclass put: (colls at: #SequentialCollection).
+^{#CompiledMethod -> cm. #ByteArray -> cm superclass} asDictionary! !
+
+!methodRemoval: Bootstrap #bootstrapCompiledMethods:splObjs: stamp: 'GDK 7/19/2020 14:47:24'!
+bootstrapCompiledMethods: base splObjs: spObjs
+^{} asDictionary!
+
+Class allSubInstances size!
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/19/2020 15:41:24' prior: 50805015!
+diff: snapshot
+| newSnapshot |
+newSnapshot _ self snapshot.
+newSnapshot _ newSnapshot associations select: [:i|snapshot at: i key ifPresent: [:v|((1 to: v basicSize) collect:  [:index|(v basicAt: index) == (i value basicAt: index)]) inject: false into: [:carry :v2|carry or: [v2 not]]] ifAbsent: [true]].
+newSnapshot _ newSnapshot asDictionary.
+3 timesRepeat: [Smalltalk garbageCollect] .
+^newSnapshot! !
+!SITSnapshotter class methodsFor: 'as yet unclassified' stamp: 'GDK 7/19/2020 15:46:41' prior: 50804962!
+instance
+^Instance ifNil: [Instance _ SITSnapshotter basicNew initialize;yourself]! !
+!Object methodsFor: 'copying' stamp: 'GDK 7/19/2020 15:51:02'!
+basicCopySameFrom: otherObject
+	"Copy to myself all instance variables named the same in otherObject.
+	This ignores otherObject's control over its own inst vars."
+
+	| myInstVars otherInstVars |
+	myInstVars := self class allInstVarNames.
+	otherInstVars := otherObject class allInstVarNames.
+	myInstVars withIndexDo: [:each :index | | match |
+		(match := otherInstVars indexOf: each) > 0 ifTrue:
+			[self instVarAt: index put: (otherObject instVarAt: match)]].
+	1 to: (self basicSize min: otherObject basicSize) do: [:i |
+		self basicAt: i put: (otherObject basicAt: i)].
+! !
+!Object class methodsFor: 'instance creation' stamp: 'GDK 7/19/2020 15:51:16'!
+basicNewFrom: aSimilarObject
+	"Create an object that has similar contents to aSimilarObject.
+	If the classes have any instance varaibles with the same names, copy them across.
+	If this is bad for a class, override this method."
+
+	^ (self isVariable
+		ifTrue: [self basicNew: aSimilarObject basicSize]
+		ifFalse: [self basicNew]
+	  ) basicCopySameFrom: aSimilarObject! !

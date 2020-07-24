@@ -1,0 +1,17 @@
+
+
+----STARTUP---- (14 July 2020 17:49:30) as F:\Dbs\squeak\build-0.037.image!
+
+
+Object subclass: #IIFile
+	instanceVariableNames: 'driveDictionary pathKey object'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-IIFS'!
+
+!classDefinition: #IIFile category: #'System-IIFS' stamp: 'GDK 7/14/2020 17:56:50'!
+Object subclass: #IIFile
+	instanceVariableNames: 'driveDictionary pathKey object'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-IIFS'!

@@ -1,0 +1,174 @@
+
+
+----SNAPSHOT----(4 July 2020 10:56:01) build-0.002.image priorSource: 11776010!
+
+----SNAPSHOT----(4 July 2020 10:56:06) build-0.002.image priorSource: 11777797!
+
+!classRenamed: #OnBreak as: #OnBreakEnvironmentBoundary stamp: 'GDK 7/4/2020 10:56:49'!
+Smalltalk renameClassNamed: #OnBreak as: #OnBreakEnvironmentBoundary!
+!Environment methodsFor: 'as yet unclassified' stamp: 'GDK 7/4/2020 10:56:50' prior: 50699685 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: presentBlock ifAbsent: [absentBlock on: OnBreakEnvironmentBoundary do: [:ex|ex resumeUnchecked: (self class break: ex outer)]]! !
+!SystemDictionary methodsFor: 'as yet unclassified' stamp: 'GDK 7/4/2020 10:56:50' prior: 50699700 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+OnBreakEnvironmentBoundary signal.
+^super at: key ifPresent: presentBlock ifAbsent: absentBlock! !
+
+----SNAPSHOT----(4 July 2020 10:56:56) build-0.002.image priorSource: 11777878!
+
+Notification subclass: #OnBreakEnvironmentBoundary
+	instanceVariableNames: 'isBroken'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+
+!classDefinition: #OnBreakEnvironmentBoundary category: #'System-Environments' stamp: 'GDK 7/4/2020 10:59:32'!
+Notification subclass: #OnBreakEnvironmentBoundary
+	instanceVariableNames: 'isBroken'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+!OnBreakEnvironmentBoundary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 10:59:38'!
+isBroken
+	"Answer the value of isBroken"
+
+	^ isBroken! !
+!OnBreakEnvironmentBoundary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 10:59:38'!
+isBroken: anObject
+	"Set the value of isBroken"
+
+	isBroken _ anObject! !
+!OnBreakEnvironmentBoundary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 10:59:55' overrides: 16840144!
+initialize
+super initialize.
+isBroken _ false.! !
+!Environment methodsFor: 'accessing' stamp: 'GDK 7/4/2020 11:00:44' prior: 50699718 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: presentBlock ifAbsent: [absentBlock on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer)] ifTrue: [ex pass]]]! !
+
+----SNAPSHOT----(4 July 2020 11:00:46) build-0.002.image priorSource: 11778744!
+!Environment class methodsFor: 'instance creation' stamp: 'GDK 7/4/2020 11:07:48'!
+break: val
+^val! !
+
+----SNAPSHOT----(4 July 2020 11:09:31) build-0.002.image priorSource: 11780141!
+!Environment class methodsFor: 'instance creation' stamp: 'GDK 7/4/2020 11:19:59' prior: 50699783!
+break: val
+^val! !
+!Environment class methodsFor: 'instance creation' stamp: 'GDK 7/4/2020 11:22:51'!
+break: val from: ex
+^val! !
+
+!methodRemoval: Environment class #break: stamp: 'GDK 7/4/2020 11:22:58'!
+break: val
+^val!
+!Environment methodsFor: 'accessing' stamp: 'GDK 7/4/2020 11:23:07' prior: 50699769 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: presentBlock ifAbsent: [absentBlock on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]]! !
+
+Notification subclass: #OnBreakEnvironmentBoundary
+	instanceVariableNames: 'isBroken target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+
+!classDefinition: #OnBreakEnvironmentBoundary category: #'System-Environments' stamp: 'GDK 7/4/2020 11:23:17'!
+Notification subclass: #OnBreakEnvironmentBoundary
+	instanceVariableNames: 'isBroken target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+!OnBreakEnvironmentBoundary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 11:23:25'!
+target
+	"Answer the value of target"
+
+	^ target! !
+!OnBreakEnvironmentBoundary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 11:23:25'!
+target: anObject
+	"Set the value of target"
+
+	target _ anObject! !
+!SystemDictionary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 11:23:48' prior: 50699729 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+OnBreakEnvironmentBoundary new target: (super at: key ifPresent: presentBlock ifAbsent: absentBlock) ;signal.
+^super at: key ifPresent: presentBlock ifAbsent: absentBlock! !
+
+----SNAPSHOT----(4 July 2020 11:23:51) build-0.002.image priorSource: 11780338!
+!SystemDictionary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 11:24:17' prior: 50699839 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| s |
+OnBreakEnvironmentBoundary new target: (s _ super at: key ifPresent: presentBlock ifAbsent: absentBlock) ;signal.
+^s! !
+
+----SNAPSHOT----(4 July 2020 11:24:25) build-0.002.image priorSource: 11782339!
+
+Notification subclass: #OnBreakEnvironmentBoundary
+	instanceVariableNames: 'isBroken target changeBlock'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+
+!classDefinition: #OnBreakEnvironmentBoundary category: #'System-Environments' stamp: 'GDK 7/4/2020 11:27:13'!
+Notification subclass: #OnBreakEnvironmentBoundary
+	instanceVariableNames: 'isBroken target changeBlock'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+!OnBreakEnvironmentBoundary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 11:27:17'!
+changeBlock
+	"Answer the value of changeBlock"
+
+	^ changeBlock! !
+!OnBreakEnvironmentBoundary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 11:27:17'!
+changeBlock: anObject
+	"Set the value of changeBlock"
+
+	changeBlock _ anObject! !
+!SystemDictionary methodsFor: 'accessing' stamp: 'GDK 7/4/2020 11:27:32' prior: 50699853 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| s |
+OnBreakEnvironmentBoundary new target: (s _ super at: key ifPresent: presentBlock ifAbsent: absentBlock) ;changeBlock: [:v|s _ v];signal.
+^s! !
+
+----SNAPSHOT----(4 July 2020 11:27:40) build-0.002.image priorSource: 11782739!
+
+PluggableMorph subclass: #SystemWindow
+	instanceVariableNames: 'labelString layoutMorph adjusters menuButton'
+	classVariableNames: 'TopWindow'
+	poolDictionaries: ''
+	category: 'Morphic-Views'!
+
+!classDefinition: #SystemWindow category: #'Morphic-Views' stamp: 'GDK 7/4/2020 11:29:38'!
+PluggableMorph subclass: #SystemWindow
+	instanceVariableNames: 'labelString layoutMorph adjusters menuButton'
+	classVariableNames: 'TopWindow'
+	poolDictionaries: ''
+	category: 'Morphic-Views'!
+!SystemWindow methodsFor: 'initialization' stamp: 'GDK 7/4/2020 11:29:57' prior: 50647170!
+initializeLabelArea
+	"Initialize the label area (titlebar) for the window."
+
+	| topLeft spacing |
+	topLeft _ self labelHeight + borderWidth - self titleBarButtonsExtent // 2 * (1@1).
+	spacing _ self titleBarButtonsExtent x *14//10.
+	self addMorph: self createCloseButton position: topLeft.
+	self addMorph: self createCollapseButton position: spacing@0 + topLeft.
+	self addMorph: self createExpandButton position: spacing*2@0 + topLeft.
+	self addMorph: (menuButton _ self createMenuButton) position: spacing*3@0 + topLeft! !
+!SystemWindow methodsFor: 'geometry' stamp: 'GDK 7/4/2020 11:30:22' overrides: 16899221!
+morphExtent: ex.
+super morphExtent: ex.! !
+!SystemWindow methodsFor: 'geometry' stamp: 'GDK 7/4/2020 11:31:44' prior: 50699937 overrides: 16899221!
+morphExtent: ex
+	| topLeft spacing |
+	topLeft _ self labelHeight + borderWidth - self titleBarButtonsExtent // 2 * (1@1).
+	spacing _ self titleBarButtonsExtent x *14//10.
+super morphExtent: ex.
+menuButton ifNotNil: [menuButton morphPosition: topLeft + (ex x @ 0) -  (spacing@0)]! !
+!SystemWindow methodsFor: 'geometry' stamp: 'GDK 7/4/2020 11:32:02' prior: 50699942 overrides: 16899221!
+morphExtent: ex
+	| topLeft spacing |
+	topLeft _ self labelHeight + borderWidth - self titleBarButtonsExtent // 2 * (1@1).
+	spacing _ self titleBarButtonsExtent x *14//10.
+super morphExtent: ex.
+menuButton ifNotNil: [menuButton morphPosition: topLeft + (ex x @ 0) -  ((spacing * 1.5)@0)]! !

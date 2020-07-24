@@ -1,0 +1,45 @@
+
+
+----STARTUP---- (20 July 2020 08:38:39) as F:\Dbs\squeak\build-0.062.image!
+
+!Object class methodsFor: 'instance creation' stamp: 'GDK 7/20/2020 08:38:53' prior: 50805110!
+basicNewFrom: aSimilarObject
+	"Create an object that has similar contents to aSimilarObject.
+	If the classes have any instance varaibles with the same names, copy them across.
+	If this is bad for a class, override this method."
+
+	^ (self isVariable
+		ifTrue: [self basicNew: aSimilarObject basicSize]
+		ifFalse: [self basicNew]
+	  ) basicCopySameFrom: aSimilarObject
+	! !
+!SITSnapshotter class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 08:35:36' prior: 50805084!
+instance
+^Instance ifNil: [Instance _ SITSnapshotter basicNew initialize;yourself]
+! !
+!Object class methodsFor: 'instance creation' stamp: 'GDK 7/20/2020 08:35:39' prior: 50805154!
+basicNewFrom: aSimilarObject
+	"Create an object that has similar contents to aSimilarObject.
+	If the classes have any instance varaibles with the same names, copy them across.
+	If this is bad for a class, override this method."
+
+	^ (self isVariable
+		ifTrue: [self basicNew: aSimilarObject basicSize]
+		ifFalse: [self basicNew]
+	  ) basicCopySameFrom: aSimilarObject
+	! !
+!SITSnapshotter class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 08:35:36' prior: 50805169!
+instance
+^Instance ifNil: [Instance _ SITSnapshotter basicNew initialize;yourself]
+! !
+!Object class methodsFor: 'instance creation' stamp: 'GDK 7/20/2020 08:35:39' prior: 50805175!
+basicNewFrom: aSimilarObject
+	"Create an object that has similar contents to aSimilarObject.
+	If the classes have any instance varaibles with the same names, copy them across.
+	If this is bad for a class, override this method."
+
+	^ (self isVariable
+		ifTrue: [self basicNew: aSimilarObject basicSize]
+		ifFalse: [self basicNew]
+	  ) basicCopySameFrom: aSimilarObject
+	! !

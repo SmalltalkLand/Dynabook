@@ -1,0 +1,109 @@
+
+
+----STARTUP---- (24 July 2020 08:03:11) as F:\dynabook\squeak\build-0.086.image!
+
+
+Object subclass: #AudioObject
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #AudioObject category: #Audio stamp: 'GDK 7/24/2020 08:33:08'!
+Object subclass: #AudioObject
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!AudioObject methodsFor: 'no messages' stamp: 'GDK 7/24/2020 08:34:02'!
+emit: val
+^(Pipe sFor: self) select: [:o|o isKindOf: AudioObject]! !
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 08:35:22' prior: 50813815!
+emit: val
+^((Pipe sFor: self) select: [:o|o isKindOf: AudioObject]) collect: [:o|o emit: val]! !
+
+AudioObject subclass: #Reverb
+	instanceVariableNames: 'buffer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #Reverb category: #Audio stamp: 'GDK 7/24/2020 08:40:56'!
+AudioObject subclass: #Reverb
+	instanceVariableNames: 'buffer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+AudioObject subclass: #Reverb
+	instanceVariableNames: 'buffer delay'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #Reverb category: #Audio stamp: 'GDK 7/24/2020 08:41:06'!
+AudioObject subclass: #Reverb
+	instanceVariableNames: 'buffer delay'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!Reverb methodsFor: 'no messages' stamp: 'GDK 7/24/2020 08:41:38' overrides: 50813821!
+emit: val
+buffer add: val.
+^super emit: val + (buffer at: buffer size - delay)! !
+!Reverb methodsFor: 'accessing' stamp: 'GDK 7/24/2020 08:41:44'!
+buffer
+	"Answer the value of buffer"
+
+	^ buffer! !
+!Reverb methodsFor: 'accessing' stamp: 'GDK 7/24/2020 08:41:44'!
+buffer: anObject
+	"Set the value of buffer"
+
+	buffer _ anObject! !
+!Reverb methodsFor: 'accessing' stamp: 'GDK 7/24/2020 08:41:44'!
+delay
+	"Answer the value of delay"
+
+	^ delay! !
+!Reverb methodsFor: 'accessing' stamp: 'GDK 7/24/2020 08:41:44'!
+delay: anObject
+	"Set the value of delay"
+
+	delay _ anObject! !
+!Reverb methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 08:41:58' prior: 50813849 overrides: 50813821!
+emit: val
+buffer add: val.
+^super emit: (val + (buffer at: buffer size - delay)) / 2! !
+
+AudioObject subclass: #Sound
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #Sound category: #Audio stamp: 'GDK 7/24/2020 08:43:42'!
+AudioObject subclass: #Sound
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!Sound methodsFor: 'no messages' stamp: 'GDK 7/24/2020 08:43:55'!
+buffer
+^self subclassResponsibility! !
+
+AudioObject subclass: #Sound
+	instanceVariableNames: 'index'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #Sound category: #Audio stamp: 'GDK 7/24/2020 08:44:01'!
+AudioObject subclass: #Sound
+	instanceVariableNames: 'index'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!Sound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 08:44:48' overrides: 50813821!
+emit: val
+^super emit: (self buffer at: (index _ (index + 1) mod: self buffer size))! !

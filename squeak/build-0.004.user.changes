@@ -1,0 +1,58 @@
+
+
+----SNAPSHOT----(4 July 2020 17:33:24) build-0.004.image priorSource: 11789006!
+!Button methodsFor: 'accessing' stamp: 'GDK 7/4/2020 17:40:32' prior: 50700146 overrides: 16881508!
+value
+self pollDependents; poll.
+^self currentValue! !
+
+Feature require:  'Morphic-Misc1'.!
+
+----End fileIn of F:\Dbs\src\Morphic-Misc1\Morphic-Widgets-Extras.pck.st----!
+
+CodePackage subclass: #ColorExtrasPackage
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Color-Extras'!
+
+!classDefinition: #ColorExtrasPackage category: #'Color-Extras' stamp: 'Install-Color-Extras 7/4/2020 17:53:05'!
+CodePackage subclass: #ColorExtrasPackage
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Color-Extras'!
+
+ColorExtrasPackage class
+	instanceVariableNames: ''!
+
+!classDefinition: 'ColorExtrasPackage class' category: #'Color-Extras' stamp: 'Install-Color-Extras 7/4/2020 17:53:05'!
+ColorExtrasPackage class
+	instanceVariableNames: ''!
+
+----End fileIn of F:\Dbs\src\Packages\Features\Color-Extras.pck.st----!
+
+CodePackage subclass: #MorphicMisc1Package
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Morphic-Misc1'!
+
+!classDefinition: #MorphicMisc1Package category: #'Morphic-Misc1' stamp: 'Install-Morphic-Misc1 7/4/2020 17:53:06'!
+CodePackage subclass: #MorphicMisc1Package
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Morphic-Misc1'!
+!MorphicMisc1Package commentStamp: '<historical>' prior: 0!
+My purpose in life is to check that any base image methods overridden have not been updated.
+See #MorphMisc1Package class>>prePackageInstall!
+
+MorphicMisc1Package class
+	instanceVariableNames: ''!
+
+!classDefinition: 'MorphicMisc1Package class' category: #'Morphic-Misc1' stamp: 'Install-Morphic-Misc1 7/4/2020 17:53:06'!
+MorphicMisc1Package class
+	instanceVariableNames: ''!
+
+----End fileIn of F:\Dbs\src\Morphic-Misc1\Morphic-Misc1.pck.st----!

@@ -1,0 +1,78 @@
+
+
+----STARTUP---- (6 July 2020 14:29:41) as F:\Dbs\src\build-0.014.image!
+
+!Preferences class methodsFor: 'as yet unclassified' stamp: 'GDK 7/6/2020 14:48:00' prior: 50733085!
+protectedMode
+^(self valueOfFlag: #protectedMode) or: [Project ifNotNil: [Project current ifNotNil: #protected ifNil: [false]] ifNil: [false]]! !
+
+Object subclass: #Domain
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+
+!classDefinition: #Domain category: #Domains stamp: 'GDK 7/6/2020 14:49:06'!
+Object subclass: #Domain
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+!Domain methodsFor: 'no messages' stamp: 'GDK 7/6/2020 14:49:18'!
+exists
+^false! !
+!Domain class methodsFor: 'no messages' stamp: 'GDK 7/6/2020 14:50:12'!
+allExisting
+^Domain allSubInstances select: [:i|i exists]! !
+
+Domain subclass: #WorldDomain
+	instanceVariableNames: 'world'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+
+!classDefinition: #WorldDomain category: #Domains stamp: 'GDK 7/6/2020 14:50:54'!
+Domain subclass: #WorldDomain
+	instanceVariableNames: 'world'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+!WorldDomain methodsFor: 'no messages' stamp: 'GDK 7/6/2020 14:51:13' overrides: 50733130!
+exists
+^world == self runningWorld! !
+!WorldDomain methodsFor: 'accessing' stamp: 'GDK 7/6/2020 14:51:22'!
+world
+	"Answer the value of world"
+
+	^ world! !
+!WorldDomain methodsFor: 'accessing' stamp: 'GDK 7/6/2020 14:51:22'!
+world: anObject
+	"Set the value of world"
+
+	world _ anObject! !
+
+Domain subclass: #ProjectDomain
+	instanceVariableNames: 'project'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Projects'!
+
+!classDefinition: #ProjectDomain category: #Projects stamp: 'GDK 7/6/2020 14:52:05'!
+Domain subclass: #ProjectDomain
+	instanceVariableNames: 'project'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Projects'!
+!ProjectDomain methodsFor: 'accessing' stamp: 'GDK 7/6/2020 14:52:09'!
+project
+	"Answer the value of project"
+
+	^ project! !
+!ProjectDomain methodsFor: 'accessing' stamp: 'GDK 7/6/2020 14:52:09'!
+project: anObject
+	"Set the value of project"
+
+	project _ anObject! !
+!ProjectDomain methodsFor: 'accessing' stamp: 'GDK 7/6/2020 14:52:24' overrides: 50733130!
+exists
+^project == Project current! !

@@ -1,0 +1,62 @@
+
+
+----SNAPSHOT----(22 July 2020 08:52:00) build-0.078.image priorSource: 15372983!
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 08:59:50' prior: 50812087!
+overlay: otherMorph
+| copy reported b val |
+copy _ self shallowCopy.
+otherMorph privateOwner: owner.
+self becomeForward: otherMorph.
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+otherMorph when: #reported send: #value: to: b.
+[reported]whileFalse: [otherMorph world doOneCycle].
+otherMorph removeActionsWithReceiver: b
+forEvent: #reported.
+otherMorph becomeForward: copy.
+^val! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 09:23:19'!
+report: val
+self triggerEvent: #reported with: val.! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 09:28:28' prior: 50812105!
+overlay: otherMorph
+| copy reported b val |
+copy _ self shallowCopy.
+otherMorph privateOwner: owner.
+self becomeForward: otherMorph.
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+otherMorph when: #reported send: #value: to: b.
+[reported]whileFalse: [otherMorph world doOneCycle].
+otherMorph removeActionsWithReceiver: b
+forEvent: #reported.
+otherMorph becomeForward: copy.
+^val! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 09:33:46' prior: 50812125!
+overlay: otherMorph
+| copy reported b val |
+copy _ self shallowCopy.
+otherMorph privateOwner: owner.
+self becomeForward: otherMorph.
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+otherMorph when: #reported send: #value: to: b.
+[reported]whileFalse: [otherMorph world doOneCycle].
+otherMorph removeActionsWithReceiver: b
+forEvent: #reported.
+otherMorph becomeForward: copy.
+^val! !
+!Morph methodsFor: 'overlaying' stamp: 'GDK 7/22/2020 09:40:03' prior: 50812140!
+overlay: otherMorph
+| copy reported b val |
+copy _ self shallowCopy.
+otherMorph privateOwner: owner.
+self becomeForward: otherMorph.
+reported _ false.
+b _ [:v|reported _ true. val _ v].
+otherMorph when: #reported send: #value: to: b.
+[reported]whileFalse: [otherMorph world doOneCycle].
+otherMorph removeActionsWithReceiver: b
+forEvent: #reported.
+otherMorph becomeForward: copy.
+^val! !

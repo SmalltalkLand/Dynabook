@@ -1,0 +1,17 @@
+
+
+----STARTUP---- (8 July 2020 08:37:08) as F:\Dbs\src\build-0.019.image!
+
+
+HookDictionary initializeClassVars!
+
+----SNAPSHOT----(8 July 2020 08:37:48) build-0.019.image priorSource: 14364064!
+
+!classDefinition: #SystemDictionary category: #'System-Support' stamp: 'GDK 7/8/2020 08:37:55'!
+HookDictionary subclass: #SystemDictionary
+	instanceVariableNames: 'cachedClassNames cachedNonClassNames startUpScriptArguments startUpArguments'
+	classVariableNames: 'ChangesInitialFileSize EndianCache LastImageName LastQuitLogPosition LowSpaceProcess LowSpaceSemaphore ShutDownList SourceFileVersionString SpecialSelectors StartUpList StartupStamp WordSize'
+	poolDictionaries: ''
+	category: 'System-Support'!
+
+Number!

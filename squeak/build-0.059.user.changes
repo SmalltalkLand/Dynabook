@@ -1,0 +1,34 @@
+
+
+----SNAPSHOT----(18 July 2020 18:02:43) build-0.059.image priorSource: 15077967!
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:08:09' prior: 50802993!
+snapshot
+^((Object allSubInstances select: [:i|
+	| nv |
+	nv _ true.
+	i triggerEvent: #squitMark with: [:v|nv _ v].
+	nv
+	]) collect: [:i|
+	| bp |
+	bp _ [:b|b value: false].
+	bp when: #squitMark send: #value: to: bp.
+	(i -> (i shallowCopy when: #squitMark send: #value: to: bp;yourself)) when: #squitMark send: #value: to: bp;yourself]) asDictionary! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:13:55' prior: 50803010!
+snapshot
+	| bpp |
+	bpp _ [:b|b value: false].
+	bpp when: #squitMark send: #value: to: bpp.
+^(((Object allSubInstances select: [:i|
+	| nv |
+	nv _ true.
+	i triggerEvent: #squitMark with: [:v|nv _ v].
+	nv
+	]) collect: [:i|
+	| bp |
+	bp _ [:b|b value: false].
+	bp when: #squitMark send: #value: to: bp.
+	(i -> (i shallowCopy when: #squitMark send: #value: to: bp;yourself)) when: #squitMark send: #value: to: bp;yourself]) asArray when: #squitMark send: #value: to: bpp;yourself) asDictionary when: #squitMark send: #value: to: bpp;yourself! !
+!SITSnapshotter methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 18:19:56' prior: 50802985!
+restore: snapshot
+snapshot valuesDo: [:i|i removeActionsForEvent: #squitMark].
+snapshot keysAndValuesDo: [:k :v|k becomeForward: v].! !

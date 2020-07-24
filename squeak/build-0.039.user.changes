@@ -1,0 +1,340 @@
+
+
+----STARTUP---- (14 July 2020 20:09:47) as F:\Dbs\squeak\build-0.039.image!
+
+!HandMorph methodsFor: 'event handling' stamp: 'GDK 7/14/2020 19:16:56' prior: 50601684!
+processEventQueue
+	"Process user input events from the local input devices."
+
+	| evt evtBuf type hadAny mcs |
+	mcs _ mouseClickState.
+	hadAny := false.
+	VirtualKeyboard allSubInstancesDo: [:i|i targetHand == self ifTrue: [i processEvents: [:evt2|self startEventDispatch: evt2]]].
+	[ (evtBuf := Sensor nextEvent) isNil ] whileFalse: [
+		type := evtBuf first.
+		evt := self createEventFrom: evtBuf ofType: type.
+		evt
+			ifNil: [ 
+				"I have to consume all eventTypeDragDropFiles of type 2 quicky, that is why
+				I check if it was an eventTypeDragDropFiles to continue in the loop - Hernan"
+				type ~= EventSensor eventTypeDragDropFiles ifTrue: [^hadAny]]
+			ifNotNil: [
+				"Finally, handle it"
+				self startEventDispatch: evt.
+				hadAny := true.
+				"For better user feedback, return immediately after a mouse event has been processed."
+				evt isMouse ifTrue: [ ^hadAny ]]].
+	"note: if we come here we didn't have any mouse events"
+	mcs 
+		ifNotNil: [ 
+			"No mouse events during this cycle. Make sure click states time out accordingly"
+			mcs
+				handleEvent: (self lastMouseEvent asMouseMove: (Time localMillisecondClock - self lastMouseEventTime max: 0))
+				from: self ].
+	^hadAny! !
+
+!classDefinition: #VirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:51'!
+Morph subclass: #VirtualKeyboard
+	instanceVariableNames: 'targetHand eventQueue'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+
+!classDefinition: #VirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:51'!
+Morph subclass: #VirtualKeyboard
+	instanceVariableNames: 'targetHand eventQueue'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+!VirtualKeyboard methodsFor: 'accessing' stamp: 'GDK 7/14/2020 19:26:20'!
+eventQueue
+	"Answer the value of eventQueue"
+
+	^ eventQueue! !
+!VirtualKeyboard methodsFor: 'accessing' stamp: 'GDK 7/14/2020 19:26:21'!
+eventQueue: anObject
+	"Set the value of eventQueue"
+
+	eventQueue _ anObject! !
+!VirtualKeyboard methodsFor: 'events' stamp: 'GDK 7/14/2020 19:26:50' prior: 50785026!
+processEvents: process
+eventQueue ifNotNil: [eventQueue do: process].
+eventQueue _ OrderedCollection new.! !
+
+!classDefinition: #VirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:52'!
+LayoutMorph subclass: #VirtualKeyboard
+	instanceVariableNames: 'targetHand eventQueue'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+
+!classDefinition: #VirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:52'!
+LayoutMorph subclass: #VirtualKeyboard
+	instanceVariableNames: 'targetHand eventQueue'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+
+!classDefinition: #SsytemVirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:52'!
+VirtualKeyboard subclass: #SsytemVirtualKeyboard
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+
+!classDefinition: #SsytemVirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:52'!
+VirtualKeyboard subclass: #SsytemVirtualKeyboard
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+
+!classDefinition: #SystemVirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:52'!
+VirtualKeyboard subclass: #SystemVirtualKeyboard
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+
+!classDefinition: #SystemVirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:52'!
+VirtualKeyboard subclass: #SystemVirtualKeyboard
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+
+!classRemoval: #SsytemVirtualKeyboard stamp: 'GDK 7/14/2020 20:09:52'!
+VirtualKeyboard subclass: #SsytemVirtualKeyboard
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+!SystemVirtualKeyboard methodsFor: 'no messages' stamp: 'GDK 7/14/2020 19:40:51' overrides: 50785021!
+initialize
+super initialize.! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:40:55' prior: 50785597 overrides: 50785021!
+initialize
+super initialize.
+self build.! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:43:28'!
+build
+| buttons |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'} collect: [:str|PluggableButtonMorph model: [] action: #value]! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:45:30' prior: 50785607!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'} collect: [:str|
+	i _ 0.
+	PluggableButtonMorph model: [i _ 1 + 1. [(Delay forMilliseconds: 750) wait. (str2 = str) ifTrue: []] fork] action: #value
+	]! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:45:40' prior: 50785616!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'} collect: [:str|
+	i _ 0.
+	PluggableButtonMorph model: [i _ i + 1. [(Delay forMilliseconds: 750) wait. (str2 = str) ifTrue: []] fork] action: #value
+	]! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:45:54' prior: 50785628!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'} collect: [:str|
+	i _ 0.
+	PluggableButtonMorph model: [i _ i + 1. str2 _ str. [(Delay forMilliseconds: 750) wait. (str2 = str) ifTrue: []] fork] action: #value
+	]! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:46:26' prior: 50785640!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'} collect: [:str|
+	i _ 0.
+	PluggableButtonMorph model: [i _ i + 1. str2 _ str. [(Delay forMilliseconds: 750) wait. (str2 = str) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value
+	].
+buttons do: [:b|self addMorph: b].! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:46:33'!
+emitIt: c! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:47:28' prior: 50785652!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'} collect: [:str|
+	i _ 0.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i.
+				self emitIt: c.]. str2 _ str. [(Delay forMilliseconds: 750) wait. (str2 = str) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value
+	].
+buttons do: [:b|self addMorph: b].! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:47:55' prior: 50785670!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'} collect: [:str|
+	i _ 1.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i - 1.
+				self emitIt: c.
+				i _ 1]. str2 _ str. [(Delay forMilliseconds: 750) wait. (str2 = str) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value
+	].
+buttons do: [:b|self addMorph: b].! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:55:08' prior: 50785687!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'} collect: [:str|
+	i _ 1.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i - 1.
+				self emitIt: c.
+				i _ 1]. str2 _ str. [|ci |ci _ i.(Delay forMilliseconds: 750) wait. (str2 = str and: [ci = 1]) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value
+	].
+buttons do: [:b|self addMorph: b].! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:59:34' prior: 50785704!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'. '.()[]'} collect: [:str|
+	i _ 1.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i - 1.
+				self emitIt: c.
+				i _ 1]. str2 _ str. [|ci |ci _ i.(Delay forMilliseconds: 750) wait. (str2 = str and: [ci = 1]) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value
+	].
+buttons do: [:b|self addMorph: b].! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 19:59:43' prior: 50785722!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'. '.()[]'. ' '} collect: [:str|
+	i _ 1.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i - 1.
+				self emitIt: c.
+				i _ 1]. str2 _ str. [|ci |ci _ i.(Delay forMilliseconds: 750) wait. (str2 = str and: [ci = 1]) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value
+	].
+buttons do: [:b|self addMorph: b].! !
+
+!classDefinition: #SystemVirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:53'!
+VirtualKeyboard subclass: #SystemVirtualKeyboard
+	instanceVariableNames: 'capital'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+
+!classDefinition: #SystemVirtualKeyboard category: #'System-VirtualKeyboard' stamp: 'GDK 7/14/2020 20:09:53'!
+VirtualKeyboard subclass: #SystemVirtualKeyboard
+	instanceVariableNames: 'capital'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-VirtualKeyboard'!
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:00:38' prior: 50785740!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'. '.()[]'. ' '} collect: [:str|
+	i _ 1.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i - 1.
+				self emitIt: c.
+				i _ 1]. str2 _ str. [|ci |ci _ i.(Delay forMilliseconds: 750) wait. (str2 = str and: [ci = 1]) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value label: str
+	], {PluggableButtonMorph}.
+buttons do: [:b|self addMorph: b].! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:01:06' prior: 50785776!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'. '.()[]'. ' '} collect: [:str|
+	i _ 1.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i - 1.
+				self emitIt: c.
+				i _ 1]. str2 _ str. [|ci |ci _ i.(Delay forMilliseconds: 750) wait. (str2 = str and: [ci = 1]) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value label: str
+	], {PluggableButtonMorph model: [] action: #value label: '^'}.
+buttons do: [:b|self addMorph: b].! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:01:17' prior: 50785796!
+build
+| buttons str2 i |
+buttons _ {'abc'. 'def'. 'ghi'. 'jkl'. 'mno'. 'pqrs'. 'tuv'. 'wxyz'. '.()[]'. ' '} collect: [:str|
+	i _ 1.
+	PluggableButtonMorph model: [i _ i + 1. str2 ifNotNil: [				| c |
+				c _ str2 at: i - 1.
+				self emitIt: c.
+				i _ 1]. str2 _ str. [|ci |ci _ i.(Delay forMilliseconds: 750) wait. (str2 = str and: [ci = 1]) ifTrue: [
+				| c |
+				c _ str2 at: i.
+				self emitIt: c.
+				]] fork] action: #value label: str
+	], {PluggableButtonMorph model: [capital _ capital not] action: #value label: '^'}.
+buttons do: [:b|self addMorph: b].! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:01:28' prior: 50785602 overrides: 50785021!
+initialize
+super initialize.
+capital _ false.
+self build.! !
+!SystemVirtualKeyboard methodsFor: 'accessing' stamp: 'GDK 7/14/2020 20:01:34'!
+capital
+	"Answer the value of capital"
+
+	^ capital! !
+!SystemVirtualKeyboard methodsFor: 'accessing' stamp: 'GDK 7/14/2020 20:01:35'!
+capital: anObject
+	"Set the value of capital"
+
+	capital _ anObject! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:01:59' prior: 50785666!
+emitIt: c
+| nc |
+nc _ c.
+capital ifTrue: [nc _ nc asUppercase].! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:02:04' prior: 50785855!
+emitIt: c
+| nc |
+nc _ c.
+capital ifTrue: [nc _ nc asUppercase].
+! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:02:13' prior: 50785861!
+emitIt: c
+| nc evt |
+nc _ c.
+capital ifTrue: [nc _ nc asUppercase].
+! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:04:49' prior: 50785867!
+emitIt: c
+| nc evt |
+nc _ c.
+capital ifTrue: [nc _ nc asUppercase].
+{#keyDown. #keyUp} do: [:s|evt _ KeyboardEvent new setType: s]! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:07:51' prior: 50785873!
+emitIt: c
+| nc evt |
+nc _ c.
+capital ifTrue: [nc _ nc asUppercase].
+{#keyDown. #keyUp} do: [:s|evt _ KeyboardEvent new setType: s buttons: (capital ifTrue: [InputSensor shiftKey] ifFalse: [0]) position: targetHand morphPosition keyValue: (nc asInteger) hand: targetHand stamp: (Time localMillisecondClock )]! !
+!SystemVirtualKeyboard methodsFor: 'as yet unclassified' stamp: 'GDK 7/14/2020 20:08:13' prior: 50785881!
+emitIt: c
+| nc evt |
+nc _ c.
+capital ifTrue: [nc _ nc asUppercase].
+{#keyDown. #keyUp} do: [:s|evt _ KeyboardEvent new setType: s buttons: (capital ifTrue: [InputSensor shiftKey] ifFalse: [0]) position: targetHand morphPosition keyValue: (nc asInteger) hand: targetHand stamp: (Time localMillisecondClock ). eventQueue ifNotNil: [eventQueue add: evt]]! !

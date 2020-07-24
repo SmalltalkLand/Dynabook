@@ -1,0 +1,10 @@
+
+
+----STARTUP---- (18 July 2020 14:54:30) as F:\Dbs\squeak\build-0.055.image!
+
+!Utilities class methodsFor: 'default desktop' stamp: 'GDK 7/18/2020 14:27:34' prior: 50791939!
+showLicense
+(self confirm: self license, 'Agree?') ifFalse: [^[UISupervisor whenUIinSafeState: [self showLicense]] fork].! !
+!Utilities class methodsFor: 'default desktop' stamp: 'GDK 7/18/2020 14:32:56' prior: 50792226!
+showLicense
+(self confirm: self license, 'Agree?') ifFalse: [^[UISupervisor whenUIinSafeState: [self showLicense]] fork].! !

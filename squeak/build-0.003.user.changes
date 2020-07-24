@@ -1,0 +1,75 @@
+
+
+----STARTUP---- (4 July 2020 16:00:49) as F:\Dbs\src\build-0.003.image!
+
+!SystemWindow methodsFor: 'events' stamp: 'GDK 7/4/2020 15:54:05' prior: 16926165 overrides: 16874422!
+wantsToBeDroppedInto: aMorph
+	"Return true if it's okay to drop the receiver into aMorph"
+	^aMorph isWorldMorph or:[Preferences systemWindowEmbedOK] or: [(aMorph is: #SystemWindow) and: [aMorph hasTabs]]! !
+
+----SNAPSHOT----(4 July 2020 16:00:57) build-0.003.image priorSource: 11788210!
+!SystemWindow methodsFor: 'events' stamp: 'GDK 7/4/2020 16:18:36' prior: 50700048 overrides: 16874422!
+wantsToBeDroppedInto: aMorph
+	"Return true if it's okay to drop the receiver into aMorph"
+	^aMorph isWorldMorph or:[Preferences systemWindowEmbedOK] or: [(aMorph is: #SystemWindow) and: [aMorph hasTabs]]! !
+!SystemWindow methodsFor: 'events' stamp: 'GDK 7/4/2020 16:45:43' prior: 50700061 overrides: 16874422!
+wantsToBeDroppedInto: aMorph
+	"Return true if it's okay to drop the receiver into aMorph"
+	^aMorph isWorldMorph or:[Preferences systemWindowEmbedOK] or: [(aMorph is: #SystemWindow) and: [aMorph hasTabs]] ! !
+!SystemWindow methodsFor: 'events' stamp: 'GDK 7/4/2020 16:53:57' prior: 50700071 overrides: 16874422!
+wantsToBeDroppedInto: aMorph
+	"Return true if it's okay to drop the receiver into aMorph"
+	^aMorph isWorldMorph or:[Preferences systemWindowEmbedOK] or: [(aMorph is: #SystemWindow) and: [aMorph hasTabs]] ! !
+!SystemWindow methodsFor: 'events' stamp: 'GDK 7/4/2020 17:03:36' prior: 50700081 overrides: 16874422!
+wantsToBeDroppedInto: aMorph
+	"Return true if it's okay to drop the receiver into aMorph"
+	^aMorph isWorldMorph or:[Preferences systemWindowEmbedOK] or: [(aMorph is: #SystemWindow) and: [aMorph hasTabs]] ! !
+
+Object subclass: #Button
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Buttons-Kernel'!
+
+!classDefinition: #Button category: #'Buttons-Kernel' stamp: 'GDK 7/4/2020 17:30:57'!
+Object subclass: #Button
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Buttons-Kernel'!
+!Button methodsFor: 'no messages' stamp: 'GDK 7/4/2020 17:31:07'!
+poll
+! !
+!Button methodsFor: 'as yet unclassified' stamp: 'GDK 7/4/2020 17:32:14'!
+pollDependents
+Button allSubInstances do: [:b|(self dependent: b) ifTrue: [b pollDependents; poll]]! !
+!Button methodsFor: 'as yet unclassified' stamp: 'GDK 7/4/2020 17:32:27'!
+dependent: b
+^false! !
+
+Object subclass: #Button
+	instanceVariableNames: 'currentValue'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Buttons-Kernel'!
+
+!classDefinition: #Button category: #'Buttons-Kernel' stamp: 'GDK 7/4/2020 17:32:43'!
+Object subclass: #Button
+	instanceVariableNames: 'currentValue'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Buttons-Kernel'!
+!Button methodsFor: 'accessing' stamp: 'GDK 7/4/2020 17:32:50'!
+currentValue
+	"Answer the value of currentValue"
+
+	^ currentValue! !
+!Button methodsFor: 'accessing' stamp: 'GDK 7/4/2020 17:32:51'!
+currentValue: anObject
+	"Set the value of currentValue"
+
+	currentValue _ anObject! !
+!Button methodsFor: 'accessing' stamp: 'GDK 7/4/2020 17:33:12' overrides: 16881508!
+value
+self pollDependents; poll.
+^self currentValue! !

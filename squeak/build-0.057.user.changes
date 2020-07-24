@@ -1,0 +1,111 @@
+
+
+----SNAPSHOT----(18 July 2020 15:03:38) build-0.057.image priorSource: 14739474!
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 15:05:39' prior: 50792284!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^s,
+'
+Dynabook Smalltalk is based on Cuis. The parts of it that are unique from Cuis are copyright (c) 2020 Contributors to Dynabook Smalltalk.
+Portions of Cuis are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.'! !
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 15:12:22' prior: 50792308!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^s,
+'
+Portions of Dynabook Smalltalk are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.
+Copyright (c) Contributors to Dynabook Smalltalk 2020'! !
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 15:16:54' prior: 50792329!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^
+'
+Portions of Dynabook Smalltalk are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.
+Copyright (c) Contributors to Dynabook Smalltalk 2020' , s! !
+
+----SNAPSHOT----(18 July 2020 15:17:33) build-0.057.image priorSource: 14740918!
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 15:37:31' prior: 50792348!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^
+'
+Portions of Dynabook Smalltalk are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.
+Copyright (c) Contributors to Dynabook Smalltalk 2020' , s! !
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 16:00:49' prior: 50792370!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^
+'
+Portions of Dynabook Smalltalk are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.
+Copyright (c) Contributors to Dynabook Smalltalk 2020' , s, '
+Dynabook Smalltalk is licensed using the GPLv3+ license.
+
+'! !
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 16:01:23' prior: 50792389!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^
+'
+Portions of Dynabook Smalltalk are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.
+Copyright (c) Contributors to Dynabook Smalltalk 2020' , s, '
+Dynabook Smalltalk is licensed using the GPLv3+ license.
+Evaluate Utilities licesne to get the license.
+'! !
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/18/2020 16:01:41' prior: 50792410!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]),' ',Date today year.
+	^
+'
+Portions of Dynabook Smalltalk are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2018.
+Copyright (c) Contributors to Dynabook Smalltalk 2020' , s, '
+Dynabook Smalltalk is licensed using the GPLv3+ license.
+Evaluate "Utilities license" to get the license.
+'! !
+
+Feature require: 'VectorGraphics'!
+
+----End fileIn of F:\Dbs\squeak\Packages\System\Collections-CompactArrays.pck.st----!
+
+----End fileIn of F:\Dbs\squeak\Packages\Features\VectorGraphics.pck.st----!

@@ -1,0 +1,318 @@
+
+
+----SNAPSHOT----(24 July 2020 10:22:12) build-0.090.image priorSource: 16363913!
+!AudioOutput methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 10:27:19' prior: 50845244 overrides: 50845229!
+emitBase: s
+AudioPlayer playSample: s pan: 0.5! !
+!SoundRecorder methodsFor: 'private' stamp: 'GDK 7/24/2020 10:30:01' prior: 50843655!
+emitBuffer: buffer
+
+	| sound ratio resultBuf |
+
+	"since some sound recording devices cannot (or will not) record below a certain sample rate,
+	trim the samples down if the user really wanted fewer samples"
+
+	(desiredSampleRate isNil or: [(ratio _ samplingRate // desiredSampleRate) <= 1]) ifTrue: [
+		sound _ SampledSound new setSamples: buffer samplingRate: samplingRate.
+	] ifFalse: [
+		resultBuf _ AudioBuffer 
+			averageEvery: ratio 
+			from: buffer 
+			upTo: buffer monoSampleCount.
+		sound _ SampledSound new setSamples: resultBuf samplingRate: samplingRate / ratio.
+	].
+
+	recordedSound add: (codec ifNil: [sound] ifNotNil: [codec compressSound: sound]).
+	self emitAsTick: sound.! !
+
+AudioObject subclass: #SoundRecorder
+	instanceVariableNames: 'stereo samplingRate recordLevel recordedBuffers recordedSound recordProcess bufferAvailableSema paused meteringBuffer meterLevel soundPlaying currentBuffer nextIndex codec desiredSampleRate'
+	classVariableNames: 'CanRecordWhilePlaying RecorderActive'
+	poolDictionaries: ''
+	category: 'Sound-Synthesis'!
+
+!classDefinition: #SoundRecorder category: #'Sound-Synthesis' stamp: 'GDK 7/24/2020 10:30:09'!
+AudioObject subclass: #SoundRecorder
+	instanceVariableNames: 'stereo samplingRate recordLevel recordedBuffers recordedSound recordProcess bufferAvailableSema paused meteringBuffer meterLevel soundPlaying currentBuffer nextIndex codec desiredSampleRate'
+	classVariableNames: 'CanRecordWhilePlaying RecorderActive'
+	poolDictionaries: ''
+	category: 'Sound-Synthesis'!
+!SoundRecorder methodsFor: 'private' stamp: 'GDK 7/24/2020 10:31:09' prior: 50845257!
+emitBuffer: buffer
+
+	| sound ratio resultBuf |
+
+	"since some sound recording devices cannot (or will not) record below a certain sample rate,
+	trim the samples down if the user really wanted fewer samples"
+
+	(desiredSampleRate isNil or: [(ratio _ samplingRate // desiredSampleRate) <= 1]) ifTrue: [
+		sound _ SampledSound new setSamples: buffer samplingRate: samplingRate.
+	] ifFalse: [
+		resultBuf _ AudioBuffer 
+			averageEvery: ratio 
+			from: buffer 
+			upTo: buffer monoSampleCount.
+		sound _ SampledSound new setSamples: resultBuf samplingRate: samplingRate / ratio.
+	].
+
+	recordedSound add: (codec ifNil: [sound] ifNotNil: [codec compressSound: sound]).
+	sound samples do: [:s|self emitAsTick: s].! !
+!SoundRecorder methodsFor: 'private' stamp: 'GDK 7/24/2020 10:36:25' prior: 50845308!
+emitBuffer: buffer
+
+	| sound ratio resultBuf |
+
+	"since some sound recording devices cannot (or will not) record below a certain sample rate,
+	trim the samples down if the user really wanted fewer samples"
+
+	(desiredSampleRate isNil or: [(ratio _ samplingRate // desiredSampleRate) <= 1]) ifTrue: [
+		sound _ SampledSound new setSamples: buffer samplingRate: samplingRate.
+	] ifFalse: [
+		resultBuf _ AudioBuffer 
+			averageEvery: ratio 
+			from: buffer 
+			upTo: buffer monoSampleCount.
+		sound _ SampledSound new setSamples: resultBuf samplingRate: samplingRate / ratio.
+	].
+
+	recordedSound add: (codec ifNil: [sound] ifNotNil: [codec compressSound: sound]).
+	sound samples do: [:s|self emitAsTick: s].! !
+!SoundRecorder methodsFor: 'private' stamp: 'GDK 7/24/2020 10:41:42' prior: 50845334!
+emitBuffer: buffer
+
+	| sound ratio resultBuf |
+
+	"since some sound recording devices cannot (or will not) record below a certain sample rate,
+	trim the samples down if the user really wanted fewer samples"
+
+	(desiredSampleRate isNil or: [(ratio _ samplingRate // desiredSampleRate) <= 1]) ifTrue: [
+		sound _ SampledSound new setSamples: buffer samplingRate: samplingRate.
+	] ifFalse: [
+		resultBuf _ AudioBuffer 
+			averageEvery: ratio 
+			from: buffer 
+			upTo: buffer monoSampleCount.
+		sound _ SampledSound new setSamples: resultBuf samplingRate: samplingRate / ratio.
+	].
+
+	recordedSound add: (codec ifNil: [sound] ifNotNil: [codec compressSound: sound]).
+	sound samples do: [:s|self emitAsTick: s].! !
+
+AudioObject subclass: #SoundRecorder
+	instanceVariableNames: 'stereo samplingRate recordLevel recordedBuffers recordedSound recordProcess bufferAvailableSema paused meteringBuffer meterLevel soundPlaying currentBuffer nextIndex codec desiredSampleRate'
+	classVariableNames: 'CanRecordWhilePlaying RecorderActive'
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #SoundRecorder category: #Audio stamp: 'GDK 7/24/2020 10:42:45'!
+AudioObject subclass: #SoundRecorder
+	instanceVariableNames: 'stereo samplingRate recordLevel recordedBuffers recordedSound recordProcess bufferAvailableSema paused meteringBuffer meterLevel soundPlaying currentBuffer nextIndex codec desiredSampleRate'
+	classVariableNames: 'CanRecordWhilePlaying RecorderActive'
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classRenamed: #SoundRecorder as: #AudioRecorder stamp: 'GDK 7/24/2020 10:42:54'!
+Smalltalk renameClassNamed: #SoundRecorder as: #AudioRecorder!
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 10:42:55' prior: 50839167!
+canStartPlayer
+	"Some platforms do no support simultaneous record and play. If this is one of those platforms, return false if there is a running SoundRecorder."
+
+	Preferences canRecordWhilePlaying ifTrue: [^ true].
+	AudioRecorder anyActive ifTrue:[^false].
+	^ true
+! !
+!SoundSystem methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 10:42:55' prior: 50842754!
+randomBitsFromSoundInput: bitCount
+	"Answer a positive integer with the given number of random bits of 'noise' from a sound input source. Typically, one would use a microphone or line input as the sound source, although many sound cards have enough thermal noise that you get random low-order sample bits even with no microphone connected. Only the least signficant bit of the samples is used. Since not all sound cards support 16-bits of sample resolution, we use the lowest bit that changes."
+	"(1 to: 10) collect: [:i | BaseSoundSystem new randomBitsFromSoundInput: 512]"
+
+	| recorder buf mid samples bitMask randomBits bit |
+	"collect some sound data"
+	recorder _ AudioRecorder new clearRecordedSound.
+	recorder resumeRecording.
+	(Delay forSeconds: 1) wait.
+	recorder stopRecording.
+	buf _ recorder condensedSamples.
+
+	"grab bitCount samples from the middle"
+	mid _ buf monoSampleCount // 2.
+	samples _ buf copyFrom: mid to: mid + bitCount - 1.
+
+	"find the least significant bit that varies"
+	bitMask _ 1.
+	[bitMask < 16r10000 and:
+	 [(samples collect: [:s | s bitAnd: bitMask]) asSet size < 2]]
+		whileTrue: [bitMask _ bitMask bitShift: 1].
+	bitMask = 16r10000 ifTrue: [^ self error: 'sound samples do not vary'].
+
+	"pack the random bits into a positive integer"
+	randomBits _ 0.
+	1 to: samples size do: [:i |
+		bit _ ((samples at: i) bitAnd: bitMask) = 0 ifTrue: [0] ifFalse: [1].
+		randomBits _ (randomBits bitShift: 1) + bit].
+
+	^ randomBits	
+! !
+
+Object subclass: #Command
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+
+!classDefinition: #Command category: #Terminal stamp: 'GDK 7/24/2020 11:01:13'!
+Object subclass: #Command
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+
+Object subclass: #Command
+	instanceVariableNames: 'object'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+
+!classDefinition: #Command category: #Terminal stamp: 'GDK 7/24/2020 11:01:27'!
+Object subclass: #Command
+	instanceVariableNames: 'object'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+
+Object subclass: #Command
+	instanceVariableNames: 'xxxtraget'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+
+!classDefinition: #Command category: #Terminal stamp: 'GDK 7/24/2020 11:01:42'!
+Object subclass: #Command
+	instanceVariableNames: 'xxxtraget'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+
+Object subclass: #Command
+	instanceVariableNames: 'xxxtarget'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+
+!classDefinition: #Command category: #Terminal stamp: 'GDK 7/24/2020 11:01:46'!
+Object subclass: #Command
+	instanceVariableNames: 'xxxtarget'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+!Command methodsFor: 'accessing' stamp: 'GDK 7/24/2020 11:01:57'!
+xxxtarget
+	"Answer the value of xxxtarget"
+
+	^ xxxtarget! !
+!Command methodsFor: 'accessing' stamp: 'GDK 7/24/2020 11:01:57'!
+xxxtarget: anObject
+	"Set the value of xxxtarget"
+
+	xxxtarget _ anObject! !
+
+ProtoObject subclass: #Command
+	instanceVariableNames: 'xxxtarget'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+
+!classDefinition: #Command category: #Terminal stamp: 'GDK 7/24/2020 11:02:04'!
+ProtoObject subclass: #Command
+	instanceVariableNames: 'xxxtarget'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Terminal'!
+!Command methodsFor: 'accessing' stamp: 'GDK 7/24/2020 11:04:27' overrides: 16896555!
+doesNotUnderstand: message
+^(Pipe sFor: self) collect: [:p|p onMessage: (message sentTo: self xxxtarget)]! !
+!Command methodsFor: 'accessing' stamp: 'GDK 7/24/2020 11:04:38' prior: 50845540 overrides: 16896555!
+doesNotUnderstand: message
+^(Pipe sFor: self) collect: [:p|p onMessage: message previous: (message sentTo: self xxxtarget)]! !
+!Command methodsFor: 'accessing' stamp: 'GDK 7/24/2020 11:04:57' prior: 50845547 overrides: 16896555!
+doesNotUnderstand: message
+^(Pipe sFor: self) collect: [:p|p onMessage: message previous: (message sentTo: self xxxtarget)], {(message sentTo: self xxxtarget)}! !
+!Command methodsFor: 'accessing' stamp: 'GDK 7/24/2020 11:05:31' prior: 50845555 overrides: 16896555!
+doesNotUnderstand: message
+^((Pipe sFor: self) collect: [:p|p onMessage: message previous: (message sentTo: self xxxtarget)]), {(message sentTo: self xxxtarget)}! !
+
+AudioOutput class
+	instanceVariableNames: 'instance'!
+
+!classDefinition: 'AudioOutput class' category: #Audio stamp: 'GDK 7/24/2020 11:24:57'!
+AudioOutput class
+	instanceVariableNames: 'instance'!
+!AudioOutput class methodsFor: 'no messages' stamp: 'GDK 7/24/2020 11:25:15' overrides: 16783533!
+new
+^instance ifNil: [instance _ super new]! !
+
+AudioObject subclass: #SoundLike
+	instanceVariableNames: 'playingBufferIndex'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #SoundLike category: #Audio stamp: 'GDK 7/24/2020 12:02:59'!
+AudioObject subclass: #SoundLike
+	instanceVariableNames: 'playingBufferIndex'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!BootPasteUpMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 12:12:28' prior: 50813393!
+activate
+^self activate: self target.! !
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 12:18:46' prior: 50813448 overrides: 16785023!
+shutDown
+super shutDown.
+self allSubInstancesDo: [:i| [i activate] fork.].! !
+!SampledSound class methodsFor: 'instance creation' stamp: 'GDK 7/24/2020 12:50:59' prior: 50834651!
+beep
+	"Beep in the presence of the sound system.
+	Not to be used directly - use Beeper class>>beep
+	or Beeper class>>beepPrimitive instead."
+
+| i |
+i _ 0.
+.
+	(self new
+			setSamples: (self coffeeCupClink collect: [:val |i _ i + 1. val + (self coffeeCupClink at: (i - 40000))])
+			samplingRate: 12000) play
+			! !
+!SampledSound class methodsFor: 'instance creation' stamp: 'GDK 7/24/2020 12:53:01' prior: 50845608!
+beep
+	"Beep in the presence of the sound system.
+	Not to be used directly - use Beeper class>>beep
+	or Beeper class>>beepPrimitive instead."
+
+| i |
+i _ 0.
+.
+	(self new
+			setSamples: (self coffeeCupClink collect: [:val |i _ i + 1. val + (self coffeeCupClink at: (i - 40000 max: 1))])
+			samplingRate: 12000) play
+			! !
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 13:08:22'!
+play
+| pipe |
+pipe _ Pipe new source: self; target: AudioPlayer.! !
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 13:08:43' prior: 50845635!
+play
+| pipe |
+pipe _ Pipe new source: self; target: AudioOutput new.! !
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 13:09:06' prior: 50845641!
+play
+| pipe |
+pipe _ Pipe new source: self; target: AudioOutput new.
+[[pipe] repeat] fork.
+^pipe! !
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 13:20:35' prior: 50845647!
+play
+| pipe |
+pipe _ Pipe new source: self; target: AudioOutput new.
+[[pipe] repeat] fork.
+^pipe! !

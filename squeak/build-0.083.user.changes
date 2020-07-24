@@ -1,0 +1,84 @@
+
+
+----STARTUP---- (22 July 2020 18:43:16) as F:\dynabook\squeak\build-0.083.image!
+
+
+PasteUpMorph subclass: #BootPasteUpMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BootScreen'!
+
+!classDefinition: #BootPasteUpMorph category: #BootScreen stamp: 'GDK 7/22/2020 18:45:15'!
+PasteUpMorph subclass: #BootPasteUpMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BootScreen'!
+!BootPasteUpMorph methodsFor: 'no messages' stamp: 'GDK 7/22/2020 18:46:05'!
+activate: old
+^old overlay: self.! !
+!BootPasteUpMorph class methodsFor: 'no messages' stamp: 'GDK 7/22/2020 18:46:43' overrides: 50335353!
+startUp
+self allSubInstancesDo: [:i|i report: true].
+super startUp.! !
+
+PasteUpMorph subclass: #BootPasteUpMorph
+	instanceVariableNames: 'target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BootScreen'!
+
+!classDefinition: #BootPasteUpMorph category: #BootScreen stamp: 'GDK 7/22/2020 18:46:52'!
+PasteUpMorph subclass: #BootPasteUpMorph
+	instanceVariableNames: 'target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BootScreen'!
+!BootPasteUpMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/22/2020 18:47:09'!
+activate
+self activate: self target.! !
+!BootPasteUpMorph methodsFor: 'accessing' stamp: 'GDK 7/22/2020 18:47:13'!
+target
+	"Answer the value of target"
+
+	^ target! !
+!BootPasteUpMorph methodsFor: 'accessing' stamp: 'GDK 7/22/2020 18:47:13'!
+target: anObject
+	"Set the value of target"
+
+	target _ anObject! !
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/22/2020 18:48:14' overrides: 16785023!
+shutDown
+super shutDown.
+! !
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/22/2020 18:48:51' prior: 50813407 overrides: 16785023!
+shutDown
+super shutDown.
+self allSubInstancesDo: [:i|].! !
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/22/2020 20:02:27' prior: 50813412 overrides: 16785023!
+shutDown
+super shutDown.
+self allSubInstancesDo: [:i|i when: #a.].! !
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/22/2020 20:02:29' prior: 50813418 overrides: 16785023!
+shutDown
+super shutDown.
+self allSubInstancesDo: [:i|i when: #a.].
+! !
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/22/2020 20:02:31' prior: 50813425 overrides: 16785023!
+shutDown
+super shutDown.
+self allSubInstancesDo: [:i|i when: #a.].! !
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/22/2020 20:05:25' prior: 50813432 overrides: 16785023!
+shutDown
+super shutDown.
+self allSubInstancesDo: [:i|
+	| p |
+	p _ [i activate] fork.
+	Processor yield.
+	i when: #reported send: #terminate to: p.
+	].! !
+!BootPasteUpMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/22/2020 20:09:48' prior: 50813439 overrides: 16785023!
+shutDown
+super shutDown.
+self allSubInstancesDo: [:i| [i activate] fork.].! !

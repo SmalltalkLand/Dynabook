@@ -1,0 +1,6 @@
+
+
+----SNAPSHOT----(9 July 2020 17:40:26) build-0.031.image priorSource: 14448319!
+!Preferences class methodsFor: 'as yet unclassified' stamp: 'GDK 7/9/2020 17:46:54' prior: 50733201!
+protectedMode
+^((self valueOfFlag: #protectedMode) or: [Project ifNotNil: [Project current ifNotNil: #protected ifNil: [false]] ifNil: [false]] or: [Domain forceProtectedMode]) and: [Smalltalk at: #SafeMode ifPresent: [:s|s enabled not] ifAbsent: [true]]! !

@@ -1,0 +1,16 @@
+
+
+----STARTUP---- (21 July 2020 17:03:38) as F:\dynabook\squeak\build-0.075.image!
+
+
+Smalltalk openSourceFiles!
+
+!methodRemoval: ObjectFileOut class #test: stamp: 'GDK 7/21/2020 17:03:56'!
+nt to the receiver. If the receiver is at the end, answer nil.  "
+	| next |
+	position < readLimit ifTrue: [
+		^collection at: position+1 ].
+	self atEnd ifTrue: [^ nil].
+	next _ self basicNext.
+	self position: self position - 1.
+	^ next!

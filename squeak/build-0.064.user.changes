@@ -1,0 +1,28 @@
+
+
+----SNAPSHOT----(20 July 2020 12:17:14) build-0.064.image priorSource: 15155509!
+
+AltGarbageCollector class
+	instanceVariableNames: 'objects'!
+
+!classDefinition: 'AltGarbageCollector class' category: #AltGC stamp: 'GDK 7/20/2020 12:22:21'!
+AltGarbageCollector class
+	instanceVariableNames: 'objects'!
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:22:46'!
+startTickler
+^[objects _ SystemOrganization allObjects] fork! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:23:14' prior: 50805337!
+startTickler
+^[[objects _ Smalltalk allObjects] repeat] fork! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:23:32' prior: 50805317!
+mark
+^(Smalltalk allObjects collect: [:o|o -> (((Smalltalk allObjects anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:24:04' prior: 50805349!
+mark
+^(Smalltalk allObjects collect: [:o|o -> ((((Smalltalk allObjects reject: [:o2|o2 == objects]) anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:45:54' prior: 50805360!
+mark
+^(Smalltalk allObjects collect: [:o|o -> ((((Smalltalk allObjects reject: [:o2|o2 == objects]) anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/20/2020 12:53:58' prior: 50805372!
+mark
+^(Smalltalk allObjects collect: [:o|o -> ((((Smalltalk allObjects reject: [:o2|o2 == objects]) anySatisfy: [:o2|(1 to: o2 basicSize) anySatisfy: [:f|(o2 basicAt: f) == o]]) or: [self isNonGCAble: o]) and: [(self isDrum: o) not])]) asDictionary! !

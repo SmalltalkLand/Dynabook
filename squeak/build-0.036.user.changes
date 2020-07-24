@@ -1,0 +1,82 @@
+
+
+----STARTUP---- (13 July 2020 14:13:55) as D:\Dbs\squeak\build-0.036.image!
+
+
+!classDefinition: #SystemObjectProtector category: #'System-ObjectProtection-System' stamp: 'GDK 7/13/2020 14:14:15'!
+Object subclass: #SystemObjectProtector
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-ObjectProtection-System'!
+
+!classDefinition: #SystemObjectProtector category: #'System-ObjectProtection-System' stamp: 'GDK 7/13/2020 14:14:16'!
+Object subclass: #SystemObjectProtector
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-ObjectProtection-System'!
+
+!classDefinition: 'SystemObjectProtector class' category: #'System-ObjectProtection-System' stamp: 'GDK 7/13/2020 14:14:16'!
+SystemObjectProtector class
+	instanceVariableNames: 'backup'!
+
+!classDefinition: 'SystemObjectProtector class' category: #'System-ObjectProtection-System' stamp: 'GDK 7/13/2020 14:14:17'!
+SystemObjectProtector class
+	instanceVariableNames: 'backup'!
+!SystemObjectProtector class methodsFor: 'no messages' stamp: 'GDK 7/10/2020 09:11:09'!
+getObjects! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 09:12:20' prior: 50784050!
+getObjects
+backup _ {Object. ProtoObject. Number. Integer. SmallInteger. Behavior. ClassDescription. Metaclass} collect: #copy.! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 09:12:46' prior: 50784054!
+getObjects
+backup _ {Object. ProtoObject. Number. Integer. SmallInteger. Behavior. ClassDescription. Metaclass} collect: [:o|o -> o copy].! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 09:13:07' prior: 50784062!
+getObjects
+backup _ {Object. ProtoObject. Number. Integer. SmallInteger. Behavior. ClassDescription. Metaclass. SqueakFreeze. SafeMode} collect: [:o|o -> o copy].! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 09:13:18' prior: 50784070!
+getObjects
+backup _ {Object. ProtoObject. Number. Integer. SmallInteger. Behavior. ClassDescription. Metaclass. SqueakFreeze.} collect: [:o|o -> o copy].! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 09:13:38' prior: 50784079!
+getObjects
+backup _ {Object. ProtoObject. Number. Integer. SmallInteger. Behavior. ClassDescription. Metaclass. SqueakFreeze. Bootstrap} collect: [:o|o -> o copy].! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 09:13:43'!
+restore
+! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 09:14:24' prior: 50784097!
+restore
+backup do: [:a|a key becomeForward: a value. a instVarNamed: #value put: a value shallowCopy].! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 09:24:00' prior: 50784101!
+restore
+backup do: [:a|a key becomeForward: a value. a instVarNamed: #value put: a value shallowCopy].! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 10:29:31' prior: 50784088!
+getObjects
+backup _ {Object. ProtoObject. Number. Integer. SmallInteger. Behavior. ClassDescription. Metaclass. SqueakFreeze. Bootstrap} collect: [:o|o -> o copy].! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 10:40:22' prior: 50784115!
+getObjects
+backup _ {Object. ProtoObject. Number. Integer. SmallInteger. Behavior. ClassDescription. Metaclass. SqueakFreeze. Bootstrap} collect: [:o|o -> o copy].! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 14:40:45' prior: 50784108!
+restore
+backup do: [:a|a key becomeForward: a value. a instVarNamed: #value put: a value copy].! !
+!SystemObjectProtector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 14:45:56' prior: 50784133!
+restore
+backup do: [:a|a key becomeForward: a value. a instVarNamed: #value put: a value copy].! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/10/2020 15:19:11'!
+initSymbols: dict
+(dict values collect: [:v|{v. v class}]) concatenation do: [:vp|vp methodDictionary keysAndValuesDo: [:k :v|vp methodDictionary at: ((dict at: #Symbol) intern: k) put: v]].! !
+
+Utilities authorInitials!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/13/2020 14:15:11' prior: 50783518 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]or: [i == theMap]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray.
+		varyBlock ifNotNil: [
+			| vs |
+			vs _ os select: (varyBlock value: 0).
+			vs asArray elementsForwardIdentityTo: (vs collect: (varyBlock value: 1)).
+			].
+		]] ifNil: [enabled _ false].! !

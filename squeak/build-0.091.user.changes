@@ -1,0 +1,21 @@
+
+
+----SNAPSHOT----(24 July 2020 13:24:44) build-0.091.image priorSource: 16435121!
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 13:28:26' prior: 50845654!
+play
+| pipe |
+pipe _ Pipe new source: self; target: AudioOutput new.
+[[pipe] whileNotNil: []] fork.
+^pipe! !
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 13:33:57' prior: 50845663!
+play
+| pipe |
+pipe _ Pipe new source: self; target: AudioOutput new.
+[[pipe] whileNotNil: []] fork.
+^pipe! !
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 13:44:43' prior: 50845670!
+play
+| pipe |
+pipe _ Pipe new source: self; target: AudioOutput new.
+[[pipe] whileNotNil: []] fork.
+^pipe! !

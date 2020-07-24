@@ -1,0 +1,1474 @@
+
+
+----SNAPSHOT----(24 July 2020 09:23:48) build-0.089.image priorSource: 16359805!
+
+Object subclass: #SoundPlayer
+	instanceVariableNames: ''
+	classVariableNames: 'ActiveSounds Buffer BufferIndex BufferMSecs LastBuffer PlayerProcess PlayerSemaphore ReadyForBuffer ReverbState SamplingRate SoundJustStarted SoundSupported Stereo UseReadySemaphore UseReverb'
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #SoundPlayer category: #Audio stamp: 'GDK 7/24/2020 09:24:43'!
+Object subclass: #SoundPlayer
+	instanceVariableNames: ''
+	classVariableNames: 'ActiveSounds Buffer BufferIndex BufferMSecs LastBuffer PlayerProcess PlayerSemaphore ReadyForBuffer ReverbState SamplingRate SoundJustStarted SoundSupported Stereo UseReadySemaphore UseReverb'
+	poolDictionaries: ''
+	category: 'Audio'!
+!SoundPlayer class methodsFor: 'private' stamp: 'GDK 7/24/2020 09:26:01' prior: 50839426!
+startPlayingImmediately: aSound
+	"Private!! Start playing the given sound as soon as possible by mixing it into the sound output buffers of the underlying sound driver."
+
+	| totalSamples buf n leftover src rest |
+	"first, fill a double-size buffer with samples"
+	"Note: The code below assumes that totalSamples contains two
+	 buffers worth of samples, and the insertSamples primitive is
+	 expected to consume at least one buffer's worth of these
+	 samples. The remaining samples are guaranteed to fit into
+	 a single buffer."
+	totalSamples _ Buffer stereoSampleCount * 2.  "two buffer's worth"
+	buf _ SoundBuffer newStereoSampleCount: totalSamples.
+	[aSound playSampleCount: totalSamples into: buf startingAt: 1.] on: MessageNotUnderstood do: [:ex|buf _ aSound buffer].
+	ReverbState ifNotNil: [
+		ReverbState applyReverbTo: buf startingAt: 1 count: totalSamples].
+
+	PlayerSemaphore critical: [
+		"insert as many samples as possible into the sound driver's buffers"
+		n _ self primSoundInsertSamples: totalSamples
+			from: buf
+			samplesOfLeadTime: 1024.
+		n > 0 ifTrue:[
+			leftover _ totalSamples - n.
+
+			"copy the remainder of buf into Buffer"
+			"Note: the following loop iterates over 16-bit words, not two-word stereo slices"
+			"assert: 0 < leftover <= Buffer stereoSampleCount"
+			src _ 2 * n.
+			1 to: 2 * leftover do:
+				[:dst | Buffer at: dst put: (buf at: (src _ src + 1))].
+
+			"generate enough additional samples to finish filling Buffer"
+			rest _ Buffer stereoSampleCount - leftover.
+			aSound playSampleCount: rest into: Buffer startingAt: leftover + 1.
+			ReverbState == nil ifFalse: [
+				ReverbState applyReverbTo: Buffer startingAt: leftover + 1 count: rest].
+
+			"record the fact that this sound has already been played into Buffer so that we don't process it again this time around"
+			SoundJustStarted _ aSound.
+		] ifFalse:[
+			"quick start failed; reset the sound so we start over"
+			aSound reset.
+		].
+		ActiveSounds add: aSound].
+! !
+
+!classRenamed: #SoundPlayer as: #AudioPlayer stamp: 'GDK 7/24/2020 09:26:38'!
+Smalltalk renameClassNamed: #SoundPlayer as: #AudioPlayer!
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:38' prior: 50830710!
+samplingRate
+	"Answer the sampling rate in samples per second."
+
+	^ AudioPlayer samplingRate
+! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50835789 overrides: 50830598!
+playSampleCount: n into: aSoundBuffer startingAt: startIndex
+	"Mix the next n samples of this sound into the given buffer starting at the given index"
+
+	self repeat ifTrue: [  "loop if necessary"
+		(totalSamples - self currentSampleIndex) < n ifTrue: [self startOver]].
+
+	mutex critical: [
+		lastBufferMSecs _ Time localMillisecondClock.
+		self loadBuffersForSampleCount: (n * streamSamplingRate) // AudioPlayer samplingRate.
+		mixer playSampleCount: n into: aSoundBuffer startingAt: startIndex].
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50830674!
+resumePlaying
+	"Resume playing this sound from where it last stopped."
+
+	AudioPlayer resumePlaying: self.
+! !
+!ScorePlayer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50835966!
+disableReverb: aBoolean
+
+	aBoolean
+		ifTrue: [AudioPlayer stopReverb]
+		ifFalse: [AudioPlayer startReverb].
+! !
+!SoundRecorder methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50839825!
+startRecording
+	"Turn of the sound input driver and start the recording process. Initially, recording is paused."
+
+	| semaIndex |
+	recordLevel ifNil: [recordLevel _ 0.5].  "lazy initialization"
+	Preferences canRecordWhilePlaying ifFalse: [AudioPlayer shutDown].
+	recordProcess ifNotNil: [self stopRecording].
+	paused _ true.
+	meteringBuffer _ SoundBuffer newMonoSampleCount: 1024.
+	meterLevel _ 0.
+	self allocateBuffer.
+	bufferAvailableSema _ Semaphore new.
+	semaIndex _ Smalltalk registerExternalObject: bufferAvailableSema.
+	self primStartRecordingDesiredSampleRate: samplingRate asInteger
+		stereo: stereo
+		semaIndex: semaIndex.
+	RecorderActive _ true.
+	samplingRate _ self primGetActualRecordingSampleRate.
+	self primSetRecordLevel: (1000.0 * recordLevel) asInteger.
+	recordProcess _ [self recordLoop] newProcess.
+	recordProcess
+		priority: Processor userInterruptPriority;
+		name: 'Sound Recorder';
+		resume.
+! !
+!AbstractSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50843013!
+buffer
+	| buf totalSamples |
+	totalSamples _ AudioPlayer buffer stereoSampleCount * 2.  "two buffer's worth"
+	buf _ SoundBuffer newStereoSampleCount: totalSamples.
+	self playSampleCount: totalSamples into: buf startingAt: 1.
+	^buf! !
+!MIDISynth methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50842169!
+startMIDITracking
+
+	midiParser ifNil: [^ self].
+	midiParser midiPort ifNil: [^ self].
+	midiParser midiPort ensureOpen.
+	self stopMIDITracking.
+	AudioPlayer useShortBuffer.
+	process _ [self midiTrackingLoop] newProcess.
+	process priority: Processor userInterruptPriority.
+	process name: 'MIDISynth'.
+	process resume! !
+!MIDISynth class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50842201!
+example
+	"Here's one way to run the MIDI synth. It will get a nice Morphic UI later. Click the mouse to stop running it. (Mac users note: be sure you have MIDI interface adaptor plugged in, or Squeak will hang waiting for the external clock signal.)."
+	"MIDISynth example"
+
+	| portNum synth |
+	portNum _ SimpleMIDIPort inputPortNumFromUser.
+	portNum ifNil: [^ self].
+	AudioPlayer useShortBuffer.
+	synth _ MIDISynth new
+		midiPort: (SimpleMIDIPort openOnPortNumber: portNum).
+	synth midiParser ignoreCommand: 224.  "filter out pitch bends"
+	1 to: 16 do: [:i |
+		(synth channel: i) instrument:
+ 			 (AbstractSound soundNamed: 'oboe1')].
+	1 to: 16 do: [:ch | synth volumeForChannel: ch put: 0.2].
+
+	synth processMIDIUntilMouseDown.
+	AudioPlayer shutDown; initialize.  "revert to normal buffer size"
+! !
+!SoundSystem methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50829470!
+shutDown
+	AudioPlayer shutDown
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50830571!
+play
+	"Play this sound to the sound output port in real time."
+
+	AudioPlayer playSound: self.! !
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50839067!
+boinkScale
+	"Tests the sound output primitives by playing a scale."
+	"SoundPlayer boinkScale"
+
+	| sineTable pan |
+	self shutDown.
+	SamplingRate _ 11025.
+	Stereo _ true.
+	sineTable _ self sineTable: 1000.
+	Buffer _ SoundBuffer newStereoSampleCount: 1000.
+	BufferIndex _ 1.
+	self primSoundStartBufferSize: Buffer stereoSampleCount
+		rate: SamplingRate
+		stereo: Stereo.
+	pan _ 0.
+	#(261.626 293.665 329.628 349.229 391.996 440.001 493.884 523.252) do: [:p |
+		self boinkPitch: p dur: 0.3 loudness: 300 waveTable: sineTable pan: pan.
+		pan _ pan + 125].
+
+	self boinkPitch: 261.626 dur: 1.0 loudness: 300 waveTable: sineTable pan: 500.
+	self primSoundStop.
+	self shutDown.
+	AudioPlayer initialize.  "reset sampling rate, buffer size, and stereo flag"
+! !
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:39' prior: 50839586!
+startPlayerProcessBufferSize: bufferSize rate: samplesPerSecond stereo: stereoFlag sound: aSound
+	"Start the sound player process. Terminate the old process, if any."
+	"SoundPlayer startPlayerProcessBufferSize: 1000 rate: 11025 stereo: false"
+
+	self stopPlayerProcess.
+	aSound
+		ifNil:[ActiveSounds _ OrderedCollection new]
+		ifNotNil:[ActiveSounds _ OrderedCollection with: aSound].
+	Buffer _ SoundBuffer newStereoSampleCount: (bufferSize // 4) * 4.
+	LastBuffer ifNotNil:[LastBuffer _ SoundBuffer basicNew: Buffer basicSize].
+	PlayerSemaphore _ Semaphore forMutualExclusion.
+	SamplingRate _ samplesPerSecond.
+	Stereo _ stereoFlag.
+	ReadyForBuffer _ Semaphore new.
+	SoundSupported _ true. "Assume so"
+	UseReadySemaphore _ true.  "set to false if ready semaphore not supported by VM"
+	self primSoundStartBufferSize: Buffer stereoSampleCount
+		rate: samplesPerSecond
+		stereo: Stereo
+		semaIndex: (Smalltalk registerExternalObject: ReadyForBuffer).
+	"Check if sound start prim was successful"
+	SoundSupported ifFalse:[^self].
+	UseReadySemaphore
+		ifTrue: [PlayerProcess _ [AudioPlayer playLoop] newProcess]
+		ifFalse: [PlayerProcess _ [AudioPlayer oldStylePlayLoop] newProcess].
+	UseReverb ifTrue: [self startReverb].
+
+	PlayerProcess
+		priority: Processor userInterruptPriority;
+		name: 'Sound Player';
+		resume! !
+!AbstractSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50832216!
+updateScorePlayers
+	"Force all ScorePlayers to update their instrument list from the sound library. This may done after loading, unloading, or replacing a sound to make all ScorePlayers feel the change."
+
+	| soundsBeingEdited |
+	ScorePlayer allSubInstancesDo: [:p | p pause].
+	AudioPlayer shutDown.
+"	soundsBeingEdited := EnvelopeEditorMorph allSubInstances 
+				collect: [:ed | ed soundBeingEdited].
+	ScorePlayerMorph 
+		allSubInstancesDo: [:p | p updateInstrumentsFromLibraryExcept: soundsBeingEdited]"! !
+!SoundSystem class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50829467 overrides: 16785023!
+shutDown
+	AudioPlayer shutDown! !
+!MIDISynth methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50842182!
+stopMIDITracking
+
+	process ifNotNil: [
+		process terminate.
+		process _ nil].
+	AudioPlayer shutDown; initialize.  "revert to normal buffer size"
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50830564!
+pause
+	"Pause this sound. It can be resumed from this point, or reset and resumed to start from the beginning."
+
+	AudioPlayer pauseSound: self.! !
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50829413 overrides: 50335353!
+startUp
+	"Start up the player process."
+
+	AudioPlayer initialize.
+	AudioPlayer
+		startPlayerProcessBufferSize: (BufferMSecs * SamplingRate) // 1000
+		rate: SamplingRate
+		stereo: Stereo.
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50830554!
+isPlaying
+	"Return true if the receiver is currently playing"
+	^ AudioPlayer isPlaying: self! !
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50839031!
+startUpWithSound: aSound
+	"Start up the player process."
+
+	AudioPlayer initialize.
+	AudioPlayer
+		startPlayerProcessBufferSize: (BufferMSecs * SamplingRate) // 1000
+		rate: SamplingRate
+		stereo: Stereo
+		sound: aSound.
+! !
+!InputSensor methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 16856614!
+userInterruptWatcher
+	"Wait for user interrupts and open a notifier on the active process when one occurs."
+
+	[ true ] whileTrue: [
+		InterruptSemaphore wait.
+"		Display deferUpdates: false."
+		Smalltalk at: #AudioPlayer ifPresent: [ :cls | cls shutDown ].
+		Smalltalk handleUserInterrupt]! !
+!AbstractSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50832030!
+testFMInteractively
+	"Experiment with different settings of the FM modulation and multiplier settings interactively by moving the mouse. The top-left corner of the screen is 0 for both parameters. Stop when the mouse is pressed."
+	"AbstractSound testFMInteractively"
+
+	| s mousePt lastVal status mod ratio |
+	AudioPlayer startPlayerProcessBufferSize: 1100 rate: 11025 stereo: false.
+	s _ FMSound pitch: 440.0 dur: 200.0 loudness: 0.2.
+
+	AudioPlayer playSound: s.
+	lastVal _ nil.
+	[Sensor isAnyButtonPressed] whileFalse: [
+		mousePt _ Sensor mousePoint.
+		mousePt ~= lastVal ifTrue: [
+			mod _ mousePt x asFloat / 20.0.
+			ratio _ mousePt y asFloat / 20.0.
+			s modulation: mod ratio: ratio.
+			lastVal _ mousePt.
+			status _
+'mod: ', mod printString, '
+ratio: ', ratio printString.
+			status displayOn: Display at: 10@10]].
+
+	AudioPlayer shutDown.
+! !
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50839290!
+useShortBuffer
+	"Experimental support for real-time MIDI input. This only works on platforms whose hardware allows very short buffer sizes. It has been tested on a Macintosh Powerbook G3."
+	"SoundPlayer useShortBuffer"
+
+	self shutDown.
+	BufferMSecs _ 15.
+	AudioPlayer
+		startPlayerProcessBufferSize: (BufferMSecs * SamplingRate) // 1000
+		rate: SamplingRate
+		stereo: Stereo.
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:40' prior: 50830577!
+playAndWaitUntilDone
+	"Play this sound to the sound ouput port and wait until it has finished playing before returning."
+
+	AudioPlayer playSound: self.
+	[self samplesRemaining > 0] whileTrue.
+	(Delay forMilliseconds: 2 * AudioPlayer bufferMSecs) wait.  "ensure last buffer has been output"
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:41' prior: 50830701!
+originalSamplingRate
+	"For sampled sounds, answer the sampling rate used to record the stored samples. For other sounds, this is the same as the playback sampling rate."
+
+	^ AudioPlayer samplingRate
+! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:41' prior: 50835769 overrides: 50830560!
+millisecondsSinceStart
+	"Answer the number of milliseconds of this sound started playing."
+
+	| mSecs |
+	(stream isNil or: [stream closed]) ifTrue: [^ 0].
+	mSecs _ self currentSampleIndex * 1000 // streamSamplingRate.
+	(self isPlaying and: [lastBufferMSecs > 0]) ifTrue: [
+		"adjust mSecs by the milliseconds since the last buffer"
+		mutex critical: [
+			mSecs _ self currentSampleIndex * 1000 // streamSamplingRate.
+			mSecs _ mSecs + (Time localMillisecondClock - lastBufferMSecs)]].
+	^ mSecs + 350 - (2 * AudioPlayer bufferMSecs)
+! !
+!MIDISynthChannel methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:41' prior: 50842314!
+keyDown: key vel: vel
+	"Handle a key down event with non-zero velocity."
+
+	| pitch snd |
+	muted ifTrue: [^ self].
+	pitch _ AbstractSound pitchForMIDIKey: key.
+	snd _ instrument
+		soundForPitch: pitch
+		dur: 10000.0  "sustain a long time, or until turned off"
+		loudness: masterVolume * channelVolume * (self convertVelocity: vel).
+	snd _ (MixedSound new add: snd pan: pan) reset.
+	AudioPlayer resumePlaying: snd quickStart: false.
+	activeSounds add: (Array with: key with: snd with: pitch).
+! !
+!SampledSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:26:41' prior: 50835229 overrides: 50832282!
+initialize
+	"SampledSound initialize"
+
+	AudioPlayer initialize.
+	IncrementFractionBits _ 16.
+	IncrementScaleFactor _ 2 raisedTo: IncrementFractionBits.
+	ScaledIndexOverflow _ 2 raisedTo: 29.  "handle overflow before needing LargePositiveIntegers"
+	self useCoffeeCupClink.
+	SoundLibrary ifNil: [SoundLibrary _ Dictionary new].
+	Beeper setDefault: (self new
+						setSamples: self coffeeCupClink
+						samplingRate: 12000).
+! !
+!AudioPlayer class methodsFor: 'primitive test' stamp: 'GDK 7/24/2020 09:27:21'!
+playSample: s pan: pan
+	"Append the given sample in the range [-32767..32767] to the output buffer, playing the output buffer when it is full. Used for testing only."
+
+	| sample leftSample |
+	BufferIndex >= Buffer size
+		ifTrue: [
+			"current buffer is full; play it"
+			[self primSoundAvailableBytes > 0]
+				whileFalse. "wait for space to be available"
+			self primSoundPlaySamples: Buffer stereoSampleCount from: Buffer startingAt: 1.
+			Buffer primFill: 0.
+			BufferIndex _ 1].
+
+	sample _ s.
+	sample >  32767 ifTrue: [ sample _  32767 ]. 
+	sample < -32767 ifTrue: [ sample _ -32767 ].
+
+	Stereo
+		ifTrue: [
+			leftSample _ (sample * pan) // 1000.
+			Buffer at: BufferIndex		put: sample - leftSample.
+			Buffer at: BufferIndex + 1	put: leftSample]
+		ifFalse: [
+			Buffer at: BufferIndex + 1 put: sample].
+	BufferIndex _ BufferIndex + 2.
+! !
+!AudioPlayer class methodsFor: 'primitive test' stamp: 'GDK 7/24/2020 09:27:38' prior: 50839094!
+playTestSample: s pan: pan
+^self playSample: s pan: pan
+! !
+!AudioPlayer class methodsFor: 'primitive test' stamp: 'GDK 7/24/2020 09:30:41' prior: 50843545!
+playSample: s pan: pan
+	"Append the given sample in the range [-32767..32767] to the output buffer, playing the output buffer when it is full. "
+
+	| sample leftSample |
+	BufferIndex >= Buffer size
+		ifTrue: [
+			"current buffer is full; play it"
+			[self primSoundAvailableBytes > 0]
+				whileFalse. "wait for space to be available"
+			self primSoundPlaySamples: Buffer stereoSampleCount from: Buffer startingAt: 1.
+			Buffer primFill: 0.
+			BufferIndex _ 1].
+
+	sample _ s.
+	sample >  32767 ifTrue: [ sample _  32767 ]. 
+	sample < -32767 ifTrue: [ sample _ -32767 ].
+
+	Stereo
+		ifTrue: [
+			leftSample _ (sample * pan) // 1000.
+			Buffer at: BufferIndex		put: sample - leftSample.
+			Buffer at: BufferIndex + 1	put: leftSample]
+		ifFalse: [
+			Buffer at: BufferIndex + 1 put: sample].
+	BufferIndex _ BufferIndex + 2.
+! !
+
+ArrayedCollection variableWordSubclass: #SoundBuffer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #SoundBuffer category: #Audio stamp: 'GDK 7/24/2020 09:32:14'!
+ArrayedCollection variableWordSubclass: #SoundBuffer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classRenamed: #SoundBuffer as: #AudioBuffer stamp: 'GDK 7/24/2020 09:32:24'!
+Smalltalk renameClassNamed: #SoundBuffer as: #AudioBuffer!
+!SampledSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:24' prior: 50835189!
+defaultSampleTable: anArray
+	"Set the sample table to be used as the default waveform for playing a score such as the Bach fugue. Array is assumed to contain monaural signed 16-bit sample values."
+
+	DefaultSampleTable _ AudioBuffer fromArray: anArray.
+! !
+!AudioBuffer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:24' prior: 50829864!
+fromByteArray: aByteArray
+	"Convert the given ByteArray (stored with the most significant byte first) into 16-bit sample buffer."
+
+	| n buf src w |
+	n _ aByteArray size // 2.
+	buf _ AudioBuffer newMonoSampleCount: n.
+	src _ 1.
+	1 to: n do: [:i |
+		w _ ((aByteArray at: src) bitShift: 8) + (aByteArray at: src + 1).
+		w > 32767 ifTrue: [w _ w - 65536].
+		buf at: i put: w.
+		src _ src + 2].
+	^ buf
+! !
+!SoundRecorder methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:24' prior: 50839681!
+emitBuffer: buffer
+
+	| sound ratio resultBuf |
+
+	"since some sound recording devices cannot (or will not) record below a certain sample rate,
+	trim the samples down if the user really wanted fewer samples"
+
+	(desiredSampleRate isNil or: [(ratio _ samplingRate // desiredSampleRate) <= 1]) ifTrue: [
+		sound _ SampledSound new setSamples: buffer samplingRate: samplingRate.
+	] ifFalse: [
+		resultBuf _ AudioBuffer 
+			averageEvery: ratio 
+			from: buffer 
+			upTo: buffer monoSampleCount.
+		sound _ SampledSound new setSamples: resultBuf samplingRate: samplingRate / ratio.
+	].
+
+	recordedSound add: (codec ifNil: [sound] ifNotNil: [codec compressSound: sound])! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:24' prior: 50835534!
+loadFromLeftovers: aSoundBuffer sampleCount: sampleCount
+	"Load the given sound buffer from the samples leftover from the last frame. Answer the number of samples loaded, which typically is less than sampleCount."
+
+	| leftoverCount n |
+	leftoverCount _ leftoverSamples monoSampleCount.
+	leftoverCount = 0 ifTrue: [^ 0].
+
+	n _ leftoverCount min: sampleCount.
+	1 to: n do: [:i | aSoundBuffer at: i put: (leftoverSamples at: i)].
+	n < sampleCount
+		ifTrue: [leftoverSamples _ AudioBuffer new]
+		ifFalse: [leftoverSamples _ leftoverSamples copyFrom: n + 1 to: leftoverSamples size].
+	^ n
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:24' prior: 50830634!
+playSilently
+	"Compute the samples of this sound without outputting them. Used for performance analysis."
+
+	| bufSize buf |
+	self reset.
+	bufSize _ self samplingRate // 10.
+	buf _ AudioBuffer newStereoSampleCount: bufSize.
+	[self samplesRemaining > 0] whileTrue: [
+		buf primFill: 0.
+		self playSampleCount: bufSize into: buf startingAt: 1].
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:24' prior: 50831044!
+storeSampleCount: samplesToStore bigEndian: bigEndianFlag on: aBinaryStream
+	"Store my samples on the given stream at the current SoundPlayer sampling rate. If bigFlag is true, then each 16-bit sample is stored most-significant byte first (AIFF files), otherwise it is stored least-significant byte first (WAV files). If self isStereo is true, both channels are stored, creating a stereo file. Otherwise, only the left channel is stored, creating a mono file."
+
+	| bufSize stereoBuffer  |
+	self reset.
+	bufSize _ (2 * self samplingRate rounded) min: samplesToStore.  "two second buffer"
+	stereoBuffer _ AudioBuffer newStereoSampleCount: bufSize.
+
+	'Storing audio...' displayProgressAt: Sensor mousePoint
+		from: 0 to: samplesToStore during: [:barBlock | | remaining out |
+			remaining _ samplesToStore.
+			[remaining > 0] whileTrue: [
+				barBlock value: samplesToStore - remaining.
+				stereoBuffer primFill: 0.  "clear the buffer"
+				self playSampleCount: (bufSize min: remaining) into: stereoBuffer startingAt: 1.
+				self isStereo
+					ifTrue: [out _ stereoBuffer]
+					ifFalse: [out _ stereoBuffer extractLeftChannel].
+				(aBinaryStream isKindOf: StandardFileStream)
+					ifTrue: [  "optimization for files: write sound buffer directly to file"
+						aBinaryStream next: (out size // 2) putAll: out startingAt: 1]  "size in words"
+					ifFalse: [  "for non-file streams:"
+						1 to: out monoSampleCount do: [:i | aBinaryStream nextSignedInt16Put: (out at: i) bigEndian: bigEndianFlag ]].
+				remaining _ remaining - bufSize]]! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:24' prior: 50835689!
+soundPosition: fraction
+	"Jump to the position the given fraction through the sound file. The argument is a number between 0.0 and 1.0."
+
+	| desiredSampleIndex |
+	(stream isNil or: [stream closed]) ifTrue: [^ self].
+	desiredSampleIndex _ ((totalSamples * fraction) truncated max: 0) min: totalSamples.
+	codec
+		ifNil: [stream position: audioDataStart + (desiredSampleIndex * 2)]
+		ifNotNil: [self positionCodecTo: desiredSampleIndex].
+	leftoverSamples _ AudioBuffer new.
+! !
+!SoundRecorder methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:24' prior: 50840005!
+copyFrom: startPlace to: endPlace normalize: nFactor dcOffset: dcOffset
+	"Return a new SoundBuffer containing the samples in the given range."
+
+	| startBufIndex startSampleIndex endBufIndex endSampleIndex
+	 count resultBuf j buf firstInBuf n |
+	startBufIndex _ startPlace at: 1.
+	startSampleIndex _ startPlace at: 2.
+	endBufIndex _ endPlace at: 1.
+	endSampleIndex _ endPlace at: 2.
+
+	startBufIndex = endBufIndex
+		ifTrue: [count _ endSampleIndex + 1 - startSampleIndex]
+		ifFalse: [
+			count _ ((recordedBuffers at: startBufIndex) size + 1 - startSampleIndex).  "first buffer"
+			count _ count + endSampleIndex.  "last buffer"
+			startBufIndex + 1 to: endBufIndex - 1 do:
+				[:i | count _ count + (recordedBuffers at: i) size]].  "middle buffers"
+	resultBuf _ AudioBuffer newMonoSampleCount: count.
+
+	j _ 1.  "next destination index in resultBuf"
+	startBufIndex to: endBufIndex do: [:i |
+		buf _ recordedBuffers at: i.
+		firstInBuf _ 1.
+	 	n _ buf size.
+		i = startBufIndex ifTrue: [
+			n _ (recordedBuffers at: startBufIndex) size + 1 - startSampleIndex.
+			firstInBuf _ startSampleIndex].
+		i = endBufIndex ifTrue: [
+			i = startBufIndex
+				ifTrue: [n _ endSampleIndex + 1 - startSampleIndex]
+				ifFalse: [n _ endSampleIndex]].
+		self copyTo: resultBuf from: j to: (j + n - 1)
+			from: buf startingAt: firstInBuf
+			normalize: nFactor dcOffset: dcOffset.
+		j _ j + n].
+	^ resultBuf
+! !
+!SoundInputStream methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:24' prior: 50840483 overrides: 50839666!
+allocateBuffer
+	"Allocate a new buffer and reset nextIndex. This message is sent by the sound input process."
+
+	currentBuffer _ AudioBuffer newMonoSampleCount: bufferSize.
+	nextIndex _ 1.
+! !
+!AIFFFileReader methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50830291!
+readSamplesChunk: chunkSize
+	"Read a SSND chunk. All AIFF files with a non-zero frameCount contain exactly one chunk of this type."
+
+	| offset blockSize bytesOfSamples s |
+	offset _ in nextUnsignedInt32BigEndian: true.
+	blockSize _ in nextUnsignedInt32BigEndian: true.
+	((offset ~= 0) or: [blockSize ~= 0])
+		ifTrue: [^ self error: 'this AIFF reader cannot handle blocked sample chunks'].
+	bytesOfSamples _ chunkSize - 8.
+	bytesOfSamples = (channelCount * frameCount * (bitsPerSample // 8))
+		ifFalse: [self error: 'actual sample count does not match COMM chunk'].
+
+	channelDataOffset _ in position.  "record stream position for start of data"
+	skipDataChunk ifTrue: [in skip: (chunkSize - 8). ^ self].  "if skipDataChunk, skip sample data"
+
+	(mergeIfStereo and: [channelCount = 2])
+		ifTrue: [
+			channelData _ Array with: (AudioBuffer newMonoSampleCount: frameCount)]
+		ifFalse: [
+			channelData _
+				(1 to: channelCount) collect: [:i | AudioBuffer newMonoSampleCount: frameCount]].
+
+	(bytesOfSamples < (Smalltalk garbageCollectMost - 300000))
+		ifTrue: [s _ ReadStream on: (in next: bytesOfSamples)]  "bulk-read, then process"
+		ifFalse: [s _ in].  "not enough space to buffer; read directly from file"
+
+	"mono and stereo are special-cased for better performance"
+	channelCount = 1 ifTrue: [^ self readMonoChannelDataFrom: s].
+	channelCount = 2 ifTrue: [
+		mergeIfStereo
+			ifTrue: [channelCount _ 1. ^ self readMergedStereoChannelDataFrom: s]
+			ifFalse: [^ self readStereoChannelDataFrom: s]].
+	self readMultiChannelDataFrom: s.
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50830541!
+computeSamplesForSeconds: seconds
+	"Compute the samples of this sound without outputting them, and return the resulting buffer of samples."
+
+	| buf |
+	self reset.
+	buf _ AudioBuffer newStereoSampleCount: (self samplingRate * seconds) asInteger.
+	self playSampleCount: buf stereoSampleCount into: buf startingAt: 1.
+	^ buf
+! !
+!SampledSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50834784!
+initializeCoffeeCupClink
+	"Initialize the samples array for the sound of a spoon being tapped against a coffee cup."
+	"SampledSound initializeCoffeeCupClink"
+
+	| samples |
+	samples _ #(768 1024 -256 2304 -13312 26624 32512 19200 6400 -256 5888 32512 28928 32512 -32768 32512 -32768 18688 26368 -26112 32512 32512 2304 32512 5632 2816 10240 -4608 -1792 32512 32512 -5376 10752 32512 32512 32512 8192 15872 32512 -3584 -32768 -23296 -24832 -32768 -32768 -32768 -2304 32512 32512 -32768 32512 -15360 6400 8448 -18176 -32768 -256 -32768 -29440 9472 20992 17920 32512 32512 -256 32512 -32768 -32768 -23040 -32768 -25088 -32768 -27648 -1536 24320 -32768 32512 20480 27904 22016 16384 -32768 32512 -27648 -32768 -7168 28160 -6400 5376 32512 -256 32512 -7168 -11776 -19456 -27392 -24576 -32768 -24064 -19456 12800 32512 27136 2048 25344 15616 8192 -4608 -28672 -32768 -30464 -2560 17664 256 -8192 8448 32512 27648 -6144 -512 -7424 -18688 7936 -256 -22272 -14080 2048 27648 15616 -12288 -768 5376 3328 5632 3072 -6656 -20480 10240 27136 -10752 -11008 -768 -2048 6144 -7168 -3584 -1024 -7680 19712 26112 1024 -11008 3072 16384 -8960 -14848 -4864 -23808 -11264 12288 8192 7168 4864 23040 32512 512 -11776 -5632 -16896 -21504 -12800 -6144 -16896 -4352 32512 32512 23296 21760 5632 2816 -9472 -20992 -11264 -29440 -32768 -3584 7680 8448 15360 32512 32512 15616 15104 -2048 -27904 -27904 -25600 -12288 -12032 -13568 17152 22272 15360 30208 28160 7680 -5632 -8192 -16384 -31744 -25856 -10752 -3840 6656 13056 24320 26368 12800 20736 12288 -19200 -20992 -16640 -21504 -17920 -6912 8448 11264 14080 23040 18176 8192 -1024 0 256 -20992 -19712 -4608 -11264 -2048 14080 12032 8192 6912 13056 9216 -5632 -5376 -3840 -6656 -9984 -5632 4864 -3584 -1280 17408 7680 -1280 4096 2816 -1024 -4864 3328 8448 -768 -5888 -2048 5120 0 3072 11008 -7680 -15360 2560 6656 -3840 0 11776 7680 2816 1536 -1280 -3840 -8704 -1536 3584 -9728 -9728 11776 18688 7680 6656 6400 -4864 -3840 -256 -6912 -13312 -11264 2304 9728 1792 3328 18944 18432 6912 6144 -1536 -17664 -14336 -2304 -10496 -15616 -4096 9728 17152 14848 13312 11520 2304 -1024 2560 -8704 -26624 -18688 -256 -256 2816 14080 13824 12544 14080 9728 -512 -12032 -8960 -3328 -9984 -15872 -5120 8192 3584 10496 20224 7936 4608 6144 1280 -8704 -12800 -7424 -8448 -8960 -3840 7424 13056 8704 13312 13056 -2304 -4864 -768 -7168 -10496 -4608 -1536 -3072 -1280 6144 13312 11008 4864 4864 1536 -8960 -7680 1792 -4864 -7680 2816 5632 3328 2560 5376 7936 3584 -512 512 -4608 -9728 0 9216 768 -4096 7680 7168 256 4608 -768 -8704 -6400 2048 6144 -3072 -3328 6400 9472 3840 -768 1792 -3840 -5120 6144 768 -9984 -4352 5120 9472 6912 2816 1792 1280 768 512 -2816 -9728 -6912 6912 6912 -3328 -768 8448 11776 10752 3328 -6912 -10752 -8704 -1536 0 -6912 -3328 9984 13568 7424 6144 6656 256 0 256 -12032 -17920 -8192 3584 8960 4096 5632 12032 8704 6912 5632 -3584 -10496 -7936 -2048 -9216 -11776 2304 9472 15104 14848 5888 512 -2816 1024 2560 -9984 -13312 -5120 768 1792 768 8448 12032 11264 12800 -256 -11264 -9728 -2304 3072 -4352 -6912 256 2304 5376 9984 8192 2816 1280 3584 -2048 -11008 -8448 -2048 3072 4864 2304 3072 3072 3072 7168 3328 -5376 -4864 512 512 -1792 -1792 1792 5376 5888 5888 512 -5888 -3584 4096 3584 -6400 -4864 4608 3072 3840 5376 1024 768 2816 5888 -768 -12288 -7936 2304 5888 3328 2048 6144 3072 3072 6400 -3328 -7168 256 4096 -512 -9472 -6656 3328 6912 9216 8704 3840 -2560 -256 6656 -2560 -11264 -4608 -768 -1280 1536 3072 4096 5120 9984 11264 1024 -8192 -6144 -1024 -3840 -5632 -512 1024 2304 9728 9728 1280 512 4096 2816 -3584 -9984 -6912 -2304 512 5632 7680 3584 1024 5632 5888 -1280 -3584 -2304 -2560 -1536 -1024 -1792 -512 1536 7680 9984 2048 -2048 2048 3328 -1280 -4096 -3328 -4608 -1280 4352 3328 1280 1792 5120 6912 1024 -2560 0 -768 -1024 1280 -256 -4608 -1280 6400 5120 768 1792 2560 2048 0 -1536 -1280 -2304 1024 5376 2560 -2560 -512 4096 2048 512 768 -1280 -256 2560 2560 -256 -1024 768 3584 1280 -3328 -1536 1792 2816 3328 2304 -256 256 2816 2304 -1280 -3328 -1536 2304 2304 -256 -256 1024 1536 3840 5120 1024 -2048 0 1536 -768 -2560 -1792 256 2304 2048 1536 256 768 5888 6656 256 -3840 -2304 -1280 -1536 256 0 -512 2304 4352 3840 768 0 2304 3072 256 -3072 -2560 -2560 256 4608 2560 256 1536 3072 3072 1792 256 256 512 -256 -768 -1280 -1536 768 4352 2816 -512 768 2560 2560 2304 -256 -1792 -768 768 1792 256 -2304 -256 3328 3840 2304 2304 1536 256 2048 1024 -1536 -1792 -1024 512 256 -512 0 2304 4864 5120 4352 1024 -1280 0 -768 -2816 -2304 -512 1024 2048 2304 2048 3072 3840 2816 2048 -512 -3072 -1792 -1536 -1280 768 1280 1536 2304 2816 2048 1536 2048 1536 1536 -768 -3840 -2048 0 1280 2816 1792 1536 2560 3584 2816 1024 256 -768 -768 -1280 -2816 -768 1792 3328 5120 3072 1280 1536 1792 768 -1024 -1280 -1536 -768 512 256 1536 2560 2560 3328 1280 0 768 1536 768 -256 -512 -1536 -1280 768 1280 2304 2560 2560 2560 1024 -256 -512 0 1280 1536 768 -1280 -512 2048 1536 2048 1280 -256 256 512 768 768 1280 2304 1792 512 -1280 -1024 768 1536 1536 256 -768 1536 3584 3072 1792 -256 -1536 -512 256 -512 -512 768 2048 2048 1792 1280 1280 3072 2816 768 -1024 -2304 -1024 256 256 1280 1792 2304 2816 2304 1280 512 1024 768 -768 -1280 -1280 -512 1536 2560 2816 2048 512 1024 1792 1280 768 0 -768 -768 0 256 256 1280 2560 2304 2304 1536 512 512 1024 1280 0 -1792 -1536 -512 1280 3072 2816 1792 512 1024 1536 256 -256 768 768 256 256 -256 512 1280 1280 1536 768 1024 1792 1536 1024 0 256 -512 -256 1024 512 256 768 1792 2304 1280 256 768 1024 1280 1792 768 -768 -768 768 512 256 1024 1792 1536 1280 1536 1792 1280 768 512 -512 -1792 -512 512 768 2304 2816 1792 768 1536 2304 1536 0 -256 -256 -768 -768 256 1536 1536 2304 2048 256 768 2048 2304 1280 0 -256 -1024 -1024 0 1024 1792 2304 2304 1280 512 1280 2048 1280 256 -512 -1792 -1536 256 1536 1792 2048 2048 2048 1536 512 512 768 256 -256 0 -512 -1024 768 2048 2304 2304 1280 1280 1024 1024 1024 0 -512 256 768 0 -256 1536 2304 1792 2304 1280 -512 -256 768 1536 1024 256 512 512 1024 1792 1792 1536 1024 1280 0 -1280 256 2048 2560 2048 1024 -256 -256 1024 1280 1536 1024 0 0 256 768 1792 2304 2048 1280 1024 0 -512 -256 256 1024 1024 512 768 768 1280 2048 1792 1024 768 768 -256 -1024 0 256 1024 1536 1024 1280 1536 1792 1792 1024 512 512 0 -512 -256 512 768 1280 1280 1024 1280 1792 1792 1280 512 -256 -256 256 512 1280 1024 1280 1280 1024 1024 768 1024 1024 1024 1280 256 256 768 768 1024 512 256 768 1280 2560 2560 1280 512 -256 -512 -256 1024 1536 768 1024 1280 768 1024 1536 1536 1024 256 0 0 0 768 768 512 1280 1536 1280 1280 1280 1280 768 768 256 -256 768 768 256 768 1280 1792 1536 1536 1536 256 512 1024 0 -768 -256 768 512 1024 2048 1536 1024 1536 1536 768 0 0 -256).
+
+	CoffeeCupClink _ AudioBuffer fromArray: samples.
+! !
+!AudioBuffer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50829528!
+extractLeftChannel
+	"Answer a new SoundBuffer half the size of the receiver consisting of only the left channel of the receiver, which is assumed to contain stereo sound data."
+
+	| n resultBuf j |
+	n _ self monoSampleCount.
+	resultBuf _ AudioBuffer newMonoSampleCount: n // 2.
+	j _ 0.
+	1 to: n by: 2 do: [:i | resultBuf at: (j _ j + 1) put: (self at: i)].
+	^ resultBuf! !
+!AbstractSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50843193!
+buffer
+	| buf totalSamples |
+	totalSamples _ AudioPlayer buffer stereoSampleCount * 2.  "two buffer's worth"
+	buf _ AudioBuffer newStereoSampleCount: totalSamples.
+	self playSampleCount: totalSamples into: buf startingAt: 1.
+	^buf! !
+!SampledSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50835049!
+convertBytesTo16BitSamples: aByteArray mostSignificantByteFirst: msbFirst
+	"Convert the given ByteArray (with the given byte ordering) into 16-bit sample buffer."
+
+	| n data src b1 b2 w |
+	n _ aByteArray size // 2.
+	data _ AudioBuffer newMonoSampleCount: n.
+	src _ 1.
+	1 to: n do: [:i |
+		b1 _ aByteArray at: src.
+		b2 _ aByteArray at: src + 1.
+		msbFirst
+			ifTrue: [w _ (b1 bitShift: 8) + b2]
+			ifFalse: [w _ (b2 bitShift: 8) + b1].
+		w > 32767 ifTrue: [w _ w - 65536].
+		data at: i put: w.
+		src _ src + 2].
+	^ data
+! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50835555!
+positionCodecTo: desiredSampleIndex
+	"Position to the closest frame before the given sample index when using a codec. If using the ADPCM codec, try to ensure that it is in sync with the compressed sample stream."
+
+	| desiredFrameIndex desiredPosition tmpStream tmpCodec byteBuf bufFrames sampleBuf frameCount n startOffset |
+	(codec isKindOf: ADPCMCodec) ifFalse: [
+		"stateless codecs (or relatively stateless ones, like GSM: just jump to frame boundary"
+		desiredFrameIndex _ desiredSampleIndex // codec samplesPerFrame.
+		stream position: audioDataStart + (desiredFrameIndex * codec bytesPerEncodedFrame).
+		codec reset.
+		^ self].
+
+	"compute the desired stream position"
+	desiredFrameIndex _ desiredSampleIndex // codec samplesPerFrame.
+	desiredPosition _ audioDataStart + (desiredFrameIndex * codec bytesPerEncodedFrame).
+
+	"copy stream and codec"
+	(stream isKindOf: FileStream)
+		ifTrue: [tmpStream _ (stream name asFileEntry readStream ) binary]
+		ifFalse: [tmpStream _ "stream deepCopy" stream contents readStream].	"To kill #deepCopy. Not sure if right, though (jmv)"
+	tmpCodec _ codec copy reset.
+
+	"reset the codec and start back about 30 seconds to try to get codec in sync"
+	startOffset _ ((desiredFrameIndex - 80000) max: 0) * codec bytesPerEncodedFrame.
+	tmpStream position: audioDataStart + startOffset.
+
+	"decode forward to the desired position"
+	byteBuf _ ByteArray new: (32000 roundTo: codec bytesPerEncodedFrame).
+	bufFrames _ byteBuf size // codec bytesPerEncodedFrame.
+	sampleBuf _ AudioBuffer newMonoSampleCount: bufFrames * codec samplesPerFrame.
+	frameCount _ (desiredPosition - tmpStream position) // codec bytesPerEncodedFrame.
+	[frameCount > 0] whileTrue: [
+		n _ bufFrames min: frameCount.
+		tmpStream next: n * codec bytesPerEncodedFrame into: byteBuf startingAt: 1.
+		tmpCodec decodeFrames: n from: byteBuf at: 1 into: sampleBuf at: 1.
+		frameCount _ frameCount - n].
+
+	codec _ tmpCodec.
+	stream position: tmpStream position.
+	(tmpStream isKindOf: FileStream) ifTrue: [tmpStream close].! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50835513!
+loadBuffersForSampleCount: count
+	"Load the sound buffers from the stream."
+
+	| snd buf sampleCount |
+	snd _ mixer sounds first.
+	buf _ snd samples.
+	buf monoSampleCount = count ifFalse: [
+		buf _ AudioBuffer newMonoSampleCount: count.
+		snd setSamples: buf samplingRate: streamSamplingRate].
+	sampleCount _ count min: (totalSamples - self currentSampleIndex).
+	sampleCount < count ifTrue: [buf primFill: 0].
+
+	codec
+		ifNil: [self loadBuffer: buf uncompressedSampleCount: sampleCount]
+		ifNotNil: [self loadBuffer: buf compressedSampleCount: sampleCount].
+
+	mixer reset.
+! !
+!AudioBuffer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50829591!
+mergeStereo
+	"Answer a new SoundBuffer half the size of the receiver that mixes the left and right stereo channels of the receiver, which is assumed to contain stereo sound data."
+
+	| n resultBuf j |
+	n _ self monoSampleCount.
+	resultBuf _ AudioBuffer newMonoSampleCount: n // 2.
+	j _ 0.
+	1 to: n by: 2 do: [:i | resultBuf at: (j _ j + 1) put: (((self at: i) + (self at: i + 1)) // 2)].
+	^ resultBuf
+! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50835447!
+loadBuffer: aSoundBuffer compressedSampleCount: sampleCount
+	"Load the given sound buffer from the compressed sample stream."
+	"Details: Most codecs decode in multi-sample units called 'frames'. Since the requested sampleCount is typically not an even multiple of the frame size, we need to deal with partial frames. The unused samples from a partial frame are retained until the next call to this method."
+
+	| n samplesNeeded frameCount encodedBytes r decodedCount buf j |
+	"first, use any leftover samples"
+	n _ self loadFromLeftovers: aSoundBuffer sampleCount: sampleCount.
+	samplesNeeded _ sampleCount - n.
+	samplesNeeded <= 0 ifTrue: [^ self].
+
+	"decode an integral number of full compression frames"
+	frameCount _ samplesNeeded // codec samplesPerFrame.
+	encodedBytes _ stream next: (frameCount * codec bytesPerEncodedFrame).
+	r _ codec decodeFrames: frameCount from: encodedBytes at: 1 into: aSoundBuffer at: n + 1.
+	decodedCount _ r last.
+	decodedCount >= samplesNeeded ifTrue: [^ self].
+
+	"decode one last compression frame to finish filling the buffer"
+	buf _ AudioBuffer newMonoSampleCount: codec samplesPerFrame.
+	encodedBytes _ stream next: codec bytesPerEncodedFrame.
+	codec decodeFrames: 1 from: encodedBytes at: 1 into: buf at: 1.
+	j _ 0.
+	(n + decodedCount + 1) to: sampleCount do: [:i |
+		aSoundBuffer at: i put: (buf at: (j _ j + 1))].
+
+	"save the leftover samples"
+	leftoverSamples _ buf copyFrom: (j + 1) to: buf monoSampleCount.
+! !
+!ReverbSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:25' prior: 50834197!
+tapDelays: delayList gains: gainList
+	"ReverbSound new tapDelays: #(537 691 1191) gains: #(0.07 0.07 0.07)"
+
+	| maxDelay gain d |
+	delayList size = gainList size
+		ifFalse: [self error: 'tap delay and gains lists must be the same size'].
+	tapCount _ delayList size.
+	tapDelays _ Bitmap new: tapCount.
+	tapGains _ Bitmap new: tapCount.
+
+	maxDelay _ 0.
+	1 to: tapGains size do: [:i |
+		tapDelays at: i put: (delayList at: i) asInteger.
+		gain _ gainList at: i.
+		gain >= 1.0 ifTrue: [self error: 'reverb tap gains must be under 1.0'].
+		tapGains at: i put: (gain * ScaleFactor) asInteger.
+		d _ tapDelays at: i.
+		d > maxDelay ifTrue: [maxDelay _ d]].
+	bufferSize _ maxDelay.
+	leftBuffer _ AudioBuffer newMonoSampleCount: maxDelay.
+	rightBuffer _ AudioBuffer newMonoSampleCount: maxDelay.
+	bufferIndex _ 1.
+! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50835653!
+startOver
+	"Jump back to the first sample."
+
+	stream reopen; binary.
+	self readHeader.
+	stream position: audioDataStart.
+	leftoverSamples _ AudioBuffer new.
+	lastBufferMSecs _ 0.
+	mutex _ Semaphore forMutualExclusion.
+! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50835723!
+extractFrom: startSecs to: endSecs
+	"Extract a portion of this sound between the given start and end times. The current implementation only works if the sound is uncompressed."
+
+	| emptySound first last sampleCount byteStream sndBuf |
+	codec ifNotNil: [^ self error: 'only works on uncompressed sounds'].
+	emptySound _ SampledSound samples: AudioBuffer new samplingRate: streamSamplingRate.
+	first _ (startSecs * streamSamplingRate) truncated max: 0.
+	last _ ((endSecs * streamSamplingRate) truncated min: totalSamples) - 1.
+	first >= last ifTrue: [^ emptySound].
+	codec ifNotNil: [self error: 'extracting from compressed sounds is not supported'].
+	sampleCount _ last + 1 - first.
+	stream position: audioDataStart + (2 * first).
+	byteStream _ ReadStream on: (stream next: 2 * sampleCount).
+	sndBuf _ AudioBuffer newMonoSampleCount: sampleCount.
+	1 to: sampleCount do: [:i | sndBuf at: i put: (byteStream nextSignedInt16BigEndian: true)].
+	^ SampledSound samples: sndBuf samplingRate: streamSamplingRate
+! !
+!SoundCodec methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50838066!
+decodeCompressedData: aByteArray
+	"Decode the entirety of the given encoded data buffer with this codec. Answer a monophonic SoundBuffer containing the uncompressed samples."
+
+	| frameCount result increments |
+	frameCount _ self frameCount: aByteArray.
+	result _ AudioBuffer newMonoSampleCount: frameCount * self samplesPerFrame.
+	self reset.
+	increments _ self decodeFrames: frameCount from: aByteArray at: 1 into: result at: 1.
+	((increments first = aByteArray size) and: [increments last = result size]) ifFalse: [
+		self error: 'implementation problem; increment sizes should match buffer sizes'].
+	^ result
+! !
+!RestSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50834056 overrides: 50830680!
+samples
+	^ AudioBuffer newMonoSampleCount: initialCount! !
+!ADPCMCodec methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50838429!
+initializeForBitsPerSample: sampleBits samplesPerFrame: frameSize
+
+	self resetForMono.
+	stepSizeTable _ #(7 8 9 10 11 12 13 14 16 17 19 21 23 25 28 31 34 37 41 45 50 55 60 66 73 80 88 97 107 118 130 143 157 173 190 209 230 253 279 307 337 371 408 449 494 544 598 658 724 796 876 963 1060 1166 1282 1411 1552 1707 1878 2066 2272 2499 2749 3024 3327 3660 4026 4428 4871 5358 5894 6484 7132 7845 8630 9493 10442 11487 12635 13899 15289 16818 18500 20350 22385 24623 27086 29794 32767).
+
+	indexTable _ nil.
+	sampleBits = 2 ifTrue: [
+		indexTable _ #(-1 2)].
+	sampleBits = 3 ifTrue: [
+		indexTable _ #(-1 -1 2 4)].
+	sampleBits = 4 ifTrue: [
+		indexTable _ #(-1 -1 -1 -1 2 4 6 8)].
+	sampleBits = 5 ifTrue: [
+		indexTable _ #(-1 -1 -1 -1 -1 -1 -1 -1 1 2 4 6 8 10 13 16)].
+	indexTable ifNil: [self error: 'unimplemented bits/sample'].
+
+	bitsPerSample _ sampleBits.
+	deltaSignMask _ 1 bitShift: bitsPerSample - 1.
+	deltaValueMask _ deltaSignMask - 1.
+	deltaValueHighBit _ deltaSignMask / 2.
+
+	frameSize <= 1
+		ifTrue: [frameSizeMask _ 0]
+		ifFalse: [
+			(frameSize = (1 bitShift: frameSize highBit - 1))
+				ifFalse: [self error: 'frameSize must be a power of two'].
+			frameSizeMask _ frameSize - 1].
+
+	"keep as SoundBuffer to allow fast access from primitive"
+	indexTable _ AudioBuffer fromArray: indexTable.
+	stepSizeTable _ AudioBuffer fromArray: stepSizeTable.
+! !
+!ADPCMCodec methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50838256!
+resetForStereo
+	"Reset my encoding and decoding state for stereo."
+
+	"keep state as SoundBuffers to allow fast access from primitive"
+	predicted _ AudioBuffer new: 2.
+	index _ AudioBuffer new: 2.
+! !
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50843048!
+startPlayingImmediately: aSound
+	"Private!! Start playing the given sound as soon as possible by mixing it into the sound output buffers of the underlying sound driver."
+
+	| totalSamples buf n leftover src rest |
+	"first, fill a double-size buffer with samples"
+	"Note: The code below assumes that totalSamples contains two
+	 buffers worth of samples, and the insertSamples primitive is
+	 expected to consume at least one buffer's worth of these
+	 samples. The remaining samples are guaranteed to fit into
+	 a single buffer."
+	totalSamples _ Buffer stereoSampleCount * 2.  "two buffer's worth"
+	buf _ AudioBuffer newStereoSampleCount: totalSamples.
+	[aSound playSampleCount: totalSamples into: buf startingAt: 1.] on: MessageNotUnderstood do: [:ex|buf _ aSound buffer].
+	ReverbState ifNotNil: [
+		ReverbState applyReverbTo: buf startingAt: 1 count: totalSamples].
+
+	PlayerSemaphore critical: [
+		"insert as many samples as possible into the sound driver's buffers"
+		n _ self primSoundInsertSamples: totalSamples
+			from: buf
+			samplesOfLeadTime: 1024.
+		n > 0 ifTrue:[
+			leftover _ totalSamples - n.
+
+			"copy the remainder of buf into Buffer"
+			"Note: the following loop iterates over 16-bit words, not two-word stereo slices"
+			"assert: 0 < leftover <= Buffer stereoSampleCount"
+			src _ 2 * n.
+			1 to: 2 * leftover do:
+				[:dst | Buffer at: dst put: (buf at: (src _ src + 1))].
+
+			"generate enough additional samples to finish filling Buffer"
+			rest _ Buffer stereoSampleCount - leftover.
+			aSound playSampleCount: rest into: Buffer startingAt: leftover + 1.
+			ReverbState == nil ifFalse: [
+				ReverbState applyReverbTo: Buffer startingAt: leftover + 1 count: rest].
+
+			"record the fact that this sound has already been played into Buffer so that we don't process it again this time around"
+			SoundJustStarted _ aSound.
+		] ifFalse:[
+			"quick start failed; reset the sound so we start over"
+			aSound reset.
+		].
+		ActiveSounds add: aSound].
+! !
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50843287!
+startPlayerProcessBufferSize: bufferSize rate: samplesPerSecond stereo: stereoFlag sound: aSound
+	"Start the sound player process. Terminate the old process, if any."
+	"SoundPlayer startPlayerProcessBufferSize: 1000 rate: 11025 stereo: false"
+
+	self stopPlayerProcess.
+	aSound
+		ifNil:[ActiveSounds _ OrderedCollection new]
+		ifNotNil:[ActiveSounds _ OrderedCollection with: aSound].
+	Buffer _ AudioBuffer newStereoSampleCount: (bufferSize // 4) * 4.
+	LastBuffer ifNotNil:[LastBuffer _ AudioBuffer basicNew: Buffer basicSize].
+	PlayerSemaphore _ Semaphore forMutualExclusion.
+	SamplingRate _ samplesPerSecond.
+	Stereo _ stereoFlag.
+	ReadyForBuffer _ Semaphore new.
+	SoundSupported _ true. "Assume so"
+	UseReadySemaphore _ true.  "set to false if ready semaphore not supported by VM"
+	self primSoundStartBufferSize: Buffer stereoSampleCount
+		rate: samplesPerSecond
+		stereo: Stereo
+		semaIndex: (Smalltalk registerExternalObject: ReadyForBuffer).
+	"Check if sound start prim was successful"
+	SoundSupported ifFalse:[^self].
+	UseReadySemaphore
+		ifTrue: [PlayerProcess _ [AudioPlayer playLoop] newProcess]
+		ifFalse: [PlayerProcess _ [AudioPlayer oldStylePlayLoop] newProcess].
+	UseReverb ifTrue: [self startReverb].
+
+	PlayerProcess
+		priority: Processor userInterruptPriority;
+		name: 'Sound Player';
+		resume! !
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50843259!
+boinkScale
+	"Tests the sound output primitives by playing a scale."
+	"SoundPlayer boinkScale"
+
+	| sineTable pan |
+	self shutDown.
+	SamplingRate _ 11025.
+	Stereo _ true.
+	sineTable _ self sineTable: 1000.
+	Buffer _ AudioBuffer newStereoSampleCount: 1000.
+	BufferIndex _ 1.
+	self primSoundStartBufferSize: Buffer stereoSampleCount
+		rate: SamplingRate
+		stereo: Stereo.
+	pan _ 0.
+	#(261.626 293.665 329.628 349.229 391.996 440.001 493.884 523.252) do: [:p |
+		self boinkPitch: p dur: 0.3 loudness: 300 waveTable: sineTable pan: pan.
+		pan _ pan + 125].
+
+	self boinkPitch: 261.626 dur: 1.0 loudness: 300 waveTable: sineTable pan: 500.
+	self primSoundStop.
+	self shutDown.
+	AudioPlayer initialize.  "reset sampling rate, buffer size, and stereo flag"
+! !
+!AudioBuffer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50829674!
+splitStereo
+	"Answer an array of two SoundBuffers half the size of the receiver consisting of the left and right channels of the receiver (which is assumed to contain stereo sound data)."
+
+	| n leftBuf rightBuf leftIndex rightIndex |
+	n _ self monoSampleCount.
+	leftBuf _ AudioBuffer newMonoSampleCount: n // 2.
+	rightBuf _ AudioBuffer newMonoSampleCount: n // 2.
+	leftIndex _ rightIndex _ 0.
+	1 to: n by: 2 do: [:i |
+		leftBuf at: (leftIndex _ leftIndex + 1) put: (self at: i).
+		rightBuf at: (rightIndex _ rightIndex + 1) put: (self at: i + 1)].
+	^ Array with: leftBuf with: rightBuf
+! !
+!AudioBuffer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:26' prior: 50829695!
+trimmedThreshold: threshold
+
+	| start end |
+	start _ self indexOfFirstSampleOver: threshold.
+	end _  self indexOfLastSampleOver: threshold.
+	start > end ifTrue: [^ AudioBuffer new].
+	start _ (start - 200) max: 1.
+	end _ (end + 200) min: self size.
+	^ self copyFrom: start to: end
+! !
+!SampledSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50835018!
+convert8bitSignedTo16Bit: aByteArray
+	"Convert the given array of samples--assumed to be 8-bit signed, linear data--into 16-bit signed samples. Return an array containing the resulting samples. Typically used to read uncompressed AIFF sound data."
+
+	| result |
+	result _ AudioBuffer newMonoSampleCount: aByteArray size.
+	self convert8bitSignedFrom: aByteArray to16Bit: result.
+	^ result
+! !
+!AudioPlayer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50839282!
+useLastBuffer: aBool
+	Buffer ifNil:[^self].
+	aBool 
+		ifTrue:[LastBuffer _ AudioBuffer basicNew: Buffer basicSize]
+		ifFalse:[LastBuffer _ nil]	! !
+!SampledSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50835033!
+convert8bitUnsignedTo16Bit: anArray
+	"Convert the given array of samples--assumed to be 8-bit unsigned, linear data--into 16-bit signed samples. Return an array containing the resulting samples. Typically used to read uncompressed WAVE sound data."
+
+	| n samples s |
+	n _ anArray size.
+	samples _ AudioBuffer newMonoSampleCount: n.
+	1 to: n do: [:i |
+		s _ anArray at: i.
+		samples at: i put: (s - 128 * 256)].
+	^ samples
+! !
+!SoundRecorder methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50839964!
+condensedStereoSound
+	"Decompose my buffers into left and right channels and return a mixed sound consisting of the those two channels. This may be take a while, since the data must be copied into new buffers."
+
+	| sz leftBuf rightBuf leftI rightI left |
+	sz _ recordedBuffers inject: 0 into: [:tot :buff | tot + buff size].
+	leftBuf _ AudioBuffer newMonoSampleCount: (sz + 1) // 2.
+	rightBuf _ AudioBuffer newMonoSampleCount: (sz + 1) // 2.
+	leftI _ rightI _ 1.
+	left _ true.
+	recordedBuffers do: [:b |
+		1 to: b size do: [:j |
+			left
+				ifTrue: [leftBuf at: leftI put: (b at: j). leftI _ leftI + 1. left _ false]
+				ifFalse: [rightBuf at: rightI put: (b at: j). rightI _ rightI + 1. left _ true]]].
+	^ MixedSound new
+		add: (SampledSound new setSamples: leftBuf samplingRate: samplingRate) pan: 0.0;
+		add: (SampledSound new setSamples: rightBuf samplingRate: samplingRate) pan: 1.0
+! !
+!SampledSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50834417!
+setSamples: anArray samplingRate: rate
+	"Set my samples array to the given array with the given nominal sampling rate. Altering the rate parameter allows the sampled sound to be played back at different pitches."
+	"Note: There are two ways to use sampled sound: (a) you can play them through once (supported by this method) or (b) you can make them the default waveform with which to play a musical score (supported by the class method defaultSampleTable:)."
+	"Assume: anArray is either a SoundBuffer or a collection of signed 16-bit sample values."
+	"(SampledSound
+		samples: SampledSound coffeeCupClink
+		samplingRate: 5000) play"
+
+	"copy the array into a SoundBuffer if necessary"
+	anArray class isWords
+		ifTrue: [samples _ anArray]
+		ifFalse: [samples _ AudioBuffer fromArray: anArray].
+
+	samplesSize _ samples size.
+	samplesSize >= SmallInteger maxVal ifTrue: [  "this is unlikely..."
+		self error: 'sample count must be under ',  SmallInteger maxVal printString].
+	originalSamplingRate _ rate.
+	initialCount _ (samplesSize * self samplingRate) // originalSamplingRate.
+	self loudness: 1.0.
+	self reset.
+! !
+!AudioBuffer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50829542!
+extractRightChannel
+	"Answer a new SoundBuffer half the size of the receiver consisting of only the right channel of the receiver, which is assumed to contain stereo sound data."
+
+	| n resultBuf j |
+	n _ self monoSampleCount.
+	resultBuf _ AudioBuffer newMonoSampleCount: n // 2.
+	j _ 0.
+	2 to: n by: 2 do: [:i | resultBuf at: (j _ j + 1) put: (self at: i)].
+	^ resultBuf! !
+!SoundCodec methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50837964!
+compressSound: aSound atRate: desiredSampleRate
+	"Compress the entirety of the given sound with this codec. Answer a CompressedSoundData."
+
+	| compressed channels samples newRate ratio buffer |
+
+	compressed _ CompressedSoundData new
+		codecName: self class name;
+		soundClassName: aSound class name.
+	(aSound isKindOf: SampledSound) ifTrue: [
+		(desiredSampleRate isNil or: 
+				[(ratio _ aSound originalSamplingRate // desiredSampleRate) <= 1]) ifTrue: [
+			samples _ aSound samples.
+			newRate _ aSound originalSamplingRate.
+		] ifFalse: [
+			buffer _ aSound samples.
+			samples _ AudioBuffer 
+				averageEvery: ratio 
+				from: buffer 
+				upTo: buffer monoSampleCount.
+			newRate _ aSound originalSamplingRate / ratio.
+		].
+
+		channels _ Array new: 1.
+		channels at: 1 put: (self encodeSoundBuffer: samples).
+		compressed
+			channels: channels;
+			samplingRate: newRate;
+			firstSample: 1;
+			loopEnd: samples size;
+			loopLength: 0.0;
+			perceivedPitch: 100.0;
+			gain: aSound loudness.
+		^ compressed].
+	(aSound isKindOf: LoopedSampledSound) ifTrue: [
+		aSound isStereo
+			ifTrue: [
+				channels _ Array new: 2.
+				channels at: 1 put: (self encodeSoundBuffer: aSound leftSamples).
+				channels at: 2 put: (self encodeSoundBuffer: aSound rightSamples)]
+			ifFalse: [
+				channels _ Array new: 1.
+				channels at: 1 put: (self encodeSoundBuffer: aSound leftSamples)].
+		compressed
+			channels: channels;
+			samplingRate: aSound originalSamplingRate;
+			firstSample: aSound firstSample;
+			loopEnd: aSound loopEnd;
+			loopLength: aSound loopLength;
+			perceivedPitch: aSound perceivedPitch;
+			gain: aSound gain.
+		^ compressed].
+	self error: 'you can only compress sampled sounds'.
+! !
+!PluckedSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50833807 overrides: 50830905!
+setPitch: pitchNameOrNumber dur: d loudness: vol
+
+	| p sz |
+	super setPitch: pitchNameOrNumber dur: d loudness: vol.
+	p _ self nameOrNumberToPitch: pitchNameOrNumber.
+	initialCount _ (d * self samplingRate asFloat) asInteger.
+	ring _ AudioBuffer newMonoSampleCount:
+		(((2.0 * self samplingRate) / p) asInteger max: 2).
+	sz _ ring monoSampleCount.
+	scaledIndexLimit _ (sz + 1) * ScaleFactor.
+	scaledIndexIncr _ (p * sz * ScaleFactor) // (2.0 * self samplingRate).
+	self reset.
+! !
+!ADPCMCodec methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50838305!
+decodeFlash: aByteArray sampleCount: sampleCount stereo: stereoFlag
+
+	| bits |
+	encodedBytes _ aByteArray.
+	byteIndex _ 0.
+	bitPosition _ 0.
+	currentByte _ 0.
+	bits _ 2 + (self nextBits: 2).  "bits per sample"
+	self initializeForBitsPerSample: bits samplesPerFrame: 4096.
+	stereoFlag
+		ifTrue: [
+			self resetForStereo.
+			samples _ AudioBuffer newMonoSampleCount: sampleCount.
+			rightSamples _ AudioBuffer newMonoSampleCount: sampleCount.
+			sampleIndex _ 0.
+			self privateDecodeStereo: sampleCount.
+			^ Array with: samples with: rightSamples]
+		ifFalse: [
+			samples _ AudioBuffer newMonoSampleCount: sampleCount.
+			sampleIndex _ 0.
+			self privateDecodeMono: sampleCount.
+			^ Array with: samples].
+! !
+!LoopedSampledSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50832939 overrides: 16881978!
+comeFullyUpOnReload: smartRefStream
+	"Convert my sample buffers from ByteArrays into SampleBuffers after raw loading from a DataStream. Answer myself."
+
+	leftSamples == rightSamples
+		ifTrue: [
+			leftSamples _ AudioBuffer fromByteArray: self leftSamples.
+			rightSamples _ leftSamples]
+		ifFalse: [
+			leftSamples _ AudioBuffer fromByteArray: self leftSamples.
+			rightSamples _ AudioBuffer fromByteArray: self rightSamples].
+
+! !
+!SampledSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:27' prior: 50835200!
+defaultSamples: anArray repeated: n
+
+	| data |
+	data _ WriteStream on: (AudioBuffer newMonoSampleCount: anArray size * n).
+	n timesRepeat: [
+		anArray do: [:sample | data nextPut: sample truncated]].
+	DefaultSampleTable _ data contents.
+! !
+!StreamingMonoSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50835420!
+createMixer
+	"Create a mixed sound consisting of sampled sounds with one sound buffer's worth of samples."
+
+	| snd |
+	mixer _ MixedSound new.
+	snd _ SampledSound
+		samples: (AudioBuffer newMonoSampleCount: 2)  "buffer size will be adjusted dynamically"
+		samplingRate: streamSamplingRate.
+	mixer add: snd pan: 0.5 volume: volume.
+! !
+!SoundRecorder methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50843160!
+startRecording
+	"Turn of the sound input driver and start the recording process. Initially, recording is paused."
+
+	| semaIndex |
+	recordLevel ifNil: [recordLevel _ 0.5].  "lazy initialization"
+	Preferences canRecordWhilePlaying ifFalse: [AudioPlayer shutDown].
+	recordProcess ifNotNil: [self stopRecording].
+	paused _ true.
+	meteringBuffer _ AudioBuffer newMonoSampleCount: 1024.
+	meterLevel _ 0.
+	self allocateBuffer.
+	bufferAvailableSema _ Semaphore new.
+	semaIndex _ Smalltalk registerExternalObject: bufferAvailableSema.
+	self primStartRecordingDesiredSampleRate: samplingRate asInteger
+		stereo: stereo
+		semaIndex: semaIndex.
+	RecorderActive _ true.
+	samplingRate _ self primGetActualRecordingSampleRate.
+	self primSetRecordLevel: (1000.0 * recordLevel) asInteger.
+	recordProcess _ [self recordLoop] newProcess.
+	recordProcess
+		priority: Processor userInterruptPriority;
+		name: 'Sound Recorder';
+		resume.
+! !
+!AudioBuffer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50829502!
+downSampledLowPassFiltering: doFiltering
+	"Answer a new SoundBuffer half the size of the receiver consisting of every other sample. If doFiltering is true, a simple low-pass filter is applied to avoid aliasing of high frequencies. Assume that receiver is monophonic."
+	"Details: The simple low-pass filter in the current implementation could be improved, at some additional cost."
+
+	| n resultBuf j |
+	n _ self monoSampleCount.
+	resultBuf _ AudioBuffer newMonoSampleCount: n // 2.
+	j _ 0.
+	doFiltering
+		ifTrue: [
+			1 to: n by: 2 do: [:i |
+				resultBuf at: (j _ j + 1) put:
+					(((self at: i) + (self at: i + 1)) bitShift: -1)]]
+		ifFalse: [
+			1 to: n by: 2 do: [:i |
+				resultBuf at: (j _ j + 1) put: (self at: i)]].
+
+	^ resultBuf! !
+!AudioBuffer class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50829853!
+fromArray: anArray
+	"Return a new SoundBuffer whose contents are copied from the given Array or ByteArray."
+
+	| new |
+	new _ AudioBuffer newMonoSampleCount: anArray size.
+	1 to: anArray size do: [:i | new at: i put: (anArray at: i)].
+	^ new
+! !
+!SoundRecorder methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50839666!
+allocateBuffer
+	"Allocate a new buffer and reset nextIndex."
+
+	| bufferTime |
+	bufferTime _ stereo  "Buffer time = 1/2 second"
+		ifTrue: [self samplingRate asInteger]
+		ifFalse: [self samplingRate asInteger // 2].
+	currentBuffer _ AudioBuffer newMonoSampleCount:
+		"Multiple of samplesPerFrame that is approx. bufferTime long"
+		(bufferTime truncateTo: self samplesPerFrame).
+	nextIndex _ 1.
+! !
+!SampledSound class methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50835069!
+uLawDecode: aByteArray
+	"Convert the given array of uLaw-encoded 8-bit samples into a SoundBuffer of 16-bit signed samples."
+
+	| n out decodingTable |
+	n _ aByteArray size.
+	out _ AudioBuffer newMonoSampleCount: n.
+	decodingTable _ self uLawDecodeTable.
+	1 to: n do: [:i | out at: i put: (decodingTable at: (aByteArray at: i) + 1)].
+	^ out
+! !
+!ADPCMCodec methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50838282!
+decode: aByteArray sampleCount: count bitsPerSample: bits frameSize: frameSize stereo: stereoFlag
+
+	self initializeForBitsPerSample: bits samplesPerFrame: frameSize.
+	encodedBytes _ aByteArray.
+	byteIndex _ 0.
+	bitPosition _ 0.
+	currentByte _ 0.
+	stereoFlag
+		ifTrue: [
+			self resetForStereo.
+			samples _ AudioBuffer newMonoSampleCount: count.
+			rightSamples _ AudioBuffer newMonoSampleCount: count.
+			sampleIndex _ 0.
+			self privateDecodeStereo: count.
+			^ Array with: samples with: rightSamples]
+		ifFalse: [
+			samples _ AudioBuffer newMonoSampleCount: count.
+			sampleIndex _ 0.
+			self privateDecodeMono: count.
+			^ samples]
+! !
+!SoundRecorder methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50839943!
+condensedSamples
+	"Return a single SoundBuffer that is the contatenation of all my recorded buffers."
+
+	| sz newBuf i |
+	recordedBuffers _ recordedSound sounds collect: [:snd | snd samples].
+	recordedBuffers isEmpty ifTrue: [^ AudioBuffer new: 0].
+	recordedBuffers size = 1 ifTrue: [^ recordedBuffers first copy].
+	sz _ recordedBuffers inject: 0 into: [:tot :buff | tot + buff size].
+	newBuf _ AudioBuffer newMonoSampleCount: sz.
+	i _ 1.
+	recordedBuffers do: [:b |
+		1 to: b size do: [:j |
+			newBuf at: i put: (b at: j).
+			i _ i + 1]].
+	recordedBuffers _ nil.
+	^ newBuf
+! !
+!SoundCodec methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50838088!
+encodeSoundBuffer: aSoundBuffer
+	"Encode the entirety of the given monophonic SoundBuffer with this codec. Answer a ByteArray containing the compressed sound data."
+
+	| codeFrameSize frameSize fullFrameCount lastFrameSamples result increments finalFrame i lastIncs |
+	frameSize _ self samplesPerFrame.
+	fullFrameCount _ aSoundBuffer monoSampleCount // frameSize.
+	lastFrameSamples _ aSoundBuffer monoSampleCount - (fullFrameCount * frameSize).
+	codeFrameSize _ self bytesPerEncodedFrame.
+	codeFrameSize = 0 ifTrue:
+		["Allow room for 1 byte per sample for variable-length compression"
+		codeFrameSize _ frameSize].
+	lastFrameSamples > 0
+		ifTrue: [result _ ByteArray new: (fullFrameCount + 1) * codeFrameSize]
+		ifFalse: [result _ ByteArray new: fullFrameCount * codeFrameSize].
+	self reset.
+	increments _ self encodeFrames: fullFrameCount from: aSoundBuffer at: 1 into: result at: 1.
+	lastFrameSamples > 0 ifTrue: [
+		finalFrame _ AudioBuffer newMonoSampleCount: frameSize.
+		i _ fullFrameCount * frameSize.
+		1 to: lastFrameSamples do: [:j |
+			finalFrame at: j put: (aSoundBuffer at: (i _ i + 1))].
+		lastIncs _ self encodeFrames: 1 from: finalFrame at: 1 into: result at: 1 + increments second.
+		increments _ Array with: increments first + lastIncs first
+							with: increments second + lastIncs second].
+	increments second < result size
+		ifTrue: [^ result copyFrom: 1 to: increments second]
+		ifFalse: [^ result]
+! !
+!AbstractSound methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:32:28' prior: 50830648!
+playSilentlyUntil: startTime
+	"Compute the samples of this sound without outputting them. Used to fast foward to a particular starting time. The start time is given in seconds."
+
+	| buf startSample nextSample samplesRemaining n |
+	self reset.
+	buf _ AudioBuffer newStereoSampleCount: (self samplingRate // 10).
+	startSample _ (startTime * self samplingRate) asInteger.
+	nextSample _ 1.
+	[self samplesRemaining > 0] whileTrue: [
+		nextSample >= startSample ifTrue: [^ self].
+		samplesRemaining _ startSample - nextSample.
+		samplesRemaining > buf stereoSampleCount
+			ifTrue: [n _ buf stereoSampleCount]
+			ifFalse: [n _ samplesRemaining].
+		self playSampleCount: n into: buf startingAt: 1.
+		nextSample _ nextSample + n].
+! !
+
+Object subclass: #AudioObject
+	instanceVariableNames: ''
+	classVariableNames: 'Tick'
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #AudioObject category: #Audio stamp: 'GDK 7/24/2020 09:52:50'!
+Object subclass: #AudioObject
+	instanceVariableNames: ''
+	classVariableNames: 'Tick'
+	poolDictionaries: ''
+	category: 'Audio'!
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:54:10' prior: 50813821!
+emit: val
+(thisContext sender receiver isKindOf: AudioObject) ifFalse: [Tick _ Tick + 1].
+^((Pipe sFor: self) select: [:o|o isKindOf: AudioObject]) collect: [:o|o emit: val]! !
+
+AudioObject subclass: #Mixer
+	instanceVariableNames: 'tracker'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #Mixer category: #Audio stamp: 'GDK 7/24/2020 09:56:48'!
+AudioObject subclass: #Mixer
+	instanceVariableNames: 'tracker'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!Mixer methodsFor: 'no messages' stamp: 'GDK 7/24/2020 09:56:54' overrides: 50845177!
+emit: val
+! !
+!Mixer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 09:58:25' prior: 50845196 overrides: 50845177!
+emit: val
+tracker first = Tick ifTrue: [tracker second add: val] ifFalse: [| v |
+	v _ super emit: (tracker second average).
+	tracker _ {Tick. OrderedCollection new.}.
+	^v].
+! !
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 10:00:43' prior: 50845177!
+emit: val
+^((Pipe sFor: self) select: [:o|o isKindOf: AudioObject]) collect: [:o|o emit: val]! !
+!AudioObject methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 10:02:02'!
+emitAsTick: val
+Tick _ Tick + 1.
+^self emit: val! !
+!Mixer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 10:20:33' prior: 50845200 overrides: 50845209!
+emit: val
+tracker first = Tick ifTrue: [tracker second add: val] ifFalse: [| v |
+	v _ self emitBase: (tracker second average).
+	tracker _ {Tick. OrderedCollection new.}.
+	^v].
+! !
+!Mixer methodsFor: 'as yet unclassified' stamp: 'GDK 7/24/2020 10:20:46'!
+emitBase: val
+^super emit: val! !
+
+Mixer subclass: #AudioOutput
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #AudioOutput category: #Audio stamp: 'GDK 7/24/2020 10:21:02'!
+Mixer subclass: #AudioOutput
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!AudioOutput methodsFor: 'no messages' stamp: 'GDK 7/24/2020 10:22:01' overrides: 50845229!
+emitBase: s
+AudioPlayer playSample: s pan: 0.5! !

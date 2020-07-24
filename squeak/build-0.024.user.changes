@@ -1,0 +1,28 @@
+
+
+----SNAPSHOT----(8 July 2020 16:25:29) build-0.024.image priorSource: 14407365!
+
+----SNAPSHOT----(8 July 2020 16:30:34) build-0.024.image priorSource: 14408047!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 16:30:37' prior: 50781856 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+(self == Recovery) ifFalse: [Recovery ifNotNil: [Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+^super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [[[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	]! !
+
+Class!
+
+----SNAPSHOT----(8 July 2020 16:57:29) build-0.024.image priorSource: 14408128!
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 16:57:51' prior: 50781908 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+| vp r |
+(self == Recovery) ifFalse: [Recovery ifNotNil: [r _ Recovery at: key ifPresent: #yourself ifAbsent: [nil]]].
+vp _ super at: key ifPresent: [:v|presentBlock value: ((EnvironmentUserMode signal isNil and: [self isRecovery not]) ifFalse: [copyDict at: v ifAbsentPut: [v copy]] ifTrue: [v])] ifAbsent: [| b |
+	b _ [[[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	].
+r ifNotNil: [vp ifNil: [(self == Smalltalk) ifTrue: [vp _ r. self at: key put: r]]].
+^vp! !
+
+ Number!

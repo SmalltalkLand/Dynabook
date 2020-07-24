@@ -1,0 +1,24 @@
+
+
+----SNAPSHOT----(21 July 2020 10:12:48) build-0.074.image priorSource: 15221105!
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 10:13:34' prior: 50806029!
+sweep: dict
+thisContext isSecure ifFalse: [^self].
+dict associationsDo: [:a|a value ifFalse: [a key finalize;becomeForward: nil]].! !
+
+----SNAPSHOT----(21 July 2020 10:13:41) build-0.074.image priorSource: 15221569!
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 10:31:54'!
+document: markDict target: target! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 10:33:25' prior: 50807339!
+document: markDict target: target
+^'object ', target printString, ':'! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 10:34:43' prior: 50807344!
+document: markDict target: target
+^('object ', target printString, ':') bold! !
+!AltGarbageCollector class methodsFor: 'as yet unclassified' stamp: 'GDK 7/21/2020 10:42:44' prior: 50807350!
+document: markDict target: target
+^('object ', target printString, ':') bold, 'Contexts Referenced: ', (target isContext ifTrue: [''] ifFalse: [((ContextPart allSubInstances select: [:c|self object: c includesRecursive: target]) collect: [:o|self document: markDict target: o]) concatenation])! !
+
+Feature require: 'PetitParser'!
+
+----End fileIn of F:\Dbs\squeak\PetitParser.pck----!

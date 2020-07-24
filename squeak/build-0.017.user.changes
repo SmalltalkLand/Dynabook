@@ -1,0 +1,180 @@
+
+
+----STARTUP---- (7 July 2020 08:20:28) as F:\Dbs\src\build-0.017.image!
+
+!JSObjectProxy class methodsFor: 'callbacks' stamp: 'GDK 7/6/2020 20:24:36' prior: 50733900!
+newSqueak: arr
+JS at: #runSqueak put: (JS Function new: '...arr' with: 'return new Promise(c => {
+let p = Object.getOwnPropertyDescriptor(SqueakJS,"vm");
+Object.defineProperty(SqueakJS,"vm",{get: () => null,set: v => {
+c(v);
+Object.defineProperty(SqueakJS,"vm",p);
+}});
+})').
+^JS runSqueak apply: JS with: arr ! !
+!JSObjectProxy class methodsFor: 'callbacks' stamp: 'GDK 7/7/2020 08:25:32'!
+proxy: object with: dict
+^JS Proxy new: object with: dict! !
+!JSObjectProxy class methodsFor: 'callbacks' stamp: 'GDK 7/7/2020 08:30:38' prior: 50733945!
+proxy: object with: dict
+^JS Proxy new: object with: dict! !
+!JSObjectProxy class methodsFor: 'callbacks' stamp: 'GDK 7/7/2020 08:35:42' prior: 50733950!
+proxy: object with: dict
+^JS Proxy new: object with: dict! !
+
+Domain subclass: #WebDomain
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'JSBridge-Domains'!
+
+!classDefinition: #WebDomain category: #'JSBridge-Domains' stamp: 'GDK 7/7/2020 08:50:45'!
+Domain subclass: #WebDomain
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'JSBridge-Domains'!
+
+!classDefinition: #WebDomain category: #'JSBridge-Domains' stamp: 'GDK 7/7/2020 08:51:29'!
+Domain subclass: #WebDomain
+	instanceVariableNames: 'key'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'JSBridge-Domains'!
+!WebDomain methodsFor: 'no messages' stamp: 'GDK 7/7/2020 08:51:26' overrides: 50733130!
+exists
+[JS at: key] on: Error do: [:ex|^false].
+^true! !
+!WebDomain methodsFor: 'accessing' stamp: 'GDK 7/7/2020 08:51:35'!
+key
+	"Answer the value of key"
+
+	^ key! !
+!WebDomain methodsFor: 'accessing' stamp: 'GDK 7/7/2020 08:51:35'!
+key: anObject
+	"Set the value of key"
+
+	key _ anObject! !
+!WebDomain methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 08:58:56' prior: 50733978 overrides: 50733130!
+exists
+[JS at: key] on: Error do: [:ex|^false].
+^true! !
+
+Domain subclass: #AllDomain
+	instanceVariableNames: 'domains'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+
+!classDefinition: #AllDomain category: #Domains stamp: 'GDK 7/7/2020 09:12:41'!
+Domain subclass: #AllDomain
+	instanceVariableNames: 'domains'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Domains'!
+!AllDomain methodsFor: 'accessing' stamp: 'GDK 7/7/2020 09:12:45'!
+domains
+	"Answer the value of domains"
+
+	^ domains! !
+!AllDomain methodsFor: 'accessing' stamp: 'GDK 7/7/2020 09:12:45'!
+domains: anObject
+	"Set the value of domains"
+
+	domains _ anObject! !
+!AllDomain methodsFor: 'accessing' stamp: 'GDK 7/7/2020 09:13:41' overrides: 50733130!
+exists
+^domains inject: true into: [:b :d|b and: [d exists]]! !
+
+----SNAPSHOT----(7 July 2020 09:13:45) build-0.017.image priorSource: 12872376!
+!AllDomain methodsFor: 'accessing' stamp: 'GDK 7/7/2020 10:28:11' prior: 50734016 overrides: 50733130!
+exists
+^domains inject: true into: [:b :d|b and: [d exists]]! !
+!AllDomain methodsFor: 'accessing' stamp: 'GDK 7/7/2020 10:37:50' prior: 50734024 overrides: 50733130!
+exists
+domains size < 2 ifTrue: [^false].
+^domains inject: true into: [:b :d|b and: [d exists]]! !
+!DomainRequirement methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 12:04:44' prior: 50733349 overrides: 50680174!
+checkRequirement
+^super checkRequirement and: [domain exists]! !
+
+Object subclass: #JSVue
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'JSVue'!
+
+!classDefinition: #JSVue category: #JSVue stamp: 'GDK 7/7/2020 12:05:37'!
+Object subclass: #JSVue
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'JSVue'!
+!JSVue class methodsFor: 'no messages' stamp: 'GDK 7/7/2020 12:06:15'!
+setup: props
+! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 12:06:26' prior: 50734051!
+setup: props
+^JSObjectProxy sync: []! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 12:08:05' prior: 50734055!
+setup: props
+| r |
+r _ thisContext sender receiver.
+^JSObjectProxy sync: [:h|]! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 12:14:05' prior: 50734060!
+setup: props
+| r |
+r _ thisContext sender receiver. 
+^JSObjectProxy sync: [:h|]! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 12:23:35' prior: 50734066!
+setup: props
+| r |
+r _ thisContext sender receiver. 
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|c component])]! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 12:23:50' prior: 50734072!
+setup: props
+| r |
+r _ thisContext sender receiver. 
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|h call: nil with: c component])]! !
+
+----SNAPSHOT----(7 July 2020 12:23:53) build-0.017.image priorSource: 12875839!
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 12:32:57' prior: 50734080!
+setup: props
+| r |
+r _ thisContext sender receiver. 
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|h call: nil with: c component])]! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 12:40:38' prior: 50734091!
+setup: props
+| r |
+r _ thisContext sender receiver.
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|h call: nil with: c component])] ! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 12:48:03' prior: 50734100!
+setup: props
+| r |
+r _ thisContext sender receiver.
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|h call: nil with: c component])] ! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 13:43:23' prior: 50734109!
+setup: props
+| r |
+r _ thisContext sender receiver.
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|h call: nil with: c component])] ! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 13:48:39' prior: 50734118!
+setup: props
+| r |
+r _ thisContext sender receiver.
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|h call: nil with: c component])] ! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 13:49:39' prior: 50734127!
+setup: props
+| r |
+r _ JSObjectProxy basicNew. thisContext sender receiver.
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|h call: nil with: c component])] ! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 13:50:01' prior: 50734136!
+setup: props
+| r |
+r _ JSObjectProxy basicNew primSqueakAsJSObject: thisContext sender receiver.
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|h call: nil with: c component])] ! !
+!JSVue class methodsFor: 'as yet unclassified' stamp: 'GDK 7/7/2020 13:51:37' prior: 50734145!
+setup: props
+| r |
+r _ [:o|JS Squeak Object new initAsClone: o with: o hash] value: (JSObjectProxy basicNew primSqueakAsJSObject: thisContext sender receiver).
+^JSObjectProxy sync: [:h|h call: nil with: 'div' with: (r children collect: [:c|h call: nil with: c component])] ! !

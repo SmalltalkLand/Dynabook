@@ -1,0 +1,70 @@
+
+
+----STARTUP---- (8 July 2020 12:20:20) as F:\Dbs\src\build-0.022.image!
+
+!HookDictionary methodsFor: 'accessing' stamp: 'GDK 7/8/2020 12:21:39' prior: 50780607 overrides: 16833344!
+at: key ifPresent: presentBlock ifAbsent: absentBlock
+^super at: key ifPresent: [:v|presentBlock value: (EnvironmentUserMode signal ifNotNil: [copyDict at: v ifAbsentPut: [v copy]] ifNil: [v])] ifAbsent: [| b |
+	b _ [[[absentBlock value] on: MessageNotUnderstood do: [:ex|absentBlock]] on: OnBreakEnvironmentBoundary do: [:ex|ex isBroken ifFalse: [ex isBroken: true. ex resumeUnchecked: (self class break: ex outer from: ex)] ifTrue: [ex pass]]].
+	super at: #Pools ifPresent: [:p|(p inject: nil into: [:c2 :po|po at: key ifAbsent: [c2]]) ifNil: b] ifAbsent: b
+	]! !
+
+----SNAPSHOT----(8 July 2020 12:21:42) build-0.022.image priorSource: 14367534!
+
+ProtoObject subclass: #HookDictionaryUserProxy
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+
+!classDefinition: #HookDictionaryUserProxy category: #'System-Environments' stamp: 'GDK 7/8/2020 12:22:24'!
+ProtoObject subclass: #HookDictionaryUserProxy
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+
+ProtoObject subclass: #HookDictionaryUserProxy
+	instanceVariableNames: 'dict'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+
+!classDefinition: #HookDictionaryUserProxy category: #'System-Environments' stamp: 'GDK 7/8/2020 12:22:34'!
+ProtoObject subclass: #HookDictionaryUserProxy
+	instanceVariableNames: 'dict'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+
+ProtoObject subclass: #HookDictionaryUserProxy
+	instanceVariableNames: 'xxxdict'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+
+!classDefinition: #HookDictionaryUserProxy category: #'System-Environments' stamp: 'GDK 7/8/2020 12:22:40'!
+ProtoObject subclass: #HookDictionaryUserProxy
+	instanceVariableNames: 'xxxdict'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Environments'!
+!HookDictionaryUserProxy methodsFor: 'accessing' stamp: 'GDK 7/8/2020 12:22:44'!
+xxxdict
+	"Answer the value of xxxdict"
+
+	^ xxxdict! !
+!HookDictionaryUserProxy methodsFor: 'accessing' stamp: 'GDK 7/8/2020 12:22:44'!
+xxxdict: anObject
+	"Set the value of xxxdict"
+
+	xxxdict _ anObject! !
+!HookDictionaryUserProxy methodsFor: 'accessing' stamp: 'GDK 7/8/2020 12:23:07' overrides: 16896555!
+doesNotUnderstand: m
+^m sentTo: self xxxdict! !
+!HookDictionary class methodsFor: 'instance creation' stamp: 'GDK 7/8/2020 12:23:27'!
+userMode
+^EnvironmentUserMode! !
+!HookDictionaryUserProxy methodsFor: 'accessing' stamp: 'GDK 7/8/2020 12:23:58' prior: 50780953 overrides: 16896555!
+doesNotUnderstand: m
+^[m sentTo: self xxxdict] on: self xxxdict class userMode do: [:ex|ex resumeUnchecked: 1]! !

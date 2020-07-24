@@ -1,0 +1,62 @@
+
+
+----SNAPSHOT----(9 July 2020 19:14:25) build-0.034.image priorSource: 14456809!
+
+SqueakFreeze enabled!
+
+SqueakFreeze class
+	instanceVariableNames: 'enabled theMap disabledObjects varyBlock'!
+
+!classDefinition: 'SqueakFreeze class' category: #'System-SqueakFreeze' stamp: 'GDK 7/9/2020 19:15:43'!
+SqueakFreeze class
+	instanceVariableNames: 'enabled theMap disabledObjects varyBlock'!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:15:48'!
+theMap
+	"Answer the value of theMap"
+
+	^ theMap! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:15:48'!
+theMap: anObject
+	"Set the value of theMap"
+
+	theMap _ anObject! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:15:48'!
+varyBlock
+	"Answer the value of varyBlock"
+
+	^ varyBlock! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:15:48'!
+varyBlock: anObject
+	"Set the value of varyBlock"
+
+	varyBlock _ anObject! !
+
+!methodRemoval: SqueakFreeze class #theMap stamp: 'GDK 7/9/2020 19:15:52'!
+theMap
+	"Answer the value of theMap"
+
+	^ theMap!
+
+!methodRemoval: SqueakFreeze class #theMap: stamp: 'GDK 7/9/2020 19:15:56'!
+theMap: anObject
+	"Set the value of theMap"
+
+	theMap _ anObject!
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:16:09' prior: 50783456!
+varyBlock: anObject
+	"Set the value of varyBlock"
+enabled ifTrue: [^self].
+	varyBlock _ anObject! !
+!SqueakFreeze class methodsFor: 'accessing' stamp: 'GDK 7/9/2020 19:17:51' prior: 50783413 overrides: 50335353!
+startUp
+super startUp.
+enabled ifNotNil: [enabled ifTrue: [
+		| os |
+		os _ Object allSubInstances reject: [:i|i == SafeMode or: [disabledObjects notNil and: [disabledObjects includes: i]]].
+		os asArray elementsForwardIdentityTo: (os collect: [:i|theMap at: i ifPresent: [:v|v value]]) asArray.
+		varyBlock ifNotNil: [
+			| vs |
+			vs _ os select: (varyBlock value: 0).
+			vs asArray elementsForwardIdentityTo: (vs collect: (varyBlock value: 1)).
+			].
+		]] ifNil: [enabled _ false] .! !

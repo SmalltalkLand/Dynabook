@@ -1,0 +1,103 @@
+
+
+----STARTUP---- (18 July 2020 09:10:11) as F:\Dbs\squeak\build-0.049.image!
+
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/17/2020 06:37:16' prior: 50787456 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p] ifAbsent: [self asmError: 'Nonexistent  function'].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/17/2020 06:42:18' prior: 50787540 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p] ifAbsent: [self asmError: 'Nonexistent  function'].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/17/2020 06:47:22' prior: 50787560 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|pc _ p] ifAbsent: [self asmError: 'Nonexistent  function'].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 09:10:37' prior: 50787580 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+sendDictionary at: selector ifPresent: [:p|self push: pc. pc _ p] ifAbsent: [self asmError: 'Nonexistent  function'].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 09:13:04' prior: 50787450!
+asmError: err
+self push: pc.
+self push: err.
+pc _ (errorPC ifNil: [^self error: err]).! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 09:13:27' prior: 50787620!
+asmError: err
+self push: pc.
+self push: err.
+pc _ (errorPC ifNil: [^self error: err]).! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 09:13:46' prior: 50787626!
+asmError: err
+self push: pc.
+self push: err.
+pc _ (errorPC ifNil: [^self error: err]).
+errorPC _ nil.! !
+
+ContextPart subclass: #SqAsmContextPart
+	instanceVariableNames: 'sendDictionary method errorPC oldErrorPC'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SqueakAssembly'!
+
+!classDefinition: #SqAsmContextPart category: #SqueakAssembly stamp: 'GDK 7/18/2020 09:14:06'!
+ContextPart subclass: #SqAsmContextPart
+	instanceVariableNames: 'sendDictionary method errorPC oldErrorPC'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SqueakAssembly'!
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 09:14:19' prior: 50787632!
+asmError: err
+self push: pc.
+self push: err.
+pc _ (errorPC ifNil: [^self error: err]).
+oldErrorPC _ errorPC.
+errorPC _ nil.! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 09:14:36' prior: 50787600 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+	errorPC _ oldErrorPC.
+sendDictionary at: selector ifPresent: [:p|self push: pc. pc _ p] ifAbsent: [self asmError: 'Nonexistent  function'].! !
+!SqAsmContextPart methodsFor: 'as yet unclassified' stamp: 'GDK 7/18/2020 09:14:43' prior: 50787661 overrides: 16823915!
+send: selector super: superFlag numArgs: numArgs
+	| receiver arguments |
+	arguments := Array new: numArgs.
+	numArgs to: 1 by: -1 do: [ :i | arguments at: i put: self pop].
+	receiver := self pop.
+	self push: receiver.
+	arguments do: [:a|self push: a].
+	(receiver is: #BlockClosure) ifTrue: [(selector beginsWith: #value) ifTrue: [^super send: selector super: superFlag numArgs: numArgs]].
+	errorPC _ oldErrorPC.
+	oldErrorPC _ nil.
+sendDictionary at: selector ifPresent: [:p|self push: pc. pc _ p] ifAbsent: [self asmError: 'Nonexistent  function'].! !
