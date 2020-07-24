@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dynabook-pod
+  labels:
+    app: dynabook
+spec:
+  containers:
+  - name: x11server
+    image: x11docker/lxde
+    command: ['sh','-c','if [ -f /tmp/.X11-unix/X0] then echo "exists" else startx']
+    volumeMounts:
+    - mountPath: /tmp/x11-unix
+      name: x11
+  volumes:
+  - name: x11
+    hostPath:
+      path: /tmp/.X11-unix
+      type: Directory
