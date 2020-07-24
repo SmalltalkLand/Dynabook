@@ -1,0 +1,1 @@
+wget https://github.com/OpenSmalltalk/opensmalltalk-vm/releases/download/202003021730/squeak.cog.spur_linux64x64_202003021730.tar.gz
