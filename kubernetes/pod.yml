@@ -12,6 +12,12 @@ spec:
     volumeMounts:
     - mountPath: /tmp/x11-unix
       name: x11
+  - name: squeak
+    image: alpine
+    command: ['sh','-c','mkdir squeak && cd squeak && wget https://github.com/OpenSmalltalk/opensmalltalk-vm/releases/download/202003021730/squeak.cog.spur_linux64x64_202003021730.tar.gz && ./squeak.sh /target/target.image']
+    volumeMounts:
+    - mountPath: /tmp/x11-unix
+      name: x11
   volumes:
   - name: x11
     hostPath:
