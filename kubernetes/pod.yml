@@ -14,7 +14,10 @@ spec:
       name: x11
   - name: blockchain
     image: python
-    command: ['sh','-c','']
+    command: ['sh','-c','python /host/home/dynabook/node_server.py']
+    volumeMounts:
+    - mountPath: /host
+      name: host
   - name: squeak
     image: alpine
     command: ['sh','-c','mkdir squeak && cd squeak && wget https://github.com/OpenSmalltalk/opensmalltalk-vm/releases/download/202003021730/squeak.cog.spur_linux64x64_202003021730.tar.gz && ./squeak.sh /target/target.image']
@@ -25,4 +28,8 @@ spec:
   - name: x11
     hostPath:
       path: /tmp/.X11-unix
+      type: Directory
+  - name: host
+    hostPath:
+      path: /
       type: Directory
