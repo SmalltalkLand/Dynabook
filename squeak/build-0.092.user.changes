@@ -1,0 +1,54 @@
+
+
+----SNAPSHOT----(25 July 2020 08:36:22) build-0.092.image priorSource: 16448291!
+
+Object subclass: #AACHostMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AAC'!
+
+!classDefinition: #AACHostMorph category: #'System-AAC' stamp: 'GDK 7/25/2020 08:39:48'!
+Object subclass: #AACHostMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AAC'!
+
+Morph subclass: #AACHostMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AAC'!
+
+!classDefinition: #AACHostMorph category: #'System-AAC' stamp: 'GDK 7/25/2020 08:39:56'!
+Morph subclass: #AACHostMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AAC'!
+!AACHostMorph methodsFor: 'no messages' stamp: 'GDK 7/25/2020 08:47:25'!
+activate
+| oldActionMaps v |
+oldActionMaps _ ActiveModel actionMaps.
+ActiveModel classPool at: #ActionMaps put: WeakIdentityKeyDictionary new.
+v _ self overlayNoBecome.
+ActiveModel classPool at: #ActionMaps put: oldActionMaps.
+^v! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/25/2020 08:48:06' prior: 50845751!
+activate
+| oldActionMaps |
+oldActionMaps _ ActiveModel actionMaps.
+ActiveModel classPool at: #ActionMaps put: WeakIdentityKeyDictionary new.
+^[self overlayNoBecome] ensure: [.
+ActiveModel classPool at: #ActionMaps put: oldActionMaps.
+].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/25/2020 08:52:17' prior: 50845762!
+activate
+| oldActionMaps |
+oldActionMaps _ ActiveModel actionMaps.
+ActiveModel classPool at: #ActionMaps put: WeakIdentityKeyDictionary new.
+^[self overlayNoBecome] ensure: [
+	ActiveModel actionMaps keysDo: [:k|oldActionMaps declare: k from: ActiveModel actionMaps].
+ActiveModel classPool at: #ActionMaps put: oldActionMaps.
+].! !
