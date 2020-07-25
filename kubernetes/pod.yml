@@ -10,13 +10,16 @@ spec:
     image: x11docker/lxde
     command: ['sh','-c','if [ -f /tmp/.X11-unix/X0] then echo "exists" else startx']
     volumeMounts:
-    - mountPath: /tmp/x11-unix
+    - mountPath: /tmp/.X11-unix
       name: x11
+  - name: blockchain
+    image: python
+    command: ['sh','-c','']
   - name: squeak
     image: alpine
     command: ['sh','-c','mkdir squeak && cd squeak && wget https://github.com/OpenSmalltalk/opensmalltalk-vm/releases/download/202003021730/squeak.cog.spur_linux64x64_202003021730.tar.gz && ./squeak.sh /target/target.image']
     volumeMounts:
-    - mountPath: /tmp/x11-unix
+    - mountPath: /tmp/.X11-unix
       name: x11
   volumes:
   - name: x11
