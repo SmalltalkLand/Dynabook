@@ -1,0 +1,14 @@
+
+
+----SNAPSHOT----(26 July 2020 09:54:59) build-0.094.image priorSource: 16468685!
+!SqueakMorph class methodsFor: 'no messages' stamp: 'GDK 7/26/2020 09:55:08' overrides: 50846311!
+isSqueak
+^true! !
+
+----SNAPSHOT----(26 July 2020 09:55:11) build-0.094.image priorSource: 16473236!
+!SqueakMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/26/2020 10:03:14' prior: 50846436 overrides: 16875302!
+internalize: p
+^p! !
+!SqueakMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/26/2020 10:13:03' prior: 50846450 overrides: 16875302!
+internalize: p
+^p! !

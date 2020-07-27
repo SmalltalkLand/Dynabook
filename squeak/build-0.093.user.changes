@@ -1,0 +1,195 @@
+
+
+----STARTUP---- (26 July 2020 09:21:13) as F:\dynabook\squeak\build-0.093.image!
+
+
+PasteUpMorph subclass: #IsolatorMorph
+	instanceVariableNames: 'isolate target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Morphic-Isolation'!
+
+!classDefinition: #IsolatorMorph category: #'Morphic-Isolation' stamp: 'GDK 7/26/2020 09:25:18'!
+PasteUpMorph subclass: #IsolatorMorph
+	instanceVariableNames: 'isolate target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Morphic-Isolation'!
+!IsolatorMorph methodsFor: 'accessing' stamp: 'GDK 7/26/2020 09:25:23'!
+isolate
+	"Answer the value of isolate"
+
+	^ isolate! !
+!IsolatorMorph methodsFor: 'accessing' stamp: 'GDK 7/26/2020 09:25:23'!
+isolate: anObject
+	"Set the value of isolate"
+
+	isolate _ anObject! !
+!IsolatorMorph methodsFor: 'accessing' stamp: 'GDK 7/26/2020 09:25:23'!
+target
+	"Answer the value of target"
+
+	^ target! !
+!IsolatorMorph methodsFor: 'accessing' stamp: 'GDK 7/26/2020 09:25:23'!
+target: anObject
+	"Set the value of target"
+
+	target _ anObject! !
+!InspectorWindow methodsFor: 'GUI building' stamp: 'GDK 7/26/2020 09:34:07' prior: 50691537!
+buildMorphicWindow
+	" Inspector openOn: SystemOrganization "
+	| contentsText list upperRow evaluatorText |
+
+	"Build widgets. We'll assemble them below."
+	list _ self buildList.
+	contentsText _ self buildContentsText.
+	evaluatorText _ self buildEvaluatorText.
+	
+	"Upper row has two widgets, side by side: the list of variables at the left side, and the variable contents pane at the right side."
+	upperRow _ LayoutMorph newRow.
+	upperRow
+		addMorph: list proportionalWidth: 0.3;
+		addAdjusterAndMorph: contentsText proportionalWidth: 0.7.
+	"Inspector Window has two rows: At the top, the one we just bult. Below it, the evaluation pane."
+	self layoutMorph
+		addMorph: upperRow proportionalHeight: 0.7;
+		addAdjusterAndMorph: evaluatorText proportionalHeight: 0.3.
+	"Set label"
+	self setLabel: model displayLabel! !
+
+----SNAPSHOT----(26 July 2020 09:40:35) build-0.093.image priorSource: 16466634!
+!MorphicCanvas methodsFor: 'morphic' stamp: 'GDK 7/26/2020 09:40:40' prior: 50583274!
+outOfMorph
+| old |
+old _ drawingMorphStack at: cti.
+	drawingMorphStack at: cti put: nil.			"Don't hold any morphs that could be collected"
+	cti _ cti - 1.
+	currentTransformation _ transformations at: cti.
+	currentMorph _ drawingMorphStack at: cti.
+	^old! !
+!Morph class methodsFor: 'squeak compatibility' stamp: 'GDK 7/26/2020 09:49:00'!
+isSqueak
+^false! !
+!MorphicCanvas methodsFor: 'morphic' stamp: 'GDK 7/26/2020 09:49:30' prior: 50681420!
+fullDraw: aMorph
+	"Draw the full Morphic structure on us"
+
+	"We are already set with a proper transformation from aMorph owner's coordinates to those of our target form."
+
+	
+	self flag: #jmvVer3.
+	aMorph visible ifFalse: [^ self].
+	aMorph class isSqueak.
+	self into: aMorph.
+
+	currentMorph layoutSubmorphsIfNeeded.
+
+	currentMorph isKnownFailing ifTrue: [
+		self drawCurrentAsError.
+		self outOfMorph.
+		^ self].
+
+	(currentMorph isOwnedByHand and: [ Preferences cheapWindowReframe ]) ifTrue: [
+		self drawCurrentAsOutline.
+		self outOfMorph.
+		^ self].
+
+	"Draw current Morph"
+	self isCurrentMorphVisible ifTrue: [
+		currentMorph drawOn: self ].
+
+	"Display submorphs back to front"
+	"coordinate system stack already set up for aMorph
+	('ivars transformations' and 'currentTransformation')"
+	currentMorph hasSubmorphs ifTrue: [
+		currentMorph clippedSubmorph ifNotNil: [ :clipped |
+			self clippingByCurrentMorphDo: [ self fullDraw: clipped ]].
+		currentMorph unclippedSubmorphsReverseDo: [ :m |
+			self fullDraw: m ].
+		].
+	self outOfMorph! !
+!MorphicCanvas methodsFor: 'morphic' stamp: 'GDK 7/26/2020 09:49:54' prior: 50846315!
+fullDraw: aMorph
+	"Draw the full Morphic structure on us"
+
+	"We are already set with a proper transformation from aMorph owner's coordinates to those of our target form."
+
+	
+	self flag: #jmvVer3.
+	aMorph visible ifFalse: [^ self].
+	aMorph class isSqueak ifTrue: [^aMorph fullDrawOn: self].
+	self into: aMorph.
+
+	currentMorph layoutSubmorphsIfNeeded.
+
+	currentMorph isKnownFailing ifTrue: [
+		self drawCurrentAsError.
+		self outOfMorph.
+		^ self].
+
+	(currentMorph isOwnedByHand and: [ Preferences cheapWindowReframe ]) ifTrue: [
+		self drawCurrentAsOutline.
+		self outOfMorph.
+		^ self].
+
+	"Draw current Morph"
+	self isCurrentMorphVisible ifTrue: [
+		currentMorph drawOn: self ].
+
+	"Display submorphs back to front"
+	"coordinate system stack already set up for aMorph
+	('ivars transformations' and 'currentTransformation')"
+	currentMorph hasSubmorphs ifTrue: [
+		currentMorph clippedSubmorph ifNotNil: [ :clipped |
+			self clippingByCurrentMorphDo: [ self fullDraw: clipped ]].
+		currentMorph unclippedSubmorphsReverseDo: [ :m |
+			self fullDraw: m ].
+		].
+	self outOfMorph! !
+
+RectangleLikeMorph subclass: #SqueakMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Squeak-Compatibility-Morphic'!
+
+!classDefinition: #SqueakMorph category: #'Squeak-Compatibility-Morphic' stamp: 'GDK 7/26/2020 09:50:53'!
+RectangleLikeMorph subclass: #SqueakMorph
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Squeak-Compatibility-Morphic'!
+!SqueakMorph methodsFor: 'no messages' stamp: 'GDK 7/26/2020 09:51:34'!
+fullDrawOn: canvas
+self drawOn: canvas.
+self submorphs reverseDo: [:s|canvas fullDraw: s].! !
+!SqueakMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/26/2020 09:52:23' prior: 50846401!
+fullDrawOn: canvas
+self drawOn: canvas.
+self submorphs reverseDo: [:s|canvas fullDraw: s].! !
+
+RectangleLikeMorph subclass: #SqueakMorph
+	instanceVariableNames: 'position'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Squeak-Compatibility-Morphic'!
+
+!classDefinition: #SqueakMorph category: #'Squeak-Compatibility-Morphic' stamp: 'GDK 7/26/2020 09:53:04'!
+RectangleLikeMorph subclass: #SqueakMorph
+	instanceVariableNames: 'position'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Squeak-Compatibility-Morphic'!
+!SqueakMorph methodsFor: 'accessing' stamp: 'GDK 7/26/2020 09:53:10'!
+position
+	"Answer the value of position"
+
+	^ position! !
+!SqueakMorph methodsFor: 'accessing' stamp: 'GDK 7/26/2020 09:53:11'!
+position: anObject
+	"Set the value of position"
+
+	position _ anObject! !
+!SqueakMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/26/2020 09:54:28' overrides: 16875302!
+internalize: p
+^p! !

@@ -1,2 +1,1 @@
-sudo docker build -t smalltalkland/squeak .
-sudo docker run --rm -it -v $PWD:/app smalltalkland/squeak bash -c "/sqbin/squeak $@"
+bwrap --ro-bind / / --bind . . --dev /dev --proc /proc --bind /dev/disk /dev/disk/ ./squeak_base/squeak.sh $1

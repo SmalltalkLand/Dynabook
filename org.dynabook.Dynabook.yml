@@ -1,0 +1,19 @@
+app-id: org.dynabook.Dynabook
+runtime: org.freedesktop.Platform
+runtime-version: '19.08'
+sdk: org.freedesktop.Sdk
+command: sh /app/basicLaunch.sh
+modules:
+  - name: squeak
+    buildsystem: simple
+    finish-args:
+      # X11 + XShm access
+      - --share=ipc
+      - --socket=x11
+    sources:
+      - type: archive
+        url: http://files.squeak.org/5.3/Squeak5.3-19435-64bit/Squeak5.3-19435-64bit-202003021730-Linux.zip
+      - type: file
+        path: squeak/target.image
+      - type: file
+        path: /usr/bin/bwrap
