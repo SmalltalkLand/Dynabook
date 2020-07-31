@@ -1,5 +1,214 @@
 
 
-----SNAPSHOT----(31 July 2020 11:47:19) build-0.115.image priorSource: 16665727!
+----STARTUP---- (31 July 2020 16:58:52) as /home/grahamk/dynabook/squeak/build-0.115.image!
 
-Project current world == self!
+!TheWorldMenu methodsFor: 'construction' stamp: 'GDK 7/31/2020 16:19:41'!
+projectsMenu
+	"Build the open window menu for the world."
+
+	^(DynamicMenuBuilder buildTitled: 'Projects...' targeting: self collectingMenuOptionsWith: #worldMenuForProjectsGroup) 
+		addStayUpIcons;
+		yourself
+	! !
+!TheWorldMenu methodsFor: 'construction' stamp: 'GDK 7/31/2020 16:21:43' prior: 50852705!
+projectsMenu
+	"Build the open window menu for the world."
+| menu |
+menu _ MenuMorph entitled: 'Projects...'.
+
+^menu! !
+!Project methodsFor: 'accessing' stamp: 'GDK 7/31/2020 16:22:30'!
+userName
+^name! !
+!Project methodsFor: 'accessing' stamp: 'GDK 7/31/2020 16:22:37'!
+userName: anObject
+	"Set the value of name"
+
+	name _ anObject! !
+
+!methodRemoval: Project #name: stamp: 'GDK 7/31/2020 16:58:55'!
+name: anObject
+	"Set the value of name"
+
+	name _ anObject!
+
+!classDefinition: #Project category: #Projects stamp: 'GDK 7/31/2020 16:58:55'!
+Object subclass: #Project
+	instanceVariableNames: 'world initials name protected projectName'
+	classVariableNames: 'Current'
+	poolDictionaries: ''
+	category: 'Projects'!
+
+!classDefinition: #Project category: #Projects stamp: 'GDK 7/31/2020 16:58:55'!
+Object subclass: #Project
+	instanceVariableNames: 'world initials name protected projectName'
+	classVariableNames: 'Current'
+	poolDictionaries: ''
+	category: 'Projects'!
+!Project methodsFor: 'accessing' stamp: 'GDK 7/31/2020 16:22:58'!
+name: anObject
+	"Set the value of name"
+
+	name _ anObject! !
+!Project methodsFor: 'accessing' stamp: 'GDK 7/31/2020 16:22:58'!
+projectName
+	"Answer the value of projectName"
+
+	^ projectName! !
+!Project methodsFor: 'accessing' stamp: 'GDK 7/31/2020 16:22:58'!
+projectName: anObject
+	"Set the value of projectName"
+
+	projectName _ anObject! !
+
+!methodRemoval: Project #name: stamp: 'GDK 7/31/2020 16:58:55'!
+name: anObject
+	"Set the value of name"
+
+	name _ anObject!
+!Project methodsFor: 'initialization' stamp: 'GDK 7/31/2020 16:23:13' prior: 50852361 overrides: 16896425!
+initialize
+super initialize.
+world _ PasteUpMorph new.
+world worldState: ((Current ifNotNil: [:c|c world] ifNil: ["|w |UISupervisor whenUIinSafeState: [w _ self runningWorld]. [w] whileNil: []. w" self runningWorld]) instVarNamed: #worldState) shallowCopy.
+initials _ Utilities authorInitials.
+name _ Utilities authorName.
+protected _ false.
+projectName _ 'Untitled'.! !
+!TheWorldMenu methodsFor: 'construction' stamp: 'GDK 7/31/2020 16:25:39' prior: 50852715!
+projectsMenu
+	"Build the open window menu for the world."
+| menu |
+menu _ MenuMorph entitled: 'Projects...'.
+Project allSubInstancesDo: [:p|menu add: p projectName subMenu: (MenuMorph new addStayUpIcons;defaultTarget: p;add: '*Danger* Replace world' action: #enter;add: 'Show' action: #showInPortal;yourself )].
+^menu! !
+!TheWorldMenu methodsFor: 'popups' stamp: 'GDK 7/31/2020 16:54:14'!
+openProjectsMenu
+
+	self doPopUp: self projectsMenu! !
+!TheWorldMenu class methodsFor: 'menu building' stamp: 'GDK 7/31/2020 16:55:34' prior: 50587117!
+worldMenuOptions
+
+	^`{{
+		#itemGroup 		-> 		10.
+		#itemOrder 		-> 		10.
+		#label 			-> 		'Open...'.
+		#selector 		-> 		#openOpenMenu.
+		#icon 			-> 		#openIcon.
+		#balloonText 	-> 		'Submenu to open various system tools'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		10.
+		#itemOrder 		-> 		20.
+		#label 			-> 		'New morph...'.
+		#selector 		-> 		#newMorph.
+		#icon 			-> 		#morphsIcon.
+		#balloonText 	-> 		'Offers a variety of ways to create new objects'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		10.
+		#itemOrder 		-> 		25.
+		#label 			-> 		'Projects...'.
+		#selector 		-> 		#openProjectsMenu.
+		#icon 			-> 		#morphsIcon.
+		#balloonText 	-> 		'Menu that opens projects'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		10.
+		#itemOrder 		-> 		30.
+		#label 			-> 		'Preferences...'.
+		#selector 		-> 		#openPreferencesMenu.
+		#icon 			-> 		#preferencesIcon.
+		#balloonText 	-> 		'Opens a menu offering many controls over appearance and system preferences.'.
+	} asDictionary.
+				{
+		#itemGroup 		-> 		10.
+		#itemOrder 		-> 		40.
+		#label 			-> 		'Windows...'.
+		#selector 		-> 		#openWindowsMenu.
+		#icon 			-> 		#windowIcon.
+		#balloonText 	-> 		'Manage open windows'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		10.
+		#itemOrder 		-> 		50.
+		#label 			-> 		'Help...'.
+		#selector 		-> 		#openHelpMenu.
+		#icon 			-> 		#helpIcon.
+		#balloonText 	-> 		'Opens a menu of useful items for updating the system, determining what version you are running, and much else'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		20.
+		#itemOrder 		-> 		10.
+		#label 			-> 		'Changes...'.
+		#selector 		-> 		#openChangesMenu.
+		#icon 			-> 		#changesIcon.
+		#balloonText 	-> 		'Opens a menu of useful tools for dealing with changes'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		20.
+		#itemOrder 		-> 		20.
+		#label 			-> 		'Debug...'.
+		#selector 		-> 		#openDebugMenu.
+		#icon 			-> 		#debugIcon.
+		#balloonText 	-> 		'a menu of debugging items'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		20.
+		#itemOrder 		-> 		30.
+		#label 			-> 		'Restore Display (r)'.
+		#object 			-> 		#myWorld.
+		#selector 		-> 		#restoreDisplay.
+		#icon 			-> 		#displayIcon.
+		#balloonText 	-> 		'Repaint the screen -- useful for removing unwanted display artifacts, lingering cursors, etc.'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		30.
+		#itemOrder 		-> 		10.
+		#label 			-> 		'Save'.
+		#object 			-> 		Smalltalk.
+		#selector 		-> 		#saveSession.
+		#icon 			-> 		#saveIcon.
+		#balloonText 	-> 		'Save the current version of the image on disk'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		30.
+		#itemOrder 		-> 		20.
+		#label 			-> 		'Save as...'.
+		#object 			-> 		Smalltalk.
+		#selector 		-> 		#saveAs.
+		#icon 			-> 		#saveAsIcon.
+		#balloonText 	-> 		'Save the current version of the image on disk under a new name.'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		30.
+		#itemOrder 		-> 		30.
+		#label 			-> 		'Save as New Version'.
+		#object 			-> 		Smalltalk.
+		#selector 		-> 		#saveAsNewVersion.
+		#icon 			-> 		#saveAsNewVersionIcon.
+		#balloonText 	-> 		('Save the current image a new version-stamped name\and save it under that name on disk.\',
+										'Clear all user preferences and user state (class vars).') withNewLines.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		30.
+		#itemOrder 		-> 		40.
+		#label 			-> 		'Save and Quit'.
+		#selector 		-> 		#saveAndQuit.
+		#icon 			-> 		#saveAndQuitIcon.
+		#balloonText 	-> 		'Save the image and quit out of Cuis.'.
+	} asDictionary.
+	{
+		#itemGroup 		-> 		30.
+		#itemOrder 		-> 		50.
+		#label 			-> 		'Quit'.
+		#selector 		-> 		#quitSession.
+		#icon 			-> 		#quitIcon.
+		#balloonText 	-> 		'Quit out of Cuis.'.
+	} asDictionary.
+}`! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/31/2020 16:57:10' prior: 50852415!
+showInPortal
+SystemWindow new addMorph: (PortalMorph new target: world;yourself);openInWorld.! !
+
+Project new inspect!
