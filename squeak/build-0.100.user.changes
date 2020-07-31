@@ -1,0 +1,468 @@
+
+
+----SNAPSHOT----(28 July 2020 17:18:20) build-0.100.image priorSource: 16509161!
+!MorphicCanvas methodsFor: 'tracing' stamp: 'GDK 7/28/2020 17:22:25'!
+enableTracers
+self when: #afterDraw: send: #trace: to: self class.
+^{#disable -> [self removeActionsWithReceiver: self class
+forEvent:  #afterDraw:]} asDictionary! !
+!MorphicCanvas methodsFor: 'tracing' stamp: 'GDK 7/28/2020 17:22:45' prior: 50847838!
+enableTracers
+self when: #afterDraw send: #trace: to: self class.
+^{#disable -> [self removeActionsWithReceiver: self class
+forEvent:  #afterDraw]} asDictionary! !
+!MorphicCanvas class methodsFor: 'tracing' stamp: 'GDK 7/28/2020 17:23:03'!
+trace: morph! !
+!MorphicCanvas class methodsFor: 'tracing' stamp: 'GDK 7/28/2020 17:23:25' prior: 50847854!
+trace: morph
+! !
+!MorphicCanvas class methodsFor: 'tracing' stamp: 'GDK 7/28/2020 17:25:22' prior: 50847858!
+trace: morph
+({0. morph morphExtent x} collect: [:v|{v@0. v@morph morphExtent y}]) concatenation do: []! !
+!MorphicCanvas class methodsFor: 'tracing' stamp: 'GDK 7/28/2020 17:25:54' prior: 50847862!
+trace: morph
+| sender |
+sender _ thisContext sender receiver.
+({0. morph morphExtent x} collect: [:v|{v@0. v@morph morphExtent y}]) concatenation do: [:p|]! !
+
+MorphicCanvas!
+!MorphicCanvas class methodsFor: 'tracing' stamp: 'GDK 7/28/2020 17:28:00' prior: 50847869!
+trace: morph
+| sender |
+sender _ thisContext sender receiver.
+({0. morph morphExtent x} collect: [:v|{v@0. v@morph morphExtent y}]) concatenation do: [:p|sender into: morph. sender fillRectangle: (p - (25@25) extent: 50@50) color: Color yellow. sender outOfMorph]! !
+!MorphicCanvas class methodsFor: 'tracing' stamp: 'GDK 7/28/2020 17:47:36' prior: 50847878!
+trace: morph
+| sender |
+sender _ thisContext sender.
+[sender receiver class == self] whileFalse: [sender _ sender sender].
+sender _ sender receiver.
+({0. morph morphExtent x} collect: [:v|{v@0. v@morph morphExtent y}]) concatenation do: [:p|sender into: morph. sender fillRectangle: (p - (25@25) extent: 50@50) color: Color yellow. sender outOfMorph]! !
+!MorphicCanvas class methodsFor: 'tracing' stamp: 'GDK 7/28/2020 18:49:34' prior: 50847890!
+trace: morph
+| sender |
+sender _ thisContext sender.
+[sender receiver class == self] whileFalse: [sender _ sender sender].
+sender _ sender receiver.
+({0. morph morphExtent x} collect: [:v|{v@0. v@morph morphExtent y}]) concatenation do: [:p|sender into: morph. sender fillRectangle: (p - (25@25) extent: 50@50) color: (Color yellow alpha: 0.2). sender outOfMorph]! !
+!MorphicCanvas methodsFor: 'morphic' stamp: 'GDK 7/28/2020 19:12:52' prior: 50847790!
+fullDraw: aMorph
+	"Draw the full Morphic structure on us"
+
+	"We are already set with a proper transformation from aMorph owner's coordinates to those of our target form."
+
+	
+	self flag: #jmvVer3.
+	aMorph visible ifFalse: [^ self].
+	aMorph triggerEvent: #beforeDraw with: self.
+	self triggerEvent: #beforeDraw with: aMorph.
+	aMorph class isSqueak ifTrue: [^[ aMorph fullDrawOn: self] ensure: [aMorph triggerEvent: #afterDraw with: self.self triggerEvent: #afterDraw with: aMorph]].
+	self into: aMorph.
+
+	currentMorph layoutSubmorphsIfNeeded.
+
+	currentMorph isKnownFailing ifTrue: [
+		self drawCurrentAsError.
+		self outOfMorph.
+aMorph triggerEvent: #afterDraw with: self.
+self triggerEvent: #afterDraw with: aMorph.
+		^ self].
+
+	(currentMorph isOwnedByHand and: [ Preferences cheapWindowReframe ]) ifTrue: [
+		self drawCurrentAsOutline.
+		self outOfMorph.
+aMorph triggerEvent: #afterDraw with: self.
+self triggerEvent: #afterDraw with: aMorph.
+		^ self].
+
+	"Draw current Morph"
+	self isCurrentMorphVisible ifTrue: [
+		currentMorph drawOn: self ].
+
+	"Display submorphs back to front"
+	"coordinate system stack already set up for aMorph
+	('ivars transformations' and 'currentTransformation')"
+	currentMorph hasSubmorphs ifTrue: [
+		currentMorph clippedSubmorph ifNotNil: [ :clipped |
+			self clippingByCurrentMorphDo: [ self fullDraw: clipped ]].
+		currentMorph unclippedSubmorphsReverseDo: [ :m |
+			self fullDraw: m ].
+		].
+	self outOfMorph.
+aMorph triggerEvent: #afterDraw with: self.
+self triggerEvent: #afterDraw with: aMorph.! !
+!WorldState methodsFor: 'update cycle' stamp: 'GDK 7/28/2020 19:15:01' prior: 50339484!
+displayWorldSafely
+	"Update this world's display and keep track of errors during draw methods."
+
+	[world displayWorld] on: Error do: [:err|
+		"Handle a drawing error"
+		| errCtx errMorph |
+		errCtx _ thisContext.
+		[
+			errCtx _ errCtx sender.
+			"Search the sender chain to find the morph causing the problem"
+			[errCtx notNil and: [ (errCtx receiver is: #Morph) not ]] 
+				whileTrue:[errCtx _ errCtx sender].
+			"If we're at the root of the context chain then we have a fatal drawing problem"
+			errCtx ifNil:[^self handleFatalDrawingError: err].
+			errMorph _ errCtx receiver.
+			"If the morph causing the problem has already the #drawError flag set,
+			then search for the next morph above in the caller chain."
+			errMorph isKnownFailing
+		] whileTrue.
+		errMorph drawingFails.
+		self clearCanvas.
+		"Install the old error handler, so we can re-raise the error"
+		err pass.
+	]! !
+!WorldState methodsFor: 'update cycle' stamp: 'GDK 7/28/2020 19:15:29' prior: 50847970!
+displayWorldSafely
+	"Update this world's display and keep track of errors during draw methods."
+
+	[world displayWorld] on: Error do: [:err|
+		"Handle a drawing error"
+		| errCtx errMorph |
+		errCtx _ thisContext.
+		[
+			errCtx _ errCtx sender.
+			"Search the sender chain to find the morph causing the problem"
+			[errCtx notNil and: [ (errCtx receiver is: #Morph) not ]] 
+				whileTrue:[errCtx _ errCtx sender].
+			"If we're at the root of the context chain then we have a fatal drawing problem"
+			errCtx ifNil:[^self handleFatalDrawingError: err message].
+			errMorph _ errCtx receiver.
+			"If the morph causing the problem has already the #drawError flag set,
+			then search for the next morph above in the caller chain."
+			errMorph isKnownFailing
+		] whileTrue.
+		errMorph drawingFails.
+		self clearCanvas.
+		"Install the old error handler, so we can re-raise the error"
+		err pass.
+	]! !
+!WorldState methodsFor: 'update cycle' stamp: 'GDK 7/28/2020 19:31:16' prior: 16946029!
+handleFatalDrawingError: errMsg
+	"Handle a fatal drawing error."
+	| p |
+	self world become: (p _ PasteUpMorph new worldState: self;yourself).
+	[self world doOneCycle] on: Error do: [:ex|
+self world become: p.
+	self primitiveError: 
+		'Fatal Morphic drawing error', String newLineString,
+		errMsg.
+]
+	"Hm... we should jump into a 'safe' worldState here, but how do we find it?!!"! !
+!ProtoObject methodsFor: 'system primitives' stamp: 'GDK 7/28/2020 19:31:37' prior: 50606490!
+become: otherObject 
+	"Primitive. Swap the object pointers of the receiver and the argument.
+	All variables in the entire system that used to point to the 
+	receiver now point to the argument, and vice-versa.
+	Fails if either object is a SmallInteger"
+
+	| selfMethod otherObjectMethod selector contextReceiver |
+	"self class == otherObject class ifFalse: [
+		Processor 
+			processesDo: [ :p | ] withStackFramestDo: [ :process :context |
+				contextReceiver _ context receiver.
+				(self == contextReceiver or: [ otherObject == contextReceiver ]) ifTrue: [
+					selector _ context method selector.
+					selfMethod _ self class lookupSelector: selector.
+					otherObjectMethod _ otherObject class lookupSelector: selector.
+					selfMethod = otherObjectMethod ifFalse: [
+						MethodInCallStackToBecomeInvalid
+							signal: contextReceiver class name, ' has some instance running #', selector, ' that would become invalid.' ]]]
+			runningProcessSearchStart: thisContext sender.
+		]."
+	{ self } elementsExchangeIdentityWith: { otherObject }! !
+
+ReadWriteStream subclass: #Transcripter
+	instanceVariableNames: 'frame textComposition display'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Collections-Streams'!
+
+!classDefinition: #Transcripter category: #'Collections-Streams' stamp: 'GDK 7/28/2020 19:44:40'!
+ReadWriteStream subclass: #Transcripter
+	instanceVariableNames: 'frame textComposition display'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Collections-Streams'!
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:44:45'!
+frame
+	"Answer the value of frame"
+
+	^ frame! !
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:44:45'!
+frame: anObject
+	"Set the value of frame"
+
+	frame _ anObject! !
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:44:45'!
+textComposition
+	"Answer the value of textComposition"
+
+	^ textComposition! !
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:44:45'!
+textComposition: anObject
+	"Set the value of textComposition"
+
+	textComposition _ anObject! !
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:44:45'!
+display
+	"Answer the value of display"
+
+	^ display! !
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:44:45'!
+display: anObject
+	"Set the value of display"
+
+	display _ anObject! !
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:45:17' prior: 16938821!
+clear
+	display fill: (frame insetBy: -2) fillColor: self black;
+			fill: frame fillColor: self white.
+	self on: (String new: 100); endEntry! !
+!Transcripter methodsFor: 'initialization' stamp: 'GDK 7/28/2020 19:45:34' prior: 16938810!
+initInFrame: rect
+	frame _ rect insetBy: 2.  "Leave room for border"
+	textComposition _ TextComposition new.
+	textComposition
+		setModel: (TextModel withText: self contents asText);
+		extentForComposing: frame width-8 @9999.
+	textComposition composeAll.
+	display _ Display.! !
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:47:34' prior: 50628524!
+endEntry
+	| c d cb |
+	c _ self contents.
+	display extent ~= DisplayScreen actualScreenSize ifTrue: [
+		"Handle case of user resizing physical window"
+		DisplayScreen startUp.
+		frame _ frame intersect: display boundingBox.
+		^ self clear; show: c].
+	textComposition
+		setModel: (TextModel withText: c asText);
+		extentForComposing: frame width-8 @9999.
+	textComposition composeAll.
+	d _ textComposition usedHeight - frame height.
+	d > 0 ifTrue: [
+		"Scroll up to keep all contents visible"
+		cb _ textComposition characterBlockAtPoint:
+			`0@0` + (0@(d+AbstractFont default lineSpacing)).
+		self on: (c copyFrom: cb stringIndex to: c size).
+		readLimit _ position _ collection size.
+		^ self endEntry].
+	display fill: (frame insetBy: -2) fillColor: self black;
+			fill: frame fillColor: self white.
+	display getCanvas
+		textComposition: textComposition
+		bounds: (`4@4` + frame topLeft extent: display extent)
+		color: `Color black`
+		selectionColor: `Color blue`.
+	DisplayScreen screenUpdateRequired: nil! !
+
+ReadWriteStream subclass: #Transcripter
+	instanceVariableNames: 'frame textComposition display sensor'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Collections-Streams'!
+
+!classDefinition: #Transcripter category: #'Collections-Streams' stamp: 'GDK 7/28/2020 19:48:55'!
+ReadWriteStream subclass: #Transcripter
+	instanceVariableNames: 'frame textComposition display sensor'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Collections-Streams'!
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:49:01'!
+sensor
+	"Answer the value of sensor"
+
+	^ sensor! !
+!Transcripter methodsFor: 'accessing' stamp: 'GDK 7/28/2020 19:49:01'!
+sensor: anObject
+	"Set the value of sensor"
+
+	sensor _ anObject! !
+!Transcripter methodsFor: 'command line' stamp: 'GDK 7/28/2020 19:49:11' prior: 16938886!
+request: prompt
+	| startPos char contents return |
+	return _ Character numericValue: InputSensor returnKey.
+	self
+		newLine;
+		show: prompt.
+	startPos _ position.
+	[
+		[ sensor keyboardPressed ] whileFalse.
+		(char _ sensor keyboard) = return ] whileFalse: [
+			char = Character backspace
+				ifTrue: [ readLimit _ position _ position - 1 max: startPos ]
+				ifFalse: [ self nextPut: char ].
+			self endEntry ].
+	contents _ self contents.
+	^ contents
+		copyFrom: startPos + 1
+		to: contents size! !
+!Transcripter methodsFor: 'private' stamp: 'GDK 7/28/2020 19:49:35'!
+getKeyboard! !
+!Transcripter methodsFor: 'private' stamp: 'GDK 7/28/2020 19:49:59' prior: 50848221!
+getKeyboard
+[ sensor keyboardPressed ] whileFalse.
+^sensor keyboard! !
+!Transcripter methodsFor: 'private' stamp: 'GDK 7/28/2020 19:51:59' prior: 50848225!
+getKeyboard
+| kb |
+sensor when: #keyboard send: #value: to: (kb _ [:k|sensor removeActionsWithReceiver: kb forEvent: #keyboard. ^k]).
+[ sensor keyboardPressed ] whileFalse.
+^sensor keyboard! !
+!Transcripter methodsFor: 'command line' stamp: 'GDK 7/28/2020 19:52:21' prior: 50848203!
+request: prompt
+	| startPos char contents return |
+	return _ Character numericValue: InputSensor returnKey.
+	self
+		newLine;
+		show: prompt.
+	startPos _ position.
+	[
+		(char _ self getKeyboard) = return ] whileFalse: [
+			char = Character backspace
+				ifTrue: [ readLimit _ position _ position - 1 max: startPos ]
+				ifFalse: [ self nextPut: char ].
+			self endEntry ].
+	contents _ self contents.
+	^ contents
+		copyFrom: startPos + 1
+		to: contents size! !
+!FillInTheBlankMorph class methodsFor: 'instance creation' stamp: 'GDK 7/28/2020 21:31:04' prior: 16844253!
+request: queryString
+	"Create an instance of me whose question is queryString. Invoke it centered at the cursor, and answer the string the user accepts. Answer the empty string if the user cancels."
+	"
+	FillInTheBlankMorph request: 'What is your favorite color?'
+	"
+(Transcripter allSubInstances select: [:i|i display == Display & i sensor = Sensor])
+	^ self
+		request: queryString
+		initialAnswer: ''
+		centerAt: self runningWorld activeHand morphPosition
+		onCancelReturn: ''
+		acceptOnCR: true! !
+!FillInTheBlankMorph class methodsFor: 'instance creation' stamp: 'GDK 7/28/2020 21:31:40' prior: 50848257!
+request: queryString
+	"Create an instance of me whose question is queryString. Invoke it centered at the cursor, and answer the string the user accepts. Answer the empty string if the user cancels."
+	"
+	FillInTheBlankMorph request: 'What is your favorite color?'
+	"
+(Transcripter allSubInstances select: [:i|i display == Display & i sensor = Sensor]) do: [:it|^it request: queryString].
+	^ self
+		request: queryString
+		initialAnswer: ''
+		centerAt: self runningWorld activeHand morphPosition
+		onCancelReturn: ''
+		acceptOnCR: true! !
+
+self request: 'a'!
+
+FillInTheBlankMorph request: 'a'!
+!PopUpMenu class methodsFor: 'dialogs' stamp: 'GDK 7/28/2020 21:37:03' prior: 50577008 overrides: 16881343!
+confirm: queryString
+	"Put up a yes/no menu with caption queryString. Answer true if the 
+	response is yes, false if no. This is a modal question--the user must 
+	respond yes or no."
+
+	"
+	PopUpMenu confirm: 'Are you hungry?'
+	"
+(Transcripter allSubInstances select: [:i|i display == Display & i sensor = Sensor]) do: [:it|^it confirm: queryString].
+	^ self confirm: queryString trueChoice: 'Yes' falseChoice: 'No' icons: #(acceptIcon cancelIcon)! !
+
+self confirm: 'test'!
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 08:25:42' prior: 50847267!
+activate
+| oldActionMaps |
+(Transcripter allSubInstances select: [:i|i display == Display & i sensor = Sensor]) do: [:it|^it confirm: 'Allow action'].
+oldActionMaps _ ActiveModel actionMaps.
+ActiveModel classPool at: #ActionMaps put: WeakIdentityKeyDictionary new.
+self triggerEvent: #activated.
+^[self overlayNoBecome] ensure: [
+	ActiveModel actionMaps keysDo: [:k|oldActionMaps declare: k from: ActiveModel actionMaps].
+ActiveModel classPool at: #ActionMaps put: oldActionMaps.
+].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 08:26:35' prior: 50848316!
+activate
+| oldActionMaps s |
+(Transcripter allSubInstances select: [:i|i display == Display & i sensor = Sensor]) do: [:it|(it confirm: 'Allow action')].
+oldActionMaps _ ActiveModel actionMaps.
+ActiveModel classPool at: #ActionMaps put: WeakIdentityKeyDictionary new.
+self triggerEvent: #activated.
+^[self overlayNoBecome] ensure: [
+	ActiveModel actionMaps keysDo: [:k|oldActionMaps declare: k from: ActiveModel actionMaps].
+ActiveModel classPool at: #ActionMaps put: oldActionMaps.
+].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 08:26:48' prior: 50848335!
+activate
+| oldActionMaps s |
+(Transcripter allSubInstances select: [:i|i display == Display & i sensor = Sensor]) do: [:it|(it confirm: 'Allow action') ifFalse: [^false]].
+oldActionMaps _ ActiveModel actionMaps.
+ActiveModel classPool at: #ActionMaps put: WeakIdentityKeyDictionary new.
+self triggerEvent: #activated.
+^[self overlayNoBecome] ensure: [
+	ActiveModel actionMaps keysDo: [:k|oldActionMaps declare: k from: ActiveModel actionMaps].
+ActiveModel classPool at: #ActionMaps put: oldActionMaps.
+].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 08:27:29' prior: 50848354!
+activate
+| oldActionMaps s |
+(s _ (Transcripter allSubInstances select: [:i|i display == Display & i sensor = Sensor])) do: [:it|(it confirm: 'Allow action') ifFalse: [^false]].
+s _ s size.
+s = 0 ifFalse: [^true].
+oldActionMaps _ ActiveModel actionMaps.
+ActiveModel classPool at: #ActionMaps put: WeakIdentityKeyDictionary new.
+self triggerEvent: #activated.
+^[self overlayNoBecome] ensure: [
+	ActiveModel actionMaps keysDo: [:k|oldActionMaps declare: k from: ActiveModel actionMaps].
+ActiveModel classPool at: #ActionMaps put: oldActionMaps.
+].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 11:38:21' prior: 50847303!
+initializeOn: requestor
+| targetedMorphs oldParents |
+self when: #reported send: #value: to: [:v|oldParents with: targetedMorphs do: [:a :b|a addMorph: b]].
+self when: #activated send: #value to: [targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]).
+oldParents _ targetedMorphs collect: [:m|[m owner] ensure: [m withArgs: {} executeMethod: (Morph >>#delete)]].].
+self addMorph: 2.! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 11:39:45' prior: 50848394!
+initializeOn: requestor
+| targetedMorphs oldParents |
+self when: #reported send: #value: to: [:v|oldParents with: targetedMorphs do: [:a :b|a addMorph: b]].
+self when: #activated send: #value to: [targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]).
+oldParents _ targetedMorphs collect: [:m|[m owner] ensure: [m withArgs: {} executeMethod: (Morph >>#delete)]].].
+self addMorph: (PluggableButtonMorph model: self action: #action label: 'Action').! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 11:39:57' prior: 50848415!
+initializeOn: requestor
+| targetedMorphs oldParents |
+self when: #reported send: #value: to: [:v|oldParents with: targetedMorphs do: [:a :b|a addMorph: b]].
+self when: #activated send: #value: to: [:ctxt|targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]).
+oldParents _ targetedMorphs collect: [:m|[m owner] ensure: [m withArgs: {} executeMethod: (Morph >>#delete)]].].
+self addMorph: (PluggableButtonMorph model: self action: #action label: 'Action').! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 11:40:11' prior: 50848373!
+activate
+| oldActionMaps s |
+(s _ (Transcripter allSubInstances select: [:i|i display == Display & i sensor = Sensor])) do: [:it|(it confirm: 'Allow action') ifFalse: [^false]].
+s _ s size.
+s = 0 ifFalse: [^true].
+oldActionMaps _ ActiveModel actionMaps.
+ActiveModel classPool at: #ActionMaps put: WeakIdentityKeyDictionary new.
+self triggerEvent: #activated with: thisContext.
+^[self overlayNoBecome] ensure: [
+	ActiveModel actionMaps keysDo: [:k|oldActionMaps declare: k from: ActiveModel actionMaps].
+ActiveModel classPool at: #ActionMaps put: oldActionMaps.
+].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 11:41:32'!
+action
+self report: (self confirm: 'Allow?')! !
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 11:47:24' prior: 50846975!
+open
+| o |
+o _ self new.
+o openInWorld.
+UISupervisor whenUIinSafeState: [o morphExtent: o owner morphExtent].
+[o owner] whileNil: [].! !

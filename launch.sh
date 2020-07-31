@@ -1,1 +1,1 @@
-bwrap --ro-bind / / --bind . /app sh ./basicLaunch.sh
+bwrap --bind / / --bind ./staging /app sh --bind ./st_sim /_st ./basicLaunch.sh

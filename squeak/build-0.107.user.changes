@@ -1,0 +1,201 @@
+
+
+----STARTUP---- (31 July 2020 07:33:16) as /home/grahamk/dynabook/squeak/build-0.107.image!
+
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:06:43'!
+bootstrap
+| base splObjs colls sysd |
+base _ self bootstrapBase.
+splObjs _ self bootstrapSpecialObjects: base.
+colls _ self bootstrapCollections: base spObjs: splObjs.
+sysd _ base associations, colls associations.
+
+^sysd! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:09:09' prior: 50851254!
+bootstrap
+| base splObjs colls sysd |
+base _ self bootstrapBase.
+splObjs _ self bootstrapSpecialObjects: base.
+colls _ self bootstrapCollections: base spObjs: splObjs.
+sysd _ base associations, colls associations.
+self initSymbols: sysd.
+^sysd! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:09:22'!
+bootstrap: flags
+| base splObjs colls sysd |
+base _ self bootstrapBase.
+splObjs _ self bootstrapSpecialObjects: base.
+colls _ self bootstrapCollections: base spObjs: splObjs.
+sysd _ base associations, colls associations.
+self initSymbols: sysd.
+^sysd! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:09:36' prior: 50851264!
+bootstrap
+^self bootstrap: {}! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:10:21'!
+prepareFoprIndependence: sysd! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:10:43' prior: 50851275!
+bootstrap: flags
+| base splObjs colls sysd |
+base _ self bootstrapBase.
+splObjs _ self bootstrapSpecialObjects: base.
+colls _ self bootstrapCollections: base spObjs: splObjs.
+sysd _ base associations, colls associations.
+self initSymbols: sysd.
+(flags includes: #independent).
+^sysd! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:10:59'!
+prepareForIndependence: sysd! !
+
+!methodRemoval: Bootstrap #prepareFoprIndependence: stamp: 'GDK 7/31/2020 07:33:28'!
+prepareFoprIndependence: sysd!
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:11:24' prior: 50851294!
+bootstrap: flags
+| base splObjs colls sysd |
+base _ self bootstrapBase.
+splObjs _ self bootstrapSpecialObjects: base.
+colls _ self bootstrapCollections: base spObjs: splObjs.
+sysd _ base associations, colls associations.
+self initSymbols: sysd.
+(flags includes: #independent) ifTrue: [self prepareForIndependence: sysd].
+^sysd! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:16:05' prior: 50851314!
+bootstrap: flags
+| base splObjs colls sysd |
+base _ self bootstrapBase.
+splObjs _ self bootstrapSpecialObjects: base.
+colls _ self bootstrapCollections: base spObjs: splObjs.
+sysd _ (base associations, colls associations) asDictionary.
+(self bootstrapNumericTower: base spObjs: splObjs) associationsDo: [:a|sysd at: a key put: a value]. 
+self initSymbols: sysd.
+(flags includes: #independent) ifTrue: [self prepareForIndependence: sysd].
+^sysd! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:17:46' prior: 50851328!
+bootstrap: flags
+| base splObjs colls sysd |
+base _ self bootstrapBase.
+splObjs _ self bootstrapSpecialObjects: base.
+colls _ self bootstrapCollections: base spObjs: splObjs.
+sysd _ (base associations, colls associations) asDictionary.
+(self bootstrapNumericTower: base spObjs: splObjs) associationsDo: [:a|sysd at: a key put: a value]. 
+(self bootstrapNil: base spObjs: splObjs) associationsDo: [:a|sysd at: a key put: a value]. 
+(self bootstrapCompiledMethods: base splObjs: splObjs colls: colls) associationsDo: [:a|sysd at: a key put: a value]. 
+self initSymbols: sysd.
+(flags includes: #independent) ifTrue: [self prepareForIndependence: sysd].
+^sysd! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:28:23'!
+bootstrapSymbols: base splObjs: spObjs colls: colls
+| s |
+s _ Symbol copyForBootstrap.
+s superclass instVarNamed: #superclass put: (colls at: #ArrayedCollection).
+^{#Symbol -> s. #String -> s superclass} asDictionary! !
+!Bootstrap methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 06:28:41' prior: 50851345!
+bootstrap: flags
+| base splObjs colls sysd |
+base _ self bootstrapBase.
+splObjs _ self bootstrapSpecialObjects: base.
+colls _ self bootstrapCollections: base spObjs: splObjs.
+sysd _ (base associations, colls associations) asDictionary.
+(self bootstrapNumericTower: base spObjs: splObjs) associationsDo: [:a|sysd at: a key put: a value]. 
+(self bootstrapNil: base spObjs: splObjs) associationsDo: [:a|sysd at: a key put: a value]. 
+(self bootstrapCompiledMethods: base splObjs: splObjs colls: colls) associationsDo: [:a|sysd at: a key put: a value]. 
+(self bootstrapSymbols: base splObjs: splObjs colls: colls) associationsDo: [:a|sysd at: a key put: a value]. 
+self initSymbols: sysd.
+(flags includes: #independent) ifTrue: [self prepareForIndependence: sysd].
+^sysd! !
+!EventSensor methodsFor: 'private' stamp: 'GDK 7/31/2020 07:31:06' prior: 50645953!
+eventTickler
+	"If the UI process hasn't processed events in a while, do it here.
+	This is needed to detect the interrupt key."
+	| delay delta |
+	delay _ Delay forMilliseconds: self class eventPollPeriod.
+	self lastEventPoll.
+	"ensure not nil."
+	[
+	[
+	delay wait.
+	delta _ Time localMillisecondClock - lastEventPoll.
+	delta > self class eventPollPeriod ifTrue: [
+		"See #doOneCycleNowFor:"
+		Cursor currentCursor = Cursor defaultCursor ifTrue: [ (Cursor cursorAt: #waitCursor) activateCursor ].
+		"Discard any mouse events. This code is run when the UI is slow, essentially to have a working
+					interrupt key. Processing mouse events is pointless: the UI will not handle them anyway.
+					In addition, at least on Windows 7, when the machine is suspended and resumed with Cuis
+					running, a lot of meaningless mouseMove events with the same coordinates are sent, maing
+					Cuis extremely slow and CPU hungry for a few minutes without reason. Discarding mouse
+					events makes the 'processing' of those very quick."
+		self fetchMoreEventsDiscardingMouseEvents: false ]]
+		on: Error
+		do: [ :ex |
+			nil ]] repeat.! !
+!EventSensor methodsFor: 'private' stamp: 'GDK 7/31/2020 07:31:25' prior: 50851406!
+eventTickler
+	"If the UI process hasn't processed events in a while, do it here.
+	This is needed to detect the interrupt key."
+	| delay delta |
+	delay _ Delay forMilliseconds: self class eventPollPeriod.
+	self lastEventPoll.
+	"ensure not nil."
+	[
+	[
+	delay wait.
+	delta _ Time localMillisecondClock - lastEventPoll.
+	delta > self class eventPollPeriod ifTrue: [
+		"See #doOneCycleNowFor:"
+		Cursor currentCursor = Cursor defaultCursor ifTrue: [ (Cursor cursorAt: #waitCursor) activateCursor ].
+		"Discard any mouse events. This code is run when the UI is slow, essentially to have a working
+					interrupt key. Processing mouse events is pointless: the UI will not handle them anyway.
+					In addition, at least on Windows 7, when the machine is suspended and resumed with Cuis
+					running, a lot of meaningless mouseMove events with the same coordinates are sent, maing
+					Cuis extremely slow and CPU hungry for a few minutes without reason. Discarding mouse
+					events makes the 'processing' of those very quick."
+		self fetchMoreEventsDiscardingMouseEvents: true ]]
+		on: Error
+		do: [ :ex |
+			nil ]] repeat.! !
+
+----SNAPSHOT----(31 July 2020 07:33:50) build-0.107.image priorSource: 16617982!
+
+EventSensor!
+
+----SNAPSHOT----(31 July 2020 07:34:38) build-0.107.image priorSource: 16634591!
+!EventSensor methodsFor: 'private-I/O' stamp: 'GDK 7/31/2020 07:34:41' prior: 50684532!
+processSensorEvent: evt discardingMouseEvents: discardMouseEvents
+	"Process a single event. This method is run at high priority."
+	| type |
+	type _ evt at: 1.
+
+	"Check if the event is a user interrupt"
+	(type = EventSensor eventTypeKeyboard and: [ (evt at: 4) = 0 and: [
+		((evt at: 3) bitOr: (((evt at: 5) bitAnd: 8) bitShift: 8)) = interruptKey]])
+			 ifTrue: [
+				"interrupt key is meta - not reported as event"
+				^interruptSemaphore signal].
+
+	"Store the event in the queue if there's any"
+	type = EventSensor eventTypeMouse ifTrue: [
+		"Only swap secondary and tertiary buttons if there is no command or option modifier keys.
+		This swap is done so a 3-button mouse  is
+			left -> mouseButton1 (select)
+			center -> mouseButton3 (halo)
+			right -> mouseButton2 (menu).
+		This is only needed on the Mac, Window VM does this mapping by default.
+		We avoid ding the swap if there are modifier keys, because in that case the buttons were generated by the VM as follows:
+			left -> mouseButton1
+			macOption + left -> mouseButton3
+			command + left -> mouseButton2,
+		but Mac users are already used to 
+			macOption + left -> menu
+			command + left -> halo.
+		See #installMouseDecodeTable"
+		((evt at: 6) anyMask: 12) ifFalse: [
+			evt at: 5 put: (ButtonDecodeTable at: (evt at: 5) + 1)]].
+	
+	(discardMouseEvents and: [ type = EventSensor eventTypeMouse ]) ifFalse: [
+		self queueEvent: evt ].
+self triggerEvent: #inputEvent with: evt.
+	"Update state for InputSensor."
+	type = EventSensor eventTypeMouse ifTrue: [
+		self processMouseSensorEvent: evt ].
+	type = EventSensor eventTypeKeyboard ifTrue: [
+		self processKeyboardSensorEvent: evt ]! !

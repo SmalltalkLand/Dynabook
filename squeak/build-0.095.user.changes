@@ -1,0 +1,164 @@
+
+
+----SNAPSHOT----(28 July 2020 08:44:41) build-0.095.image priorSource: 16473457!
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:44:49' prior: 50846568 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)
+! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:49:59' prior: 50846595 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:56:08' prior: 50846619 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:56:27' prior: 50846643 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	aMorphicEvent class == MouseButtonEvent.
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:57:21' prior: 50846667 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:58:28' prior: 50846693 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	aMorphicEvent class == MouseButtonEvent ifTrue: [handledByInner ifTrue: []].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:59:15' prior: 50846717 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	aMorphicEvent class == MouseButtonEvent ifTrue: [handledByInner ifTrue: [(self valueOfProperty: #forceDrag ifAbsent: [false]) ifTrue: []]].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 09:01:05' prior: 50846744 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	aMorphicEvent class == MouseButtonEvent ifTrue: [handledByInner ifTrue: [(self valueOfProperty: #forceDrag ifAbsent: [false]) ifTrue: [aMorphicEvent hand waitForClicksOrDrag:  self event: aMorphicEvent
+						dragSel: #dragEvent:localPosition:
+						clkSel: #dragEvent:localPosition:.
+						
+						]]].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 09:01:31' prior: 50846773 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	aMorphicEvent class == MouseButtonEvent ifTrue: [handledByInner ifTrue: [(self valueOfProperty: #forceDrag ifAbsent: [false]) ifTrue: [aMorphicEvent hand waitForClicksOrDrag:  self event: aMorphicEvent
+						dragSel: #dragEvent:localPosition:
+						clkSel: #dragEvent:localPosition:.
+						aMorphicEvent wasHandled: true.
+						^aMorphicEvent
+						]]].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:44:53' prior: 50731877!
+open
+| o |
+o _ self new.
+o openInWorld.! !
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:45:22' prior: 50846842!
+open
+| o |
+o _ self new.
+o openInWorld.
+o morphExtent: o world morphExtent.! !

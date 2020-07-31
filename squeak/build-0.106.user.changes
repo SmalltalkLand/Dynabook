@@ -1,0 +1,10 @@
+
+
+----SNAPSHOT----(30 July 2020 18:46:47) build-0.106.image priorSource: 16612858!
+!LinuxProcessSpawner class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 18:48:32' prior: 50850901!
+syscallMap: importDict
+^{
+'open' -> {#args -> [1]. #deny -> [false]. #value -> [:a|((importDict at: #unixRootDrive) at: a first) object]} asDictionary.
+'read' -> {#args -> [3],#deny -> [false]. #value -> [:a|1 to: a third do: [:x|a second at: x put: a first next]]} asDictionary.
+'write' -> {#args -> [3]. #deny -> [false]. #value -> [:a|1 to: a third do: [:x|a first nextPut: (a second at: x)]]} asDictionary
+} asDictionary! !

@@ -1,0 +1,77 @@
+
+
+----STARTUP---- (28 July 2020 09:48:47) as /home/grahamk/dynabook/squeak/build-0.096.image!
+
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:47:58' prior: 50846856!
+open
+| o |
+o _ self new.
+o openInWorld.
+! !
+!Debugger class methodsFor: 'opening' stamp: 'GDK 7/28/2020 09:49:42' prior: 50553840!
+interruptProcess: aProcess label: labelString
+	"Create a Notifier on aProcess with the given label."
+	|  label |
+
+	label _ labelString,
+					' - Process: ', aProcess name,
+					' - Priority: ', aProcess priority printString.
+	aProcess isTerminated
+		ifTrue: [
+			UISupervisor newProcessIfUI: aProcess.
+			self notify: 'Can not debug a terminated process: ', label ]
+		ifFalse: [
+			aProcess suspend.
+			^self
+				openInterrupt: label 
+				onProcess: aProcess ]! !
+!PreDebugWindow class methodsFor: 'instance creation' stamp: 'GDK 7/28/2020 09:50:53' prior: 50665375!
+forceOpen: model label: aString message: messageString
+		
+	|  window |
+	
+	window _ self new.
+	window
+		model: model;
+		buildMorphicWindowMessage: messageString print.
+	aString ifNotNil: [ window setLabel: aString ].
+	
+	window openInWorld.
+	^window! !
+!Debugger methodsFor: 'initialization' stamp: 'GDK 7/28/2020 09:51:05' prior: 50731648!
+openNotifierContents: msgString label: label
+	"Create and schedule a notifier view with the given label and message. A notifier view shows just the message or the first several lines of the stack, with a menu that allows the user to open a full debugger if so desired."
+	"NOTE: When this method returns, a new process has been scheduled to run the windows, and thus this notifier, but the previous active porcess has not been suspended.  The sender will do this."
+	| msg |
+	Sensor flushKeyboard.
+	savedCursor _ Cursor currentCursor.
+	Cursor defaultCursor activateCursor.
+	msg _ (label beginsWith: 'Space is low')
+		ifTrue: [ self lowSpaceChoices , (msgString ifNil: [ '' ]) ]
+		ifFalse: [ msgString ].
+	interruptedProcessUI _ UISupervisor newProcessIfUI: interruptedProcess.
+	UISupervisor whenUIinSafeState: [
+		
+		"[Debugger secureDesktop activateDuring: (b _ [:w|"^PreDebugWindow
+			forceOpen: self
+			label: label
+			message: msg" ])] on: Error do: [:ex|b value: self runningWorld]"].
+[] repeat.! !
+
+self error: 'test'!
+
+self error: 'test'!
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:52:34' prior: 50731899!
+debug
+
+	"Only debug preempted process if its priority is >= UIProcess' priority"
+	"UIProcess ifNotNil: [
+		preemptedProcess priority < UIProcess priority ifTrue: [
+			preemptedProcess _ UIProcess ]]."
+
+ 	^Debugger interruptProcess: preemptedProcess label: 'User Interrupt' ! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:52:45' prior: 50732035 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+super initialize.
+self addMorph: (self debug).! !

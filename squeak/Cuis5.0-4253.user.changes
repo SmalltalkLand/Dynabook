@@ -1,0 +1,8 @@
+
+
+----SNAPSHOT----(28 July 2020 09:46:09) Cuis5.0-4253.image priorSource: 16478090!
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:47:04' prior: 50846847!
+open
+| o |
+o _ self new.
+o openInWorld.! !

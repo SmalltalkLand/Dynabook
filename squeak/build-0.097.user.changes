@@ -1,0 +1,62 @@
+
+
+----STARTUP---- (28 July 2020 09:53:22) as /home/grahamk/dynabook/squeak/build-0.097.image!
+
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:53:43' prior: 50846955 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."! !
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:55:22' prior: 50846872!
+open
+| o |
+o _ self new.
+o openInWorld.
+UISupervisor whenUIinSafeState: [o morphExtent: o owner morphExtent].! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:55:55' prior: 50846968 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+self addMorph: self createCloseButton.! !
+!Inspector class methodsFor: 'instance creation' stamp: 'GDK 7/28/2020 09:58:09' prior: 16857182!
+openOn: anObject withLabel: label
+	^InspectorWindow open: (self inspect: anObject) label: label! !
+
+Morph subclass: #AltDotMorph
+	instanceVariableNames: 'preemptedProcess inspector'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+
+!classDefinition: #AltDotMorph category: #'System-AltDot' stamp: 'GDK 7/28/2020 09:58:35'!
+Morph subclass: #AltDotMorph
+	instanceVariableNames: 'preemptedProcess inspector'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-AltDot'!
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 09:59:05' prior: 50846983 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+self addMorph: self createCloseButton.
+inspector _ Inspector openOn: preemptedProcess .! !
+
+----SNAPSHOT----(28 July 2020 09:59:10) build-0.097.image priorSource: 16489931!
+
+PortalMorph new target: self;openInWorld!
+!PortalMorph methodsFor: 'drawing' stamp: 'GDK 7/28/2020 10:02:27' prior: 50846514 overrides: 50562873!
+drawOn: c
+c fullDraw: target.
+self redrawNeeded.! !
+!PortalMorph methodsFor: 'drawing' stamp: 'GDK 7/28/2020 10:02:48' prior: 50847025 overrides: 50562873!
+drawOn: c
+c fullDraw: target.
+self owner ifNotNil: [self owner redrawNeeded].! !
+
+self morphPosition: 0@0!
+
+self addMorph: EllipseMorph new!
+
+PortalMorph new target: self;openInWorld!

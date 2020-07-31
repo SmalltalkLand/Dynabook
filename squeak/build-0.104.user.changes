@@ -1,0 +1,587 @@
+
+
+----SNAPSHOT----(29 July 2020 19:57:24) build-0.104.image priorSource: 16549919!
+
+Command!
+
+SystemDictionary!
+!StandardFileStream class methodsFor: 'registry' stamp: 'GDK 7/29/2020 20:15:26'!
+standardStreams
+^{0. 1. 2} collect: [:i|].! !
+!StandardFileStream class methodsFor: 'registry' stamp: 'GDK 7/29/2020 20:17:15' prior: 50849263!
+standardStreams
+^{0. 1. 2} collect: [:i|(DirectoryEntry roots first //  '/proc/self/fd') / i asString].! !
+!StandardFileStream class methodsFor: 'registry' stamp: 'GDK 7/29/2020 20:19:59' prior: 50849268!
+standardStreams
+^{0. 1. 2} collect: [:i|([:e|i =0 ifTrue: [] ifFalse: []]value: (DirectoryEntry roots first //  '/proc/self/fd') / i asString)].! !
+!StandardFileStream class methodsFor: 'registry' stamp: 'GDK 7/29/2020 20:20:51' prior: 50849275!
+standardStreams
+^{0. 1. 2} collect: [:i|([:e|i =0 ifTrue: [e readStream] ifFalse: [e writeStream]]value: (DirectoryEntry roots first //  '/proc/self/fd') / i asString)].! !
+
+Smalltalk!
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 20:58:36'!
+terminalDeveloperModeThread
+! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:02:28' prior: 50849292!
+terminalDeveloperModeThread
+| standardStreams |
+standardStreams _ StandardFileStream standardStreams.! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:05:14' prior: 50849297!
+terminalDeveloperModeThread
+| standardStreams |
+standardStreams _ StandardFileStream standardStreams.
+((standardStreams first next: 8) as: String) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:06:30' prior: 50849304!
+terminalDeveloperModeThread
+| standardStreams |
+standardStreams _ StandardFileStream standardStreams.
+((standardStreams first next: 8) as: String) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams nextPutAll: ''  asUtf8.! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:06:56' prior: 50849314!
+terminalDeveloperModeThread
+| standardStreams |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams nextPutAll: ''  asUtf8.! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:09:36' prior: 50849326!
+terminalDeveloperModeThread
+| standardStreams |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams nextPutAll: 'Now, Ill inform the user a code'  asUtf8.
+! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:10:44' prior: 50849338!
+terminalDeveloperModeThread
+| standardStreams code |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams nextPutAll: 'Now, Ill inform the user a code'  asUtf8.
+self inform: (code _ (1 to: 10000) atRandom).! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:10:50' prior: 50849351!
+terminalDeveloperModeThread
+| standardStreams code |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams nextPutAll: 'Now, Ill inform the user a code'  asUtf8.
+self inform: (code _ (1 to: 10000) atRandom).
+! !
+
+UISupervisor!
+!UISupervisor class methodsFor: 'services' stamp: 'GDK 7/29/2020 21:12:40'!
+waitForUIProcess
+Processor activeProcess.! !
+!UISupervisor class methodsFor: 'services' stamp: 'GDK 7/29/2020 21:13:16' prior: 50849379!
+waitForUIProcess
+Processor activeProcess == UIProcess ifTrue: [^self].! !
+!UISupervisor class methodsFor: 'services' stamp: 'GDK 7/29/2020 21:14:07' prior: 50849384!
+waitForUIProcess
+| done |
+Processor activeProcess == UIProcess ifTrue: [^self].
+done _ false.
+self whenUIinSafeState: [done _ true].
+[done] whileFalse: [Processor yield].! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:14:18' prior: 50849365!
+terminalDeveloperModeThread
+| standardStreams code |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams nextPutAll: 'Now, Ill inform the user a code'  asUtf8.
+self inform: (code _ (1 to: 10000) atRandom).
+UISupervisor waitForUIProcess! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:15:00' prior: 50849399!
+terminalDeveloperModeThread
+| standardStreams code |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams nextPutAll: 'Now, Ill inform the user a code'  asUtf8.
+self inform: (code _ (1 to: 10000) atRandom).
+UISupervisor waitForUIProcess.! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:26:17' prior: 50849414!
+terminalDeveloperModeThread
+| standardStreams code |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams nextPutAll: 'Now, Ill inform the user a code'  asUtf8.
+self inform: (code _ (1 to: 10000) atRandom).
+UISupervisor waitForUIProcess.
+! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:27:43' prior: 50849429!
+terminalDeveloperModeThread
+| standardStreams code |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams second nextPutAll: 'Now, Ill inform the user a code'  asUtf8.
+self inform: (code _ (1 to: 10000) atRandom).
+UISupervisor waitForUIProcess.
+standardStreams second nextPutAll: '
+Now, enter the code:' asUtf8.
+(String fromUtf8: (standardStreams first next: 5))  asInteger = code ifFalse: [^standardStreams do: [:x|x close]].! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/29/2020 21:27:45' prior: 50849444!
+terminalDeveloperModeThread
+| standardStreams code |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams second nextPutAll: 'Now, Ill inform the user a code'  asUtf8.
+self inform: (code _ (1 to: 10000) atRandom).
+UISupervisor waitForUIProcess.
+standardStreams second nextPutAll: '
+Now, enter the code:' asUtf8.
+(String fromUtf8: (standardStreams first next: 5))  asInteger = code ifFalse: [^standardStreams do: [:x|x close]].
+! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/30/2020 08:22:23' prior: 50849465!
+terminalDeveloperModeThread
+| standardStreams code |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams second nextPutAll: '
+Now, Ill inform the user a code'  asUtf8.
+self inform: (code _ (1 to: 10000) atRandom).
+UISupervisor waitForUIProcess.
+standardStreams second nextPutAll: '
+Now, enter the code:' asUtf8.
+(String fromUtf8: (standardStreams first next: 5))  asInteger = code ifFalse: [^standardStreams do: [:x|x close]].
+! !
+!SystemDictionary methodsFor: 'terminal developer mode' stamp: 'GDK 7/30/2020 08:30:02' prior: 50849486!
+terminalDeveloperModeThread
+| standardStreams code |
+standardStreams _ StandardFileStream standardStreams.
+(String fromUtf8: (standardStreams first next: 8)) = 'tdenable' ifFalse: [^standardStreams do: [:x|x close]].
+standardStreams second nextPutAll: '
+Now, Ill inform the user a code'  asUtf8.
+self inform: (code _ (1 to: 10000) atRandom).
+UISupervisor waitForUIProcess.
+standardStreams second nextPutAll: '
+Now, enter the code:' asUtf8.
+[(String fromUtf8: (standardStreams first next: 5))  asInteger = code ifFalse: [^standardStreams do: [:x|x close]]] on: Error do: [:ex|standardStreams do: [:x|x close]. ex pass].
+! !
+
+Object subclass: #Syscalls
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Syscalls'!
+
+!classDefinition: #Syscalls category: #'System-Syscalls' stamp: 'GDK 7/30/2020 08:38:27'!
+Object subclass: #Syscalls
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'System-Syscalls'!
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/30/2020 08:41:04' prior: 50848627!
+runSimulated: aBlock contextAtEachStep: c
+	"Simulate the execution of the argument, current. Answer the result it 
+	returns."
+
+	^ (MethodContext newForMethod: (thisContext method))
+		runSimulated: aBlock
+		contextAtEachStep: c
+
+	"ContextPart runSimulated: [Pen new defaultNib: 5; go: 100]"! !
+!Syscalls class methodsFor: 'no messages' stamp: 'GDK 7/30/2020 08:43:11'!
+create: b getSyscallArgs: args syscall: sb
+^[ContextPart runSimulated: b onPrimitive: [:c|sb valueWithArguments: ((1 to: (args value: c method primitive)) collect: [:x|c pop])]]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 08:43:21' prior: 50849553!
+create: b getSyscallArgs: args syscall: sb
+^[ContextPart runSimulated: b onPrimitive: [:c|c push: (sb valueWithArguments: ((1 to: (args value: c method primitive)) collect: [:x|c pop]))]]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 08:45:18' prior: 50849562!
+create: b getSyscallArgs: args syscall: sb
+^[ContextPart runSimulated: b onPrimitive: [:c|c push: (sb valueWithArguments: {c method primitive}, ((1 to: (args value: c method primitive)) collect: [:x|c pop]))]]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 08:50:26'!
+create: b map: theMap
+^self create: b getSyscallArgs: [:s|(theMap at: s) at: #args] ! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 08:50:36' prior: 50849572!
+create: b getSyscallArgs: args syscall: sb
+^[ContextPart runSimulated: b onPrimitive: [:c|c push: (sb value: {c method primitive}, ((1 to: (args value: c method primitive)) collect: [:x|c pop]))]]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 08:50:50' prior: 50849588!
+create: b getSyscallArgs: args syscall: sb
+^[ContextPart runSimulated: b onPrimitive: [:c|c push: (sb value: c method primitive value: ((1 to: (args value: c method primitive)) collect: [:x|c pop]))]]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 08:51:42' prior: 50849582!
+create: b map: theMap
+^self create: b getSyscallArgs: [:s|(theMap at: s) at: #args] syscall: [:s :a|((theMap at: s) at: #value) value: a]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 08:54:43' prior: 50849598!
+create: b getSyscallArgs: args syscall: sb
+^[ContextPart runSimulated: b onPrimitive: [:c|c push: (sb value: c method primitive value: ((1 to: (args value: c method primitive)) collect: [:x|c pop]))]. [] asContext]! !
+
+----End fileIn of /home/grahamk/dynabook/squeak/GeraldKlix-Halo-scale.cs.st----!
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 09:04:28'!
+create: b getSyscallArgs: args syscall: sb deny: d
+^[ContextPart runSimulated: b onPrimitive: [:c|(d value: (c method primitive)) ifFalse: [c push: (sb value: c method primitive value: ((1 to: (args value: c method primitive)) collect: [:x|c pop])). [] asContext] ifTrue: [c]]]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 09:04:50' prior: 50849616!
+create: b getSyscallArgs: args syscall: sb
+^self create: b getSyscallArgs: args syscall: sb deny: [:x|false]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 09:06:40' prior: 50849608!
+create: b map: theMap
+^self create: b getSyscallArgs: [:s|((theMap at: s) at: #args) value: s] syscall: [:s :a|((theMap at: s) at: #value) value: a] deny: [:s|((theMap at: s) at: #deny) value: s]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 09:09:16' prior: 50849715!
+create: b map: theMap
+^self create: b getSyscallArgs: [:s|((theMap at: s) at: #args) value] syscall: [:s :a|((theMap at: s) at: #value) value: a] deny: [:s|((theMap at: s) at: #deny) value]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 09:09:34' prior: 50849725!
+create: b map: theMap
+^self create: b getSyscallArgs: [:s|((theMap at: s) at: #args) value] syscall: [:s :a|((theMap at: s) at: #value) value: a] deny: [:s|((theMap at: s) at: #deny ifAbsent: [[true]]) value]! !
+!Syscalls class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 09:10:28' prior: 50849735!
+create: b map: theMap
+^self create: b getSyscallArgs: [:s|((theMap at: s) at: #args) value] syscall: [:s :a|((theMap at: s) at: #value) value: a] deny: [:s|((theMap at: s ifAbsent: [Dictionary new]) at: #deny ifAbsent: [[true]]) value]! !
+!SystemDictionary class methodsFor: 'copyright' stamp: 'GDK 7/30/2020 09:52:33' prior: 50802866!
+copyright
+	"The Cuis Smalltalk copyright.
+	Parts are copyright of many contributors to Squeak and Cuis projects."
+	| s |
+s _ 'Copyright (c) ' ,([Utilities usernames] on: MessageNotUnderstood do: [:ex|{Utilities authorName}]) concatenation ,' ',Date today year.
+	^
+'
+Portions of Dynabook Smalltalk are:
+Copyright (c) Xerox Corp. 1981, 1982.
+Copyright (c) Apple Computer, Inc. 1985-1996.
+Copyright (c) Contributors to Squeak and Cuis projects. 1997-2020.
+Copyright (c) Contributors to Dynabook Smalltalk 2020' , s, '
+Dynabook Smalltalk is licensed using the GPLv3+ license.
+Evaluate "Utilities license" to get the license.
+'! !
+
+BorderedRectMorph subclass: #PasteUpMorph
+	instanceVariableNames: 'worldState backgroundImage backgroundImageData taskbar'
+	classVariableNames: 'WindowEventHandler DesktopBackground'
+	poolDictionaries: ''
+	category: 'Morphic-Worlds'!
+
+!classDefinition: #PasteUpMorph category: #'Morphic-Worlds' stamp: 'GDK 7/30/2020 09:59:07'!
+BorderedRectMorph subclass: #PasteUpMorph
+	instanceVariableNames: 'worldState backgroundImage backgroundImageData taskbar'
+	classVariableNames: 'DesktopBackground WindowEventHandler'
+	poolDictionaries: ''
+	category: 'Morphic-Worlds'!
+
+BorderedRectMorph subclass: #PasteUpMorph
+	instanceVariableNames: 'worldState backgroundImage backgroundImageData taskbar'
+	classVariableNames: 'WindowEventHandler'
+	poolDictionaries: ''
+	category: 'Morphic-Worlds'!
+
+!classDefinition: #PasteUpMorph category: #'Morphic-Worlds' stamp: 'GDK 7/30/2020 09:59:21'!
+BorderedRectMorph subclass: #PasteUpMorph
+	instanceVariableNames: 'worldState backgroundImage backgroundImageData taskbar'
+	classVariableNames: 'WindowEventHandler'
+	poolDictionaries: ''
+	category: 'Morphic-Worlds'!
+
+SystemWindow allSubInstancesDo: [:w|w delete]!
+!ProcessBrowserWindow methodsFor: 'open/close' stamp: 'GDK 7/30/2020 10:03:35' prior: 16895555 overrides: 50690694!
+delete
+	[model stopCPUWatcher.] on: MessageNotUnderstood do: [:ex|]
+	super delete! !
+!ProcessBrowserWindow methodsFor: 'open/close' stamp: 'GDK 7/30/2020 10:03:43' prior: 50849815 overrides: 50690694!
+delete
+	[model stopCPUWatcher.] on: MessageNotUnderstood do: [:ex|].
+	super delete! !
+!Morph methodsFor: 'submorphs-add/remove' stamp: 'GDK 7/30/2020 10:04:47' prior: 50607035!
+atFront
+owner ifNil: [^true].	
+	^owner firstSubmorph == self! !
+!PasteUpMorph class methodsFor: 'drawing' stamp: 'GDK 7/30/2020 10:08:50'!
+drawBaloonOn: c
+! !
+!PasteUpMorph class methodsFor: 'drawing' stamp: 'GDK 7/30/2020 10:11:02' prior: 50849833!
+drawBaloonOn: c
+c ellipseCenterX: 50 y: 50 rx: 25 ry: 25 borderWidth: 0 borderColor: Color black fillColor: Color red.! !
+!PasteUpMorph class methodsFor: 'drawing' stamp: 'GDK 7/30/2020 10:15:15' prior: 50849837!
+drawBaloonOn: c
+c frameRectangle: (12@25 extent: 13@50) borderWidth: 5 color: Color black.
+c ellipseCenterX: 50 y: 50 rx: 25 ry: 25 borderWidth: 0 borderColor: Color black fillColor: Color red.! !
+!PasteUpMorph class methodsFor: 'drawing' stamp: 'GDK 7/30/2020 11:03:03' prior: 50849844!
+drawBaloonOn: c
+c frameRectangle: (12@25 extent: 28@50) borderWidth: 5 color: Color black.
+c ellipseCenterX: 50 y: 50 rx: 25 ry: 25 borderWidth: 0 borderColor: Color black fillColor: Color red.! !
+!PasteUpMorph class methodsFor: 'drawing' stamp: 'GDK 7/30/2020 11:03:06' prior: 50849853!
+drawBaloonOn: c
+c frameRectangle: (12@25 extent: 25@50) borderWidth: 5 color: Color black.
+c ellipseCenterX: 50 y: 50 rx: 25 ry: 25 borderWidth: 0 borderColor: Color black fillColor: Color red.! !
+!PasteUpMorph class methodsFor: 'system startup' stamp: 'GDK 7/30/2020 11:06:10'!
+showCredits
+| coll|
+coll _ OrderedCollection new.
+Inspector openOn: coll.! !
+!PasteUpMorph class methodsFor: 'system startup' stamp: 'GDK 7/30/2020 11:08:50' prior: 50849871!
+showCredits
+| coll insp |
+coll _ OrderedCollection new.
+(insp _ Inspector openOn: coll) when: #afterDraw send: #value: to: [:c|c into: insp. self drawBaloonOn: c. c outOfMorph].! !
+!PasteUpMorph class methodsFor: 'system startup' stamp: 'GDK 7/30/2020 11:16:30' prior: 50849877!
+showCredits
+| coll insp |
+coll _ OrderedCollection new.
+(insp _ Inspector openOn: coll) when: #afterDraw send: #value: to: [:c|c into: insp. self drawBaloonOn: c. c outOfMorph].
+[self credits do: [:c|coll add: c. (Delay forMilliseconds: 2000) wait]] fork.! !
+!PasteUpMorph class methodsFor: 'system startup' stamp: 'GDK 7/30/2020 11:16:41'!
+credits
+^{}! !
+!PasteUpMorph class methodsFor: 'system startup' stamp: 'GDK 7/30/2020 11:21:29' prior: 50849897!
+credits
+^Utilities copyright lines, {}! !
+!Process methodsFor: 'new processor' stamp: 'GDK 7/30/2020 11:28:26'!
+yieldNew
+! !
+!Process methodsFor: 'changing process state' stamp: 'GDK 7/30/2020 11:32:38'!
+mount: ctxt! !
+!Process methodsFor: 'changing process state' stamp: 'GDK 7/30/2020 11:33:14' prior: 50849908!
+mount: ctxt
+ctxt sender ifNotNil: [^self error: 'Context must have no sender'].! !
+!Process methodsFor: 'changing process state' stamp: 'GDK 7/30/2020 12:41:15' prior: 50849912!
+mount: ctxt
+| copy ctxt2 |
+ctxt2 _ ctxt.
+[ctxt2 sender] whileNotNil: [ctxt2 _ ctxt2 sender ifNil: [ctxt2]].
+copy _ thisContext shallowCopy.
+ctxt2 setSender: copy.
+thisContext becomeForward: ctxt2.! !
+!ContextPart methodsFor: 'controlling' stamp: 'GDK 7/30/2020 12:52:02'!
+virtualSuspend
+self becomeForward: ([] asContextWithSender: self shallowCopy)! !
+!ContextPart methodsFor: 'controlling' stamp: 'GDK 7/30/2020 12:52:13' prior: 50849927!
+virtualSuspend
+self becomeForward: ([[] repeat] asContextWithSender: self shallowCopy)! !
+!ContextPart methodsFor: 'controlling' stamp: 'GDK 7/30/2020 12:54:05' prior: 50849933!
+virtualSuspend
+self becomeForward: ([[] repeat] asContextWithSender: self shallowCopy).! !
+!ContextPart methodsFor: 'controlling' stamp: 'GDK 7/30/2020 12:58:07'!
+virtualResume
+self becomeForward: self sender! !
+!Process methodsFor: 'changing process state' stamp: 'GDK 7/30/2020 13:03:19'!
+virtualSuspend
+self suspend.
+suspendedContext virtualSuspend.
+self resume! !
+!Process methodsFor: 'changing process state' stamp: 'GDK 7/30/2020 13:03:38'!
+virtualResume
+self suspend.
+suspendedContext virtualResume.
+self resume! !
+
+Object subclass: #AppLoop
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ssytem-AppProcesses'!
+
+!classDefinition: #AppLoop category: #'Ssytem-AppProcesses' stamp: 'GDK 7/30/2020 13:08:55'!
+Object subclass: #AppLoop
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ssytem-AppProcesses'!
+!AppLoop class methodsFor: 'no messages' stamp: 'GDK 7/30/2020 13:11:57'!
+run: app
+| coll |
+app when: #otherProcessHook send: #value: to: [:x|([coll last] ensure: [coll _ coll allButLast]) push: x;setSender: thisContext shallowCopy;become: thisContext]! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:12:15' prior: 50849970!
+run: app
+| coll |
+coll _ OrderedCollection new.
+app when: #otherProcessHook send: #value: to: [:x|([coll last] ensure: [coll _ coll allButLast]) push: x;setSender: thisContext shallowCopy;become: thisContext]! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:23:29' prior: 50849979!
+run: app
+| coll |
+coll _ OrderedCollection new.
+app when: #otherProcessHook send: #value: to: [:x|([coll last] ensure: [coll _ coll allButLast]) push: x;setSender: thisContext shallowCopy;become: thisContext]
+^[[coll add: thisContext shallowCopy. app currentProcessHook: thisContext pop] repeat] newProcess! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:24:30' prior: 50849989!
+run: app
+| coll |
+coll _ OrderedCollection new.
+app when: #otherProcessHook send: #value: to: [:x|([coll last] ensure: [coll _ coll allButLast]) push: x;setSender: thisContext shallowCopy;push: thisContext shallowCopy;become: thisContext]
+^[[coll add: thisContext shallowCopy. app currentProcessHook: thisContext pop] repeat] newProcess! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:25:16' prior: 50850002!
+run: app
+| coll |
+coll _ OrderedCollection new.
+app when: #otherProcessHook send: #value: to: [:x|
+	| v |
+	([coll last] ensure: [coll _ coll allButLast]) push: x;setSender: thisContext shallowCopy;push: thisContext shallowCopy. v become: thisContext]
+^[[coll add: thisContext shallowCopy. app currentProcessHook: thisContext pop] repeat] newProcess! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:25:22' prior: 50850016!
+run: app
+| coll |
+coll _ OrderedCollection new.
+app when: #otherProcessHook send: #value: to: [:x|
+	| v |
+	([v _ coll last] ensure: [coll _ coll allButLast]) push: x;setSender: thisContext shallowCopy;push: thisContext shallowCopy. v become: thisContext]
+^[[coll add: thisContext shallowCopy. app currentProcessHook: thisContext pop] repeat] newProcess! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:26:53' prior: 50850031!
+run: app
+| coll |
+coll _ OrderedCollection new.
+app when: #otherProcessHook send: #value: to: [:x|
+	| v c |
+	([v _ coll last] ensure: [coll _ coll allButLast]) push: x;setSender: thisContext shallowCopy;push: ([:vv|[vv]] value: (c _ thisContext shallowCopy)). v become: thisContext. ]
+^[[coll add: thisContext shallowCopy. app currentProcessHook: thisContext pop] repeat] newProcess! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:27:58' prior: 50850046!
+run: app
+! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:28:32' prior: 50850062!
+run: app
+^[[app doOneCycle. ] repeat] newProcess! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:37:37' prior: 50850066!
+run: app
+^[[app doOneCycle. ContextPart allSubInstancesDo: [:x|1 to: x size do: [:i|(x at: i)  = {#app. app}]]] repeat] newProcess! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:41:28' prior: 50850071!
+run: app
+^[[app doOneCycle. ContextPart allSubInstancesDo: [:x|1 to: x size do: [:i|(x at: i)  = {#app. app} ifTrue: [x setSender: ([] asContextWithSender: x sender)]]]] repeat] newProcess! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:46:51' prior: 50850079!
+run: app
+^[[app doOneCycle. ContextPart allSubInstancesDo: [:x|1 to: x size do: [:i|(x at: i)  = {#app. app} ifTrue: [x shallowCopy runSimulatedSelfContextAtEachStep: [:xxxx|]. x return:  nil]]]] repeat] newProcess! !
+!Color methodsFor: 'conversions' stamp: 'GDK 7/30/2020 13:53:40'!
+swapRedAndBlue
+^Color r: self b g: self g b: self r! !
+!Color methodsFor: 'conversions' stamp: 'GDK 7/30/2020 13:54:07' prior: 50850098!
+swapRedAndBlue
+^Color r: self blue g: self green b: self red! !
+!Color methodsFor: 'conversions' stamp: 'GDK 7/30/2020 13:54:51' prior: 50850103!
+swapRedAndBlue
+^Color r: self blue g: self green b: self red alpha: self alpha! !
+
+DrakBlueTheme subclass: #DynabookDarkTheme
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Dynabook-Themes'!
+
+!classDefinition: #DynabookDarkTheme category: #'Dynabook-Themes' stamp: 'GDK 7/30/2020 13:56:39'!
+DarkBlueTheme subclass: #DynabookDarkTheme
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Dynabook-Themes'!
+!DynabookDarkTheme methodsFor: 'no messages' stamp: 'GDK 7/30/2020 13:58:06' overrides: 50693952!
+defaultWindowColor
+^super defaultWindowColor swapRedAndBlue! !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:58:36' prior: 50850126 overrides: 50693952!
+defaultWindowColor
+^super defaultWindowColor swapRedAndBlue mixed: 0.6 with: super defaultWindowColor! !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:58:47' prior: 50850132 overrides: 50693952!
+defaultWindowColor
+^super defaultWindowColor swapRedAndBlue mixed: 0.4 with: super defaultWindowColor! !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:59:30' prior: 50850140 overrides: 50693952!
+defaultWindowColor
+^(super defaultWindowColor swapRedAndBlue mixed: 0.4 with: super defaultWindowColor) mixed: 0.1 with: Color red! !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 13:59:39' prior: 50850148 overrides: 50693952!
+defaultWindowColor
+^(super defaultWindowColor swapRedAndBlue mixed: 0.4 with: super defaultWindowColor) mixed: 0.9 with: Color red! !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 14:00:15' overrides: 50564085!
+debugger
+^super debugger swapRedAndBlue! !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 14:01:18' overrides: 50564163!
+acceptButton
+^super acceptButton swapRedAndBlue mixed: 0.9 with: Color green! !
+
+self confirm: 'test'!
+
+self request: 'test'!
+
+FillInTheBlankMorph request: 'test'!
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 14:02:28' prior: 50850169 overrides: 50564163!
+acceptButton
+^super acceptButton swapRedAndBlue mixed: 0.7 with: Color green! !
+
+FillInTheBlankMorph request: 'test' !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 14:03:32' overrides: 50563982!
+background
+^super background mixed: 0.6 with: Color black! !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 14:03:46' prior: 50850156 overrides: 50693952!
+defaultWindowColor
+^((super defaultWindowColor swapRedAndBlue mixed: 0.4 with: super defaultWindowColor) mixed: 0.9 with: Color red) mixed: 0.6 with: Color black! !
+
+FillInTheBlankMorph request: 'test' !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 14:05:17' overrides: 50564179!
+textPane
+^super textPane mixed: 0.6 with: Color black! !
+!Color methodsFor: 'conversions' stamp: 'GDK 7/30/2020 14:07:20'!
+noGreen
+^Color r: self red g: 0 b: self blue alpha: self alpha! !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 14:07:45' overrides: 50693895!
+paneBackgroundFrom: aColor
+^((super paneBackgroundFrom: aColor) mixed: 0.6 with: Color random noGreen) mixed: 0.6 with: Color black! !
+!Form methodsFor: 'color mapping' stamp: 'GDK 7/30/2020 14:19:12'!
+mapColors: theBlock
+	"Make all pixels of the given color in this Form to the given new color."
+	"Warnings: This method modifies the receiver. It may lose some color accuracy on 32-bit Forms, since the transformation uses a color map with only 15-bit resolution."
+
+	| map |
+	map _ (Color cachedColormapFrom: self depth to: self depth) copy.
+	"map at: (oldColor indexInMap: map) put: (newColor pixelWordForDepth: self depth)."
+	(BitBlt toForm: self)
+		sourceForm: self;
+		sourceOrigin: `0@0`;
+		combinationRule: Form over;
+		destX: 0 destY: 0 width: width height: height;
+		colorMap: map;
+		copyBits! !
+!Form methodsFor: 'color mapping' stamp: 'GDK 7/30/2020 14:20:35' prior: 50850219!
+mapColors: theBlock
+	"Make all pixels of the given color in this Form to the given new color."
+	"Warnings: This method modifies the receiver. It may lose some color accuracy on 32-bit Forms, since the transformation uses a color map with only 15-bit resolution."
+
+	| map |
+	map _ (Color cachedColormapFrom: self depth to: self depth) copy.
+	"map at: (oldColor indexInMap: map) put: (newColor pixelWordForDepth: self depth)."
+	map _ map collect: [:x|Color colorFromPixelValue: x depth: self depth].
+	(BitBlt toForm: self)
+		sourceForm: self;
+		sourceOrigin: `0@0`;
+		combinationRule: Form over;
+		destX: 0 destY: 0 width: width height: height;
+		colorMap: map;
+		copyBits! !
+!DynabookDarkTheme methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 14:21:19' overrides: 50693901!
+shout
+	"Color symbols as an association list."
+
+	^ {
+		#selector  						-> nil.
+		#arguments 						-> #white.
+		#comment 						-> #(green lighter).
+		#tempBar 						-> #gray.
+		#tempVars 						-> #(gray quiteWhiter).
+		#instVar 						-> #(magenta muchLighter).
+		#pseudoVariables 				-> #(red veryMuchLighter).
+		#literals 						-> #(green veryMuchLighter).
+		#messages 						-> #(cyan).
+		#incompleteMessages 			-> #(cyan veryMuchDarker).
+		#blockLevelZero 				-> #black.
+		#blockLevelOne 				-> #brown.
+		#blockLevelTwo 				-> #magenta.
+		#blockLevelThree 				-> #red.
+		#blockLevelFour 				-> #(green darker).
+		#blockLevelFive 				-> #(red darker).
+		#blockLevelSix 				-> #(magenta darker).
+		#blockLevelSeven 				-> #blue.
+		#defaults 						-> #white.
+		#undefined 						-> #(orange lighter).
+		#methodTags 					-> #(green lighter).
+	}! !
+!Form methodsFor: 'color mapping' stamp: 'GDK 7/30/2020 14:21:58' prior: 50850241!
+mapColors: theBlock
+	"Make all pixels of the given color in this Form to the given new color."
+	"Warnings: This method modifies the receiver. It may lose some color accuracy on 32-bit Forms, since the transformation uses a color map with only 15-bit resolution."
+
+	| map |
+	map _ (Color cachedColormapFrom: self depth to: self depth) copy.
+	"map at: (oldColor indexInMap: map) put: (newColor pixelWordForDepth: self depth)."
+	map _ map collect: [:x|(theBlock value: (Color colorFromPixelValue: x depth: self depth)) pixelValueForDepth: self depth].
+	(BitBlt toForm: self)
+		sourceForm: self;
+		sourceOrigin: `0@0`;
+		combinationRule: Form over;
+		destX: 0 destY: 0 width: width height: height;
+		colorMap: map;
+		copyBits! !
+
+Theme default closeIcon copy!
+
+Theme current closeIcon copy!
+
+Theme current closeIcon copy!
+
+self mapColors: [:c|c muchDarker]!
+
+self mapColors: [:c|c muchDarker]!
+
+self explore!

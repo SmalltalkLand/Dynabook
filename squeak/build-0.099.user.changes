@@ -1,0 +1,266 @@
+
+
+----SNAPSHOT----(28 July 2020 16:21:00) build-0.099.image priorSource: 16502114!
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 16:21:19' prior: 50847360 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+preemptedProcess suspend.
+UISupervisor newProcessIfUI: preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+self addMorph: self createCloseButton.
+inspector _ Inspector openOn: preemptedProcess .
+inspector morphPosition: 0@0.
+UISupervisor whenUIinSafeState: [inspector delete].
+self addMorph: self createInspectButton.! !
+
+----SNAPSHOT----(28 July 2020 16:21:23) build-0.099.image priorSource: 16508562!
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 16:22:47' prior: 50847547 overrides: 16875910!
+initialize
+| layout |
+preemptedProcess _ Processor preemptedProcess.
+preemptedProcess suspend.
+UISupervisor newProcessIfUI: preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+layout _ LayoutMorph newRow.
+layout addMorph: self createCloseButton.
+inspector _ Inspector openOn: preemptedProcess .
+inspector morphPosition: 0@0.
+UISupervisor whenUIinSafeState: [inspector delete].
+layout addMorph: self createInspectButton.! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 16:23:35' prior: 50847566 overrides: 16875910!
+initialize
+| layout |
+preemptedProcess _ Processor preemptedProcess.
+preemptedProcess suspend.
+UISupervisor newProcessIfUI: preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+layout _ LayoutMorph newRow.
+self addMorph: layout.
+layout addMorph: self createCloseButton.
+inspector _ Inspector openOn: preemptedProcess .
+inspector morphPosition: 0@0.
+UISupervisor whenUIinSafeState: [inspector delete].
+layout addMorph: self createInspectButton.! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 16:25:24' prior: 50847584 overrides: 16875910!
+initialize
+| layout buttonBar |
+preemptedProcess _ Processor preemptedProcess.
+preemptedProcess suspend.
+UISupervisor newProcessIfUI: preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+layout _ LayoutMorph newColumn.
+buttonBar _ LayoutMorph newRow.
+layout addMorph: buttonBar.
+self addMorph: layout.
+buttonBar  addMorph: self createCloseButton.
+inspector _ Inspector openOn: preemptedProcess .
+inspector morphPosition: 0@0.
+UISupervisor whenUIinSafeState: [inspector delete].
+buttonBar addMorph: self createInspectButton.! !
+!MorphicCanvas methodsFor: 'morphic' stamp: 'GDK 7/28/2020 16:59:44' prior: 50846351!
+fullDraw: aMorph
+	"Draw the full Morphic structure on us"
+
+	"We are already set with a proper transformation from aMorph owner's coordinates to those of our target form."
+
+	
+	self flag: #jmvVer3.
+	aMorph visible ifFalse: [^ self].
+	aMorph triggerEvent: #beforeDraw with: self.
+	aMorph class isSqueak ifTrue: [aMorph triggerEvent: #afterDraw with: self. ^aMorph fullDrawOn: self].
+	self into: aMorph.
+
+	currentMorph layoutSubmorphsIfNeeded.
+
+	currentMorph isKnownFailing ifTrue: [
+		self drawCurrentAsError.
+		self outOfMorph.
+		^ self].
+
+	(currentMorph isOwnedByHand and: [ Preferences cheapWindowReframe ]) ifTrue: [
+		self drawCurrentAsOutline.
+		self outOfMorph.
+		^ self].
+
+	"Draw current Morph"
+	self isCurrentMorphVisible ifTrue: [
+		currentMorph drawOn: self ].
+
+	"Display submorphs back to front"
+	"coordinate system stack already set up for aMorph
+	('ivars transformations' and 'currentTransformation')"
+	currentMorph hasSubmorphs ifTrue: [
+		currentMorph clippedSubmorph ifNotNil: [ :clipped |
+			self clippingByCurrentMorphDo: [ self fullDraw: clipped ]].
+		currentMorph unclippedSubmorphsReverseDo: [ :m |
+			self fullDraw: m ].
+		].
+	self outOfMorph.
+aMorph triggerEvent: #afterDraw with: self! !
+!MorphicCanvas methodsFor: 'morphic' stamp: 'GDK 7/28/2020 17:02:41' prior: 50847623!
+fullDraw: aMorph
+	"Draw the full Morphic structure on us"
+
+	"We are already set with a proper transformation from aMorph owner's coordinates to those of our target form."
+
+	
+	self flag: #jmvVer3.
+	aMorph visible ifFalse: [^ self].
+	aMorph triggerEvent: #beforeDraw with: self.
+	aMorph class isSqueak ifTrue: [[^ aMorph fullDrawOn: self] ensure: [aMorph triggerEvent: #afterDraw with: self.]].
+	self into: aMorph.
+
+	currentMorph layoutSubmorphsIfNeeded.
+
+	currentMorph isKnownFailing ifTrue: [
+		self drawCurrentAsError.
+		self outOfMorph.
+		^ self].
+
+	(currentMorph isOwnedByHand and: [ Preferences cheapWindowReframe ]) ifTrue: [
+		self drawCurrentAsOutline.
+		self outOfMorph.
+		^ self].
+
+	"Draw current Morph"
+	self isCurrentMorphVisible ifTrue: [
+		currentMorph drawOn: self ].
+
+	"Display submorphs back to front"
+	"coordinate system stack already set up for aMorph
+	('ivars transformations' and 'currentTransformation')"
+	currentMorph hasSubmorphs ifTrue: [
+		currentMorph clippedSubmorph ifNotNil: [ :clipped |
+			self clippingByCurrentMorphDo: [ self fullDraw: clipped ]].
+		currentMorph unclippedSubmorphsReverseDo: [ :m |
+			self fullDraw: m ].
+		].
+	self outOfMorph.
+aMorph triggerEvent: #afterDraw with: self! !
+!MorphicCanvas methodsFor: 'morphic' stamp: 'GDK 7/28/2020 17:02:47' prior: 50847664!
+fullDraw: aMorph
+	"Draw the full Morphic structure on us"
+
+	"We are already set with a proper transformation from aMorph owner's coordinates to those of our target form."
+
+	
+	self flag: #jmvVer3.
+	aMorph visible ifFalse: [^ self].
+	aMorph triggerEvent: #beforeDraw with: self.
+	aMorph class isSqueak ifTrue: [^[ aMorph fullDrawOn: self] ensure: [aMorph triggerEvent: #afterDraw with: self.]].
+	self into: aMorph.
+
+	currentMorph layoutSubmorphsIfNeeded.
+
+	currentMorph isKnownFailing ifTrue: [
+		self drawCurrentAsError.
+		self outOfMorph.
+		^ self].
+
+	(currentMorph isOwnedByHand and: [ Preferences cheapWindowReframe ]) ifTrue: [
+		self drawCurrentAsOutline.
+		self outOfMorph.
+		^ self].
+
+	"Draw current Morph"
+	self isCurrentMorphVisible ifTrue: [
+		currentMorph drawOn: self ].
+
+	"Display submorphs back to front"
+	"coordinate system stack already set up for aMorph
+	('ivars transformations' and 'currentTransformation')"
+	currentMorph hasSubmorphs ifTrue: [
+		currentMorph clippedSubmorph ifNotNil: [ :clipped |
+			self clippingByCurrentMorphDo: [ self fullDraw: clipped ]].
+		currentMorph unclippedSubmorphsReverseDo: [ :m |
+			self fullDraw: m ].
+		].
+	self outOfMorph.
+aMorph triggerEvent: #afterDraw with: self! !
+!MorphicCanvas methodsFor: 'morphic' stamp: 'GDK 7/28/2020 17:17:38' prior: 50847705!
+fullDraw: aMorph
+	"Draw the full Morphic structure on us"
+
+	"We are already set with a proper transformation from aMorph owner's coordinates to those of our target form."
+
+	
+	self flag: #jmvVer3.
+	aMorph visible ifFalse: [^ self].
+	aMorph triggerEvent: #beforeDraw with: self.
+	self triggerEvent: #beforeDraw with: aMorph.
+	aMorph class isSqueak ifTrue: [^[ aMorph fullDrawOn: self] ensure: [aMorph triggerEvent: #afterDraw with: self.self triggerEvent: #afterDraw with: aMorph]].
+	self into: aMorph.
+
+	currentMorph layoutSubmorphsIfNeeded.
+
+	currentMorph isKnownFailing ifTrue: [
+		self drawCurrentAsError.
+		self outOfMorph.
+		^ self].
+
+	(currentMorph isOwnedByHand and: [ Preferences cheapWindowReframe ]) ifTrue: [
+		self drawCurrentAsOutline.
+		self outOfMorph.
+		^ self].
+
+	"Draw current Morph"
+	self isCurrentMorphVisible ifTrue: [
+		currentMorph drawOn: self ].
+
+	"Display submorphs back to front"
+	"coordinate system stack already set up for aMorph
+	('ivars transformations' and 'currentTransformation')"
+	currentMorph hasSubmorphs ifTrue: [
+		currentMorph clippedSubmorph ifNotNil: [ :clipped |
+			self clippingByCurrentMorphDo: [ self fullDraw: clipped ]].
+		currentMorph unclippedSubmorphsReverseDo: [ :m |
+			self fullDraw: m ].
+		].
+	self outOfMorph.
+aMorph triggerEvent: #afterDraw with: self! !
+!MorphicCanvas methodsFor: 'morphic' stamp: 'GDK 7/28/2020 17:18:06' prior: 50847746!
+fullDraw: aMorph
+	"Draw the full Morphic structure on us"
+
+	"We are already set with a proper transformation from aMorph owner's coordinates to those of our target form."
+
+	
+	self flag: #jmvVer3.
+	aMorph visible ifFalse: [^ self].
+	aMorph triggerEvent: #beforeDraw with: self.
+	self triggerEvent: #beforeDraw with: aMorph.
+	aMorph class isSqueak ifTrue: [^[ aMorph fullDrawOn: self] ensure: [aMorph triggerEvent: #afterDraw with: self.self triggerEvent: #afterDraw with: aMorph]].
+	self into: aMorph.
+
+	currentMorph layoutSubmorphsIfNeeded.
+
+	currentMorph isKnownFailing ifTrue: [
+		self drawCurrentAsError.
+		self outOfMorph.
+		^ self].
+
+	(currentMorph isOwnedByHand and: [ Preferences cheapWindowReframe ]) ifTrue: [
+		self drawCurrentAsOutline.
+		self outOfMorph.
+		^ self].
+
+	"Draw current Morph"
+	self isCurrentMorphVisible ifTrue: [
+		currentMorph drawOn: self ].
+
+	"Display submorphs back to front"
+	"coordinate system stack already set up for aMorph
+	('ivars transformations' and 'currentTransformation')"
+	currentMorph hasSubmorphs ifTrue: [
+		currentMorph clippedSubmorph ifNotNil: [ :clipped |
+			self clippingByCurrentMorphDo: [ self fullDraw: clipped ]].
+		currentMorph unclippedSubmorphsReverseDo: [ :m |
+			self fullDraw: m ].
+		].
+	self outOfMorph.
+aMorph triggerEvent: #afterDraw with: self.
+self triggerEvent: #afterDraw with: aMorph.! !

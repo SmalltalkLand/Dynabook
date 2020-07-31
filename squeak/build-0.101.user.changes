@@ -1,0 +1,46 @@
+
+
+----STARTUP---- (29 July 2020 13:37:47) as /home/grahamk/dynabook/squeak/build-0.101.image!
+
+!AltDotMorph class methodsFor: 'as yet unclassified' stamp: 'GDK 7/29/2020 13:37:52' prior: 50848528!
+open
+| o done|
+o _ self new.
+o openInWorld.
+done _ false.
+"
+UISupervisor whenUIinSafeState: [o morphExtent: o owner morphExtent].
+UISupervisor whenUIinSafeState: [[o world] whileNotNil: [o world doOneCycle]. done _ true].
+[done] whileFalse: [Processor activeProcess animatedUI ifNotNil: [o world doOneCycle]]
+"! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/29/2020 13:44:33' overrides: 16874501!
+dragEvent: evt localPosition: pos
+evt hand grabMorph: self.! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/29/2020 13:44:36'!
+dragEventE: evt localPosition: pos
+evt hand grabMorph: self.! !
+
+!methodRemoval: PortalMorph #dragEvent:localPosition: stamp: 'GDK 7/29/2020 13:44:45'!
+dragEvent: evt localPosition: pos
+evt hand grabMorph: self.!
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/29/2020 13:44:56' prior: 50846807 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	aMorphicEvent class == MouseButtonEvent ifTrue: [handledByInner ifTrue: [(self valueOfProperty: #forceDrag ifAbsent: [false]) ifTrue: [aMorphicEvent hand waitForClicksOrDrag:  self event: aMorphicEvent
+						dragSel: #dragEventE:localPosition:
+						clkSel: #dragEventE:localPosition:.
+						aMorphicEvent wasHandled: true.
+						^aMorphicEvent
+						]]].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !

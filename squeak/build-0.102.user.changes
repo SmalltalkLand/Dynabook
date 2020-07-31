@@ -1,0 +1,176 @@
+
+
+----STARTUP---- (29 July 2020 14:44:10) as /home/grahamk/dynabook/squeak/build-0.102.image!
+
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/29/2020 14:50:19'!
+runSimulated: aBlock ontextAtEachStep: c
+	"Simulate the execution of the argument, current. Answer the result it 
+	returns."
+
+	^ thisContext sender
+		runSimulated: aBlock
+		contextAtEachStep: c
+
+	"ContextPart runSimulated: [Pen new defaultNib: 5; go: 100]"! !
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/29/2020 14:50:24'!
+runSimulated: aBlock contextAtEachStep: c
+	"Simulate the execution of the argument, current. Answer the result it 
+	returns."
+
+	^ thisContext sender
+		runSimulated: aBlock
+		contextAtEachStep: c
+
+	"ContextPart runSimulated: [Pen new defaultNib: 5; go: 100]"! !
+
+!methodRemoval: ContextPart class #runSimulated:ontextAtEachStep: stamp: 'GDK 7/29/2020 14:50:29'!
+runSimulated: aBlock ontextAtEachStep: c
+	"Simulate the execution of the argument, current. Answer the result it 
+	returns."
+
+	^ thisContext sender
+		runSimulated: aBlock
+		contextAtEachStep: c
+
+	"ContextPart runSimulated: [Pen new defaultNib: 5; go: 100]"!
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/29/2020 14:50:57' prior: 16825445!
+runSimulated: aBlock
+	"Simulate the execution of the argument, current. Answer the result it 
+	returns."
+^self runSimulated: aBlock contextAtEachStep: [:ignored].
+	"^ thisContext sender
+		runSimulated: aBlock
+		contextAtEachStep: [:ignored]"
+
+	"ContextPart runSimulated: [Pen new defaultNib: 5; go: 100]"! !
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/29/2020 14:52:34'!
+runSimulated: b onPrimitive: pb contextAtEachStep: c
+^self runSimulated: b contextAtEachStep: [:cc|c value: cc.cc method primitive ifTrue: [cc becomeForward: (pb value: cc)]].! !
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/29/2020 14:52:42' prior: 50848663!
+runSimulated: b onPrimitive: pb contextAtEachStep: c
+^self runSimulated: b contextAtEachStep: [:cc|c value: cc.cc method primitive ifNotNil: [cc becomeForward: (pb value: cc)]].! !
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/29/2020 14:53:06' prior: 50848672!
+runSimulated: b onPrimitive: pb contextAtEachStep: c
+^self runSimulated: b contextAtEachStep: [:cc|c value: cc.cc method primitive = 0 ifFalse: [cc becomeForward: (pb value: cc)]].! !
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/29/2020 16:17:14'!
+runSimulated: b onPrimitive: pb
+^self runSimulated: b onPrimitive: pb contextAtEachStep: [:c|]! !
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/29/2020 16:21:53'!
+runSimulated: b onPrimitiveMap: pb contextAtEachStep: c
+^self runSimulated: b onPrimitive: [:cc|(pb at: cc method primitive) value] contextAtEachStep: c! !
+!ContextPart class methodsFor: 'simulation' stamp: 'GDK 7/29/2020 16:22:01'!
+runSimulated: b onPrimitiveMap: pb
+^self runSimulated: b onPrimitive: [:cc|(pb at: cc method primitive) value]! !
+
+257 asCharacter!
+
+257 asCharacter printString!
+
+String with: 257 asCharacter !
+
+String with: 257 asCharacter !
+
+String addUnicodeCodePoint: 257 to: (WriteStream on: '') hex: false!
+
+[:s|String addUnicodeCodePoint: 257 to:  s hex: false. s] value: (WriteStream on: '')!
+
+String variableWordSubclass: #WideString
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Localization-Kernel'!
+!ClassBuilder methodsFor: 'public' stamp: 'GDK 7/29/2020 18:45:35' prior: 50636727!
+superclass: aClass
+	variableWordSubclass: t instanceVariableNames: f 
+	classVariableNames: d poolDictionaries: s category: cat
+	"This is the standard initialization message for creating a new class as a 
+	subclass of an existing class in which the subclass is to 
+	have indexable word-sized (32 bit) nonpointer variables."
+	(aClass instSize > 0)
+		ifTrue: [^self error: 'cannot make a 32-bit word subclass of a class with named fields'].
+	(aClass isVariable and: [aClass isPointers])
+		ifTrue: [^self error: 'cannot make a 32-bit word subclass of a class with pointer fields'].
+	"(aClass isVariable and: [aClass isWords not])
+		ifTrue: [^self error: 'cannot make a 32-bit word subclass of a class with 8, 16 or 64 bit fields']."
+
+	^self 
+		name: t
+		subclassOf: aClass
+		type: #words
+		instanceVariableNames: f
+		classVariableNames: d
+		poolDictionaries: s
+		category: cat! !
+
+!classDefinition: #WideString category: #'Localization-Kernel' stamp: 'GDK 7/29/2020 18:45:38'!
+String variableWordSubclass: #WideString
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Localization-Kernel'!
+
+Symbol variableWordSubclass: #WideSymbol
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Localization-Kernel'!
+
+!classDefinition: #WideSymbol category: #'Localization-Kernel' stamp: 'GDK 7/29/2020 18:46:00'!
+Symbol variableWordSubclass: #WideSymbol
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Localization-Kernel'!
+
+WideString basicNew!
+
+WideString basicNew: 1!
+
+WideString basicNew: 1!
+
+WideString basicNew: 1!
+
+self asciiValue!
+!WideSymbol class methodsFor: 'no messages' stamp: 'GDK 7/29/2020 18:48:11' overrides: 16918799!
+newFrom: aCollection 
+	"Answer an instance of me containing the same elements as aCollection."
+
+	^ (aCollection as: WideString) asSymbol
+
+"	Symbol newFrom: {$P. $e. $n}
+	{$P. $e. $n} as: Symbol
+"! !
+!String methodsFor: 'accessing' stamp: 'GDK 7/29/2020 18:51:06' prior: 50639190 overrides: 16880792!
+at: index put: aCharacter 
+	"Primitive. Store the Character in the field of the receiver indicated by
+	the index. Fail if the index is not an Integer or is out of bounds, or if
+	the argument is not a Character. Essential. See Object documentation
+	whatIsAPrimitive."
+
+	<primitive: 64>
+	(aCharacter is: #Character)
+		ifTrue: [	
+			index isInteger
+				ifTrue: [(index > self size or: [index <= 0]) ifTrue: [self errorSubscriptBounds: index]]
+				ifFalse: [self errorNonIntegerIndex]]
+		ifFalse: [self error: 'Strings only store Characters']! !
+!String methodsFor: 'accessing' stamp: 'GDK 7/29/2020 18:51:51' prior: 50848788 overrides: 16880792!
+at: index put: aCharacter 
+	"Primitive. Store the Character in the field of the receiver indicated by
+	the index. Fail if the index is not an Integer or is out of bounds, or if
+	the argument is not a Character. Essential. See Object documentation
+	whatIsAPrimitive."
+
+	<primitive: 64>
+	(aCharacter is: #Character)
+		ifTrue: [	
+			index isInteger
+				ifTrue: [(index > self size or: [index <= 0]) ifTrue: [self errorSubscriptBounds: index] ifFalse: [^super at: index put: aCharacter numericValue]]
+				ifFalse: [self errorNonIntegerIndex]]
+		ifFalse: [self error: 'Strings only store Characters']! !
+
+(WideString basicNew: 1) at: 1 put: $a;at: 1!
+
+(WideString basicNew: 2) at: 1 put: $a;at: 2 put: $c;at: 1!
+
+(WideString basicNew: 2) at: 1 put: $a;at: 2 put: $c;at: 2!

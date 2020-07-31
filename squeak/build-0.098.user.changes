@@ -1,0 +1,245 @@
+
+
+----STARTUP---- (28 July 2020 10:10:28) as /home/grahamk/dynabook/squeak/build-0.098.image!
+
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 10:41:29' prior: 50847011 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+self addMorph: self createCloseButton.
+inspector _ Inspector openOn: preemptedProcess .
+inspector morphPosition: 0@0.
+inspector delete.! !
+
+AACHostMorph!
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 11:31:21'!
+initializeOn: requestor! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 11:31:23' prior: 50847056!
+initializeOn: requestor
+! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 11:32:13' prior: 50847060!
+initializeOn: requestor
+(SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) do: [:w|]! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 11:32:38' prior: 50847064!
+initializeOn: requestor
+(SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 11:32:43' prior: 50847071!
+initializeOn: requestor
+(SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|
+	
+	].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 11:33:42' prior: 50847079!
+initializeOn: requestor
+(SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 11:33:50' prior: 50847087!
+initializeOn: requestor
+(SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;yourself].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 11:34:40' prior: 50847095!
+initializeOn: requestor
+(SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 11:52:07' prior: 50847104!
+initializeOn: requestor
+((SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 12:11:22' prior: 50847114!
+initializeOn: requestor
+((SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 12:11:24' prior: 50847126!
+initializeOn: requestor
+((SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 12:17:03' prior: 50847137!
+initializeOn: requestor
+(((SystemWindow allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]) do: [:m|self addMorph: m].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 12:51:55' prior: 50847149!
+initializeOn: requestor
+(((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]) do: [:m|self addMorph: m].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 12:54:24' prior: 50847161!
+initializeOn: requestor
+(((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]) do: [:m|self addMorph: m].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 12:54:58' prior: 50847173!
+initializeOn: requestor
+| targetedMorphs |
+targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself])! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 12:55:44' prior: 50847185!
+initializeOn: requestor
+| targetedMorphs |
+targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]).
+targetedMorphs do: [:m|m withArgs: {} executeMethod: (Morph >>#delete)].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 12:58:59' prior: 50847197!
+initializeOn: requestor
+| targetedMorphs oldParents |
+targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]).
+oldParents _ targetedMorphs collect: [:m|[m owner] ensure: [m withArgs: {} executeMethod: (Morph >>#delete)]].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 13:00:21' prior: 50847212!
+initializeOn: requestor
+| targetedMorphs oldParents |
+targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]).
+oldParents _ targetedMorphs collect: [:m|[m owner] ensure: [m withArgs: {} executeMethod: (Morph >>#delete)]].
+self when: #report send: #value: to: [:v|oldParents with: targetedMorphs do: [:a :b|a addMorph: b]].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 13:02:02' prior: 50847228!
+initializeOn: requestor
+| targetedMorphs oldParents |
+targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]).
+oldParents _ targetedMorphs collect: [:m|[m owner] ensure: [m withArgs: {} executeMethod: (Morph >>#delete)]].
+self when: #reported send: #value: to: [:v|oldParents with: targetedMorphs do: [:a :b|a addMorph: b]].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 13:02:31' prior: 50846220!
+activate
+| oldActionMaps |
+oldActionMaps _ ActiveModel actionMaps.
+ActiveModel classPool at: #ActionMaps put: WeakIdentityKeyDictionary new.
+self triggerEvent: #activated.
+^[self overlayNoBecome] ensure: [
+	ActiveModel actionMaps keysDo: [:k|oldActionMaps declare: k from: ActiveModel actionMaps].
+ActiveModel classPool at: #ActionMaps put: oldActionMaps.
+].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 13:02:48' prior: 50847247!
+initializeOn: requestor
+| targetedMorphs oldParents |
+targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]).
+oldParents _ targetedMorphs collect: [:m|[m owner] ensure: [m withArgs: {} executeMethod: (Morph >>#delete)]].
+self when: #reported send: #value: to: [:v|oldParents with: targetedMorphs do: [:a :b|a addMorph: b]].
+self when: #activated send: #value to: [].! !
+!AACHostMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 13:03:06' prior: 50847282!
+initializeOn: requestor
+| targetedMorphs oldParents |
+self when: #reported send: #value: to: [:v|oldParents with: targetedMorphs do: [:a :b|a addMorph: b]].
+self when: #activated send: #value to: [targetedMorphs _ (((Morph allSubInstances select: [:w|(w valueOfProperty: #requestor) == requestor]) collect: [:w|PortalMorph new target: w;morphPosition: w morphPosition negated;yourself]) collect: [:m|PortalMorph new target: m;yourself]).
+oldParents _ targetedMorphs collect: [:m|[m owner] ensure: [m withArgs: {} executeMethod: (Morph >>#delete)]].].! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 13:05:22' prior: 50847045 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+preemptedProcess suspend.
+UISupervisor newProcessIfUI: preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+self addMorph: self createCloseButton.
+inspector _ Inspector openOn: preemptedProcess .
+inspector morphPosition: 0@0.
+inspector delete.! !
+
+----SNAPSHOT----(28 July 2020 13:05:26) build-0.098.image priorSource: 16492407!
+
+----SNAPSHOT----(28 July 2020 13:05:30) build-0.098.image priorSource: 16501950!
+
+----SNAPSHOT----(28 July 2020 13:05:36) build-0.098.image priorSource: 16502032!
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 13:07:08' prior: 50847324 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+preemptedProcess suspend.
+UISupervisor newProcessIfUI: preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+self addMorph: self createCloseButton.
+inspector _ Inspector openOn: preemptedProcess .
+inspector morphPosition: 0@0.
+inspector delete.
+! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 13:13:23' prior: 50847346 overrides: 16875910!
+initialize
+preemptedProcess _ Processor preemptedProcess.
+preemptedProcess suspend.
+UISupervisor newProcessIfUI: preemptedProcess.
+super initialize.
+"self addMorph: (self debug)."
+self addMorph: self createCloseButton.
+inspector _ Inspector openOn: preemptedProcess .
+inspector morphPosition: 0@0.
+UISupervisor whenUIinSafeState: [inspector delete].
+! !
+
+PortalMorph new target: self;openInWorld!
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 15:24:32'!
+openInspector
+self addMorph: (PortalMorph new target: inspector;yourself).! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 15:28:20'!
+createInspecteButton
+	^ (PluggableButtonMorph model: self action: #openInspector)
+		icon: Theme current inspectIcon;
+		setBalloonText: 'exit AltDot';
+		morphExtent: (self withArgs: {} executeMethod: SystemWindow >> #titleBarButtonsExtent)! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 15:29:21' prior: 50847380!
+createInspecteButton
+	^ (PluggableButtonMorph model: self action: #openInspector)
+		icon: Theme current inspectIcon;
+		iconName: #drawInspectIcon;
+		setBalloonText: 'exit AltDot';
+		morphExtent: (self withArgs: {} executeMethod: SystemWindow >> #titleBarButtonsExtent)! !
+!VectorCanvas methodsFor: 'drawing - FormCanvas protocol' stamp: 'GDK 7/28/2020 15:36:37' prior: 50795435 overrides: 50638618!
+image: aForm at: aPoint
+"NO quiero usar imagenes en M3... ver como hacer... quizas meter un servicio en el canvas que en m2 use imagenes y en m3 no..."
+self flag: #jmvVer4.
+" 	self halt"
+super image: aForm at: aPoint! !
+!VectorCanvas methodsFor: 'drawing - FormCanvas protocol' stamp: 'GDK 7/28/2020 15:37:55' overrides: 50638623!
+image: aForm at: aPoint sourceRect: sourceRect
+^self withArgs: {aForm. aPoint. sourceRect} executeMethod: (BitBltCanvas << #image:at:sourceRect:)! !
+!VectorCanvas methodsFor: 'drawing - FormCanvas protocol' stamp: 'GDK 7/28/2020 15:38:05' prior: 50847415 overrides: 50638623!
+image: aForm at: aPoint sourceRect: sourceRect
+^self withArgs: {aForm. aPoint. sourceRect} executeMethod: (BitBltCanvas >> #image:at:sourceRect:)! !
+!BitBltCanvas methodsFor: 'drawing-images' stamp: 'GDK 7/28/2020 15:39:12'!
+image: aForm at: aPoint sourceRect: sourceRect engine: engine2
+	"Draw a translucent image using the best available way of representing translucency.
+	Note: This will be fixed in the future."
+	| r p |
+	p _ (currentTransformation transform: aPoint) rounded.
+	r _ (self depth < 32 or: [ aForm mightBeTranslucent not ]) 
+		ifTrue: [
+			"Rule Form paint treats pixels with a value of zero as transparent"
+			Form paint ]
+		ifFalse: [ Form blend ].
+	engine2 colorMap: (aForm colormapIfNeededFor: form); fillColor: nil.
+	engine2 image: aForm at: p sourceRect: sourceRect rule: r.
+	(self depth = 32 and: [ aForm depth < 32 ]) ifTrue: [
+		"If we blit to 32bpp from one of smaller depth,
+		it will have zero in the alpha channel (until BitBlt is fixed!!)
+		This is the same workaround as in #asFormOfDepth:"
+		engine2 sourceForm: nil.
+		engine2 combinationRule: 40. "fixAlpha:with:"
+		engine2 copyBits ]! !
+!BitBltCanvas methodsFor: 'drawing-images' stamp: 'GDK 7/28/2020 15:39:30' prior: 50669912 overrides: 50638623!
+image: aForm at: aPoint sourceRect: sourceRect
+	"Draw a translucent image using the best available way of representing translucency.
+	Note: This will be fixed in the future."
+self image: aForm at: aPoint sourceRect: sourceRect engine: engine! !
+!VectorCanvas methodsFor: 'drawing - FormCanvas protocol' stamp: 'GDK 7/28/2020 15:40:25' prior: 50847424 overrides: 50638623!
+image: aForm at: aPoint sourceRect: sourceRect
+^self withArgs: {aForm. aPoint. sourceRect. BitBltCanvasEngine toForm: form} executeMethod: (BitBltCanvas >> #image:at:sourceRect:engine:)! !
+!VectorCanvas methodsFor: 'drawing - FormCanvas protocol' stamp: 'GDK 7/28/2020 15:47:12' prior: 50847404 overrides: 50638618!
+image: aForm at: aPoint
+	"Draw a translucent image using the best available way of representing translucency."
+
+	self image: aForm
+		at: aPoint
+		sourceRect: aForm boundingBox! !
+!VectorCanvas methodsFor: 'drawing - icons' stamp: 'GDK 7/28/2020 16:17:07' prior: 50795293 overrides: 50638613!
+drawButtonIconFromCurrentMorph
+| bb |
+bb _ [^self withArgs: {} executeMethod: (BitBltCanvas >> #drawButtonIconFromCurrentMorph) ].
+	currentMorph iconName ifNotNil: [ :selector |
+		self perform: selector.
+		^true ].
+	[^bb value] on: Error do: [:ex|].
+	^false! !
+!VectorCanvas methodsFor: 'drawing - icons' stamp: 'GDK 7/28/2020 16:17:58' prior: 50847496 overrides: 50638613!
+drawButtonIconFromCurrentMorph
+| bb |
+bb _ [^self withArgs: {} executeMethod: (BitBltCanvas >> #drawButtonIconFromCurrentMorph) ].
+	currentMorph iconName ifNotNil: [ :selector |
+		[self perform: selector] on: MessageNotUnderstood do: [:ex|[^bb value] on: Error do: [:e2|ex pass]].
+		^true ].
+	[^bb value] on: Error do: [:ex|].
+	^false! !
+!AltDotMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/28/2020 16:20:25'!
+createInspectButton
+	^ (PluggableButtonMorph model: self action: #openInspector)
+		icon: Theme current inspectIcon;
+		setBalloonText: 'exit AltDot';
+		morphExtent: (self withArgs: {} executeMethod: SystemWindow >> #titleBarButtonsExtent)! !
+
+!methodRemoval: AltDotMorph #createInspecteButton stamp: 'GDK 7/28/2020 16:20:36'!
+createInspecteButton
+	^ (PluggableButtonMorph model: self action: #openInspector)
+		icon: Theme current inspectIcon;
+		iconName: #drawInspectIcon;
+		setBalloonText: 'exit AltDot';
+		morphExtent: (self withArgs: {} executeMethod: SystemWindow >> #titleBarButtonsExtent)!

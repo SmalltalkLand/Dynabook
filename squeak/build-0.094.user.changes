@@ -1,14 +1,94 @@
 
 
-----SNAPSHOT----(26 July 2020 09:54:59) build-0.094.image priorSource: 16468685!
-!SqueakMorph class methodsFor: 'no messages' stamp: 'GDK 7/26/2020 09:55:08' overrides: 50846311!
-isSqueak
-^true! !
+----STARTUP---- (27 July 2020 20:05:26) as /home/grahamk/dynabook/squeak/build-0.094.image!
 
-----SNAPSHOT----(26 July 2020 09:55:11) build-0.094.image priorSource: 16473236!
-!SqueakMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/26/2020 10:03:14' prior: 50846436 overrides: 16875302!
-internalize: p
-^p! !
-!SqueakMorph methodsFor: 'as yet unclassified' stamp: 'GDK 7/26/2020 10:13:03' prior: 50846450 overrides: 16875302!
-internalize: p
-^p! !
+
+Smalltalk openSourceFiles!
+
+Smalltalk openSourceFiles!
+!Morph methodsFor: 'events-processing' stamp: 'GDK 7/27/2020 20:06:41' prior: 16874850!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+	"This is the central entry for dispatching events in morphic. Given some event, find the right receiver and let him handle it.
+	localPosition is in our coordinates."
+
+	^ (self rejectsEvent: aMorphicEvent)
+		ifTrue: [ #rejected ]
+		ifFalse: [ aMorphicEvent dispatchWith: self localPosition: localPosition ]
+		! !
+!Morph methodsFor: 'events-processing' stamp: 'GDK 7/27/2020 20:06:43' prior: 50846464!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+	"This is the central entry for dispatching events in morphic. Given some event, find the right receiver and let him handle it.
+	localPosition is in our coordinates."
+
+	^ (self rejectsEvent: aMorphicEvent)
+		ifTrue: [ #rejected ]
+		ifFalse: [ aMorphicEvent dispatchWith: self localPosition: localPosition ]
+		
+		! !
+
+Morph subclass: #PortalMorph
+	instanceVariableNames: 'target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Morphic-Portals'!
+
+!classDefinition: #PortalMorph category: #'Morphic-Portals' stamp: 'GDK 7/27/2020 20:09:40'!
+Morph subclass: #PortalMorph
+	instanceVariableNames: 'target'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Morphic-Portals'!
+!PortalMorph methodsFor: 'accessing' stamp: 'GDK 7/27/2020 20:09:45'!
+target
+	"Answer the value of target"
+
+	^ target! !
+!PortalMorph methodsFor: 'accessing' stamp: 'GDK 7/27/2020 20:09:45'!
+target: anObject
+	"Set the value of target"
+
+	target _ anObject! !
+!PortalMorph methodsFor: 'drawing' stamp: 'GDK 7/27/2020 20:10:03' overrides: 50562873!
+drawOn: c
+c fullDraw: target! !
+!PortalMorph methodsFor: 'accessing' stamp: 'GDK 7/27/2020 20:12:12' overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'accessing' stamp: 'GDK 7/27/2020 20:16:53' overrides: 50559402!
+morphExtent
+^target morphExtent! !
+!PortalMorph methodsFor: 'accessing' stamp: 'GDK 7/27/2020 20:17:09' overrides: 16875404!
+morphExtent: val
+target morphExtent: val! !
+!PortalMorph methodsFor: 'drawing' stamp: 'GDK 7/28/2020 07:45:19' overrides: 16875610!
+morphContainsPoint: p
+^target morphContainsPoint: p! !
+!PortalMorph methodsFor: 'drawing' stamp: 'GDK 7/28/2020 07:45:27' prior: 50846535 overrides: 16875610!
+morphContainsPoint: p
+	self visible ifFalse: [ ^false ].
+^target morphContainsPoint: p! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:04:11' prior: 50846518 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| s |
+s _ (super dispatchEvent: aMorphicEvent localPosition: localPosition).
+(s = #rejected) ifFalse: [^s].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:04:30' prior: 50846547 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !
+!PortalMorph methodsFor: 'event handling' stamp: 'GDK 7/28/2020 08:07:43' prior: 50846559 overrides: 50846479!
+dispatchEvent: aMorphicEvent localPosition: localPosition
+| handledByInner |
+
+	"Now give submorphs a chance to handle the event"
+	handledByInner _ false.
+	self submorphsDo: [ :eachChild |
+		| eventPositionInChild |
+		handledByInner ifFalse: [
+			eventPositionInChild _ eachChild internalize: localPosition.
+			(eachChild dispatchEvent: aMorphicEvent localPosition: eventPositionInChild) == #rejected ifFalse: [
+				"Some child did contain the point so aMorph is part of the top-most chain."
+				handledByInner _ true ]]].
+	handledByInner ifTrue: [^#rejected].
+^target dispatchEvent: aMorphicEvent localPosition: (target internalize: localPosition)! !

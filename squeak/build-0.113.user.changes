@@ -1,0 +1,13 @@
+
+
+----STARTUP---- (31 July 2020 11:44:18) as /home/grahamk/dynabook/squeak/build-0.113.image!
+
+!Project class methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 11:45:14'!
+currentMaybe
+^Current! !
+!Preferences class methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 11:45:18' prior: 50783343!
+protectedMode
+^((self valueOfFlag: #protectedMode) or: [Project ifNotNil: [Project currentMaybe ifNotNil: #protected ifNil: [false]] ifNil: [false]] or: [Domain forceProtectedMode]) and: [Smalltalk at: #SafeMode ifPresent: [:s|s enabled not] ifAbsent: [true]]! !
+!Project class methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 11:43:24' prior: 50733081!
+current 
+^Current  ifNil: [Current _ Project new. Current world: self runningWorld. Current]! !

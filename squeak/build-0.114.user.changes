@@ -1,0 +1,14 @@
+
+
+----SNAPSHOT----(31 July 2020 11:45:55) build-0.114.image priorSource: 16664629!
+
+Project current == Project Current!
+!Preferences class methodsFor: 'as yet unclassified' stamp: 'GDK 7/31/2020 11:46:53' prior: 50852437!
+protectedMode
+^((self valueOfFlag: #protectedMode) or: [Project ifNotNil: [Project currentMaybe ifNotNil: [:x|x protected] ifNil: [false]] ifNil: [false]] or: [Domain forceProtectedMode]) and: [Smalltalk at: #SafeMode ifPresent: [:s|s enabled not] ifAbsent: [true]]! !
+
+Project current == Project Current!
+
+Project current == Project current!
+
+Project current == Project current!

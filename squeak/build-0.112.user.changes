@@ -1,0 +1,43 @@
+
+
+----SNAPSHOT----(31 July 2020 08:31:17) build-0.112.image priorSource: 16661399!
+!Project methodsFor: 'initialization' stamp: 'GDK 7/31/2020 10:17:34' prior: 50733028 overrides: 16896425!
+initialize
+super initialize.
+world _ PasteUpMorph new.
+world worldState: ((Current ifNotNil: [:c|c world] ifNil: ["|w |UISupervisor whenUIinSafeState: [w _ self runningWorld]. [w] whileNil: []. w" self runningWorld]) instVarNamed: #worldState) shallowCopy.
+initials _ Utilities authorInitials.
+name _ Utilities authorName.
+protected _ false.! !
+
+----SNAPSHOT----(31 July 2020 10:17:40) build-0.112.image priorSource: 16662608!
+
+Project new!
+!Project methodsFor: 'initialization' stamp: 'GDK 7/31/2020 10:26:51'!
+showInPortal
+! !
+!PasteUpMorph methodsFor: 'drawing' stamp: 'GDK 7/31/2020 10:27:13' prior: 50852324 overrides: 16790395!
+drawOn: aCanvas
+
+	"draw background image."
+	backgroundImage
+		ifNotNil: [
+			aCanvas image: (backgroundImage _ (((backgroundImage triggerEvent: #pumTransform)  ifNil: [true])ifTrue: [Theme current transformBackgroundImage: backgroundImage] ifFalse: [backgroundImage removeActionsForEvent: #pumTransform]) when: #pumTransform send:#yourself to: false) at: `0@0` ]
+		ifNil: [
+			"draw background fill"
+			"(self isWorldMorph and: [ aCanvas drawsOnDisplay ] and: [ color mightBeTranslucent ])
+				ifTrue: [
+					""Special case so a translucent background on the Display allows you to see through the main Cuis Window.
+					Requires proper handling of translucent Display in the VM.
+					Seems to work only on Linux when using a composing window manager.""
+					(BitBlt toForm: Display) clipRect: aCanvas clipRect;
+						copy: Display boundingBox
+						from: `0@0` in: nil
+						fillColor: color rule: Form over.
+					Display forceToScreen]
+				ifFalse: [" super drawOn: aCanvas ]"]"! !
+!Project methodsFor: 'initialization' stamp: 'GDK 7/31/2020 10:33:12' prior: 50852377!
+showInPortal
+PortalMorph new target: world;openInWorld.! !
+
+Project new showInPortal!

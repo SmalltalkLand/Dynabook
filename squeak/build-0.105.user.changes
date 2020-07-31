@@ -1,0 +1,220 @@
+
+
+----STARTUP---- (30 July 2020 16:24:23) as /home/grahamk/dynabook/squeak/build-0.105.image!
+
+!Transcripter methodsFor: 'initialization' stamp: 'GDK 7/30/2020 16:25:09' prior: 50848133!
+initInFrame: rect
+	frame _ rect insetBy: 2.  "Leave room for border"
+	textComposition _ TextComposition new.
+	textComposition
+		setModel: (TextModel withText: self contents asText);
+		extentForComposing: frame width-8 @9999.
+	textComposition composeAll.
+	display _ Display.
+	sensor _ Sensor.! !
+
+----SNAPSHOT----(30 July 2020 16:25:21) build-0.105.image priorSource: 16597608!
+
+EventTrack!
+
+----SNAPSHOT----(30 July 2020 16:28:12) build-0.105.image priorSource: 16607622!
+!WeakActionSequence methodsFor: 'evaluating' stamp: 'GDK 7/30/2020 16:28:14' prior: 16943589!
+valueWithArguments: anArray startingFrom: startIndex
+	"Do the same as my parent, but make sure that all actions that do not 
+	give errors are evaluated before resignaling the ones that gave errors 
+	(giving the chance to clients to handle them)."
+
+	| each answer |
+	startIndex to: self size do: [:index |
+		each := self at: index.
+		self triggerEvent: #aboutToLaunchEvent with: {each. anArray}.
+		[ answer := each valueWithArguments: anArray ]
+			on: UnhandledError
+			do: [:exc | 
+				self valueWithArguments: anArray startingFrom: index + 1.
+				exc pass]].
+	^ answer! !
+
+self triggerEvent: #test!
+
+self triggerEvent: #test!
+
+AudioObject subclass: #AudioDelay
+	instanceVariableNames: 'buffer delay'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #AudioDelay category: #Audio stamp: 'GDK 7/30/2020 16:33:53'!
+AudioObject subclass: #AudioDelay
+	instanceVariableNames: 'buffer delay'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+AudioDelay class
+	instanceVariableNames: ''!
+
+!classDefinition: 'AudioDelay class' category: #Audio stamp: 'GDK 7/30/2020 16:33:53'!
+AudioDelay class
+	instanceVariableNames: ''!
+!AudioDelay methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 16:33:53' overrides: 50845209!
+emit: val
+buffer add: val.
+^super emit: (val + (buffer at: buffer size - delay)) / 2! !
+!AudioDelay methodsFor: 'accessing' stamp: 'GDK 7/30/2020 16:33:53'!
+buffer
+	"Answer the value of buffer"
+
+	^ buffer! !
+!AudioDelay methodsFor: 'accessing' stamp: 'GDK 7/30/2020 16:33:53'!
+buffer: anObject
+	"Set the value of buffer"
+
+	buffer _ anObject! !
+!AudioDelay methodsFor: 'accessing' stamp: 'GDK 7/30/2020 16:33:53'!
+delay
+	"Answer the value of delay"
+
+	^ delay! !
+!AudioDelay methodsFor: 'accessing' stamp: 'GDK 7/30/2020 16:33:53'!
+delay: anObject
+	"Set the value of delay"
+
+	delay _ anObject! !
+!AudioDelay methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 16:34:06' prior: 50850685 overrides: 50845209!
+emit: val
+buffer add: val.
+^super emit:  (buffer at: buffer size - delay) / 2! !
+!AudioDelay methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 16:35:27' prior: 50850709 overrides: 50845209!
+emit: val
+buffer add: val.
+^super emit:  (buffer at: buffer size - delay) ! !
+
+!classRenamed: #AudioDelay as: #AudioTimeDelay stamp: 'GDK 7/30/2020 16:38:09'!
+Smalltalk renameClassNamed: #AudioDelay as: #AudioTimeDelay!
+
+!classRenamed: #Reverb as: #AudioDelay stamp: 'GDK 7/30/2020 16:38:16'!
+Smalltalk renameClassNamed: #Reverb as: #AudioDelay!
+
+Mixer subclass: #AdditiveMixer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+
+!classDefinition: #AdditiveMixer category: #Audio stamp: 'GDK 7/30/2020 16:40:58'!
+Mixer subclass: #AdditiveMixer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Audio'!
+!AdditiveMixer methodsFor: 'no messages' stamp: 'GDK 7/30/2020 16:41:13' overrides: 50845221!
+emit: val
+tracker first = Tick ifTrue: [tracker second add: val] ifFalse: [| v |
+	v _ self emitBase: (tracker second sum).
+	tracker _ {Tick. OrderedCollection new.}.
+	^v].
+! !
+!AudioPlayer class methodsFor: 'primitive test' stamp: 'GDK 7/30/2020 16:47:03'!
+boinkAsBufferPitch: p dur: d loudness: l waveTable: waveTable pan: pan
+	"Play a decaying note on the given stream using the given wave table. Used for testing only."
+
+	| decay tableSize amplitude increment cycles i b |
+	decay _ 0.96.
+	tableSize _ waveTable size.
+	amplitude _ l asInteger min: 1000.
+	increment _ ((p asFloat * tableSize asFloat) / SamplingRate asFloat) asInteger.
+	increment _ (increment max: 1) min: (tableSize // 2).
+	cycles _ (d * SamplingRate asFloat) asInteger.
+b _ OrderedCollection  new.
+
+	i _ 1.
+	1 to: cycles do: [:cycle |
+		(cycle \\ 100) = 0
+			ifTrue: [amplitude _ (decay * amplitude asFloat) asInteger].
+		i _ (((i - 1) + increment) \\ tableSize) + 1.
+		b add: (amplitude * (waveTable at: i)) // 1000 ].
+! !
+!AudioPlayer class methodsFor: 'primitive test' stamp: 'GDK 7/30/2020 16:47:11' prior: 50850750!
+boinkAsBufferPitch: p dur: d loudness: l waveTable: waveTable pan: pan
+	"Play a decaying note on the given stream using the given wave table."
+
+	| decay tableSize amplitude increment cycles i b |
+	decay _ 0.96.
+	tableSize _ waveTable size.
+	amplitude _ l asInteger min: 1000.
+	increment _ ((p asFloat * tableSize asFloat) / SamplingRate asFloat) asInteger.
+	increment _ (increment max: 1) min: (tableSize // 2).
+	cycles _ (d * SamplingRate asFloat) asInteger.
+b _ OrderedCollection  new.
+
+	i _ 1.
+	1 to: cycles do: [:cycle |
+		(cycle \\ 100) = 0
+			ifTrue: [amplitude _ (decay * amplitude asFloat) asInteger].
+		i _ (((i - 1) + increment) \\ tableSize) + 1.
+		b add: (amplitude * (waveTable at: i)) // 1000 ].
+! !
+
+----SNAPSHOT----(30 July 2020 17:04:46) build-0.105.image priorSource: 16607717!
+!Object methodsFor: 'events-triggering' stamp: 'GDK 7/30/2020 17:04:49' prior: 16881686!
+triggerEvent: anEventSelector withArguments: anArgumentList
+anEventSelector = #aboutToTriggerEvent ifFalse: [self triggerEvent: #aboutToTriggerEvent with: {anEventSelector. anArgumentList}].
+	^ (self actionForEvent: anEventSelector)
+		valueWithArguments: anArgumentList! !
+!Object methodsFor: 'events-triggering' stamp: 'GDK 7/30/2020 17:21:18' prior: 50850806!
+triggerEvent: anEventSelector withArguments: anArgumentList
+anEventSelector = #aboutToTriggerEvent ifFalse: [self triggerEvent: #aboutToTriggerEvent with: {anEventSelector. anArgumentList}. self triggerEvent: #aboutToTriggerEvent with: {#aboutToTriggerEvent. {{anEventSelector. anArgumentList}}}].
+	^ (self actionForEvent: anEventSelector)
+		valueWithArguments: anArgumentList! !
+
+TTFontDescription!
+
+Object subclass: #LinuxProcessSpawner
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Linux-Kernel'!
+
+!classDefinition: #LinuxProcessSpawner category: #'Linux-Kernel' stamp: 'GDK 7/30/2020 18:23:33'!
+Object subclass: #LinuxProcessSpawner
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Linux-Kernel'!
+
+Syscalls!
+!LinuxProcessSpawner class methodsFor: 'no messages' stamp: 'GDK 7/30/2020 18:24:19'!
+syscallMap
+^{} asDictionary! !
+!LinuxProcessSpawner class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 18:42:39' prior: 50850846!
+syscallMap
+^{'open' -> {#args -> [1]. #deny -> [false]. #value -> [:a|]}} asDictionary! !
+!LinuxProcessSpawner class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 18:43:16'!
+syscallMap: importDict
+^{'open' -> {#args -> [1]. #deny -> [false]. #value -> [:a|]}} asDictionary! !
+
+!methodRemoval: LinuxProcessSpawner class #syscallMap stamp: 'GDK 7/30/2020 18:43:19'!
+syscallMap
+^{'open' -> {#args -> [1]. #deny -> [false]. #value -> [:a|]}} asDictionary!
+!LinuxProcessSpawner class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 18:44:07' prior: 50850857!
+syscallMap: importDict
+^{'open' -> {#args -> [1]. #deny -> [false]. #value -> [:a|((importDict at: #unixRootDrive) at: a) object]}} asDictionary! !
+!LinuxProcessSpawner class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 18:44:14' prior: 50850870!
+syscallMap: importDict
+^{
+'open' -> {#args -> [1]. #deny -> [false]. #value -> [:a|((importDict at: #unixRootDrive) at: a) object]}
+} asDictionary! !
+!LinuxProcessSpawner class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 18:46:32' prior: 50850879!
+syscallMap: importDict
+^{
+'open' -> {#args -> [1]. #deny -> [false]. #value -> [:a|((importDict at: #unixRootDrive) at: a first) object]} asDictionary.
+'read' -> {#args -> [3],#deny -> [false]. #value -> [:a|1 to: a third do: [:x|a second at: x put: a first next]]}
+} asDictionary! !
+!LinuxProcessSpawner class methodsFor: 'as yet unclassified' stamp: 'GDK 7/30/2020 18:46:38' prior: 50850888!
+syscallMap: importDict
+^{
+'open' -> {#args -> [1]. #deny -> [false]. #value -> [:a|((importDict at: #unixRootDrive) at: a first) object]} asDictionary.
+'read' -> {#args -> [3],#deny -> [false]. #value -> [:a|1 to: a third do: [:x|a second at: x put: a first next]]} asDictionary
+} asDictionary! !
