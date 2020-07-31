@@ -3,6 +3,9 @@ extern crate nix;
 use nix::{mount::*,unistd::{fork,ForkResult,Pid}};
 use std::{process::{Command,Child},io::Read};
 use shared_memory::*;
+mod memm{
+    
+}
 fn create_child_proc(c: Option<Child>) -> Result<Option<Pid>,()>{
     Ok(match fork() {
         Ok(ForkResult::Parent { child, .. }) => {
