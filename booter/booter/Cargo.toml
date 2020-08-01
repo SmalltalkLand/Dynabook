@@ -8,5 +8,8 @@ edition = "2018"
 
 [dependencies]
 nix = "0.18.0"
-
+shredder = "0.1.2"
 shared_memory = "0.11.1"
+
+[target.'cfg(feature = "web")'.dependencies]
+stdweb = "0.4.20"
