@@ -1,7 +1,7 @@
 import * as components from './components.js'
 import * as utils from './utils.js'
 let isK = false;
-Function.prototype.constructor= (old => function(...args){
+Function.prototype.constructor = (old => function(...args){
     if(isK)return old(this,...args);
     isK = true;
     let v = new Proxy(old(this,...args),{
