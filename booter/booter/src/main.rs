@@ -1,5 +1,6 @@
 #[allow(unreachable_code)]
 extern crate nix;
+extern crate wayland_server;
 #[cfg(feature = "web")]
 extern crate stdweb;
 #[cfg(feature = "web")]
@@ -14,6 +15,7 @@ use shredder::{
 use shared_memory::*;
 mod memm;
 mod lf;
+mod secure_struct;
 fn create_child_proc(c: Option<Child>) -> Result<Option<Pid>,()>{
     Ok(match fork() {
         Ok(ForkResult::Parent { child, .. }) => {

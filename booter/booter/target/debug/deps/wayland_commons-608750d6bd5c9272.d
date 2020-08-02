@@ -1,0 +1,11 @@
+/home/grahamk/dynabook/booter/booter/target/debug/deps/wayland_commons-608750d6bd5c9272.rmeta: /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/lib.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/debug.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/filter.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/map.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/socket.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/user_data.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/wire.rs
+
+/home/grahamk/dynabook/booter/booter/target/debug/deps/wayland_commons-608750d6bd5c9272.d: /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/lib.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/debug.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/filter.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/map.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/socket.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/user_data.rs /home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/wire.rs
+
+/home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/lib.rs:
+/home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/debug.rs:
+/home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/filter.rs:
+/home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/map.rs:
+/home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/socket.rs:
+/home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/user_data.rs:
+/home/grahamk/.cargo/registry/src/github.com-1ecc6299db9ec823/wayland-commons-0.27.0/src/wire.rs:

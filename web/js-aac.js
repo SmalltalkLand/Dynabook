@@ -1,4 +1,3 @@
-import * as components from './components.js'
 import * as utils from './utils.js'
 let isK = false;
 Function.prototype.constructor = (old => function(...args){

@@ -1,0 +1,9 @@
+data/src/main.rs.i
+data/build.rs.i
+data/README.md.i
+data/src/wlr.rs.i
+data/wlr/wrapper.h.i
+data/xdg-shell-protocol.c.i
+data/Cargo.toml.i
+data/wlr/xdg-shell-protocol.h.i
+data/.hgignore.i
