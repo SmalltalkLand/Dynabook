@@ -1,3 +1,10 @@
 
 
-----SNAPSHOT----(31 July 2020 16:59:31) build-0.116.image priorSource: 16666331!
+----STARTUP---- (31 July 2020 17:10:19) as /home/grahamk/dynabook/squeak/build-0.116.image!
+
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 8/2/2020 12:47:35' prior: 50850089!
+run: app
+^[[app doOneCycle. ContextPart allSubInstancesDo: [:x|1 to: x size do: [:i|(x at: i)  = {#app. app} ifTrue: [[[x shallowCopy] ensure: [x return:  nil]]runSimulatedSelfContextAtEachStep: [:xxxx|]. ]] ]]repeat] newProcess! !
+!AppLoop class methodsFor: 'as yet unclassified' stamp: 'GDK 8/2/2020 12:47:42' prior: 50852929!
+run: app
+^[[app doOneCycle. ContextPart allSubInstancesDo: [:x|1 to: x size do: [:i|(x at: i)  = {#app. app} ifTrue: [[[x shallowCopy] ensure: [x return:  nil]] runSimulatedSelfContextAtEachStep: [:xxxx|]. ]] ]]repeat] newProcess! !

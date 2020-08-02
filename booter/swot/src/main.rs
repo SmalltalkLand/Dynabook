@@ -14,6 +14,7 @@ use std::pin::Pin;
 use std::process;
 use std::ptr;
 use std::time::{Duration, Instant};
+use nix::{*,unistd::*,fcntl::*,sys::stat::*};
 
 mod wlr;
 
@@ -182,14 +183,16 @@ unsafe extern "C" fn keyboard_handle_modifiers(
         &mut (*(*keyboard.device).__bindgen_anon_1.keyboard).modifiers,
     );
 }
-
+static mut squeak: Option<(u64,u64)> = None;
 unsafe fn handle_keybinding(server: &mut Server, sym: xkb_keysym_t) -> bool {
     #[allow(non_upper_case_globals)]
-    match sym {
-        XKB_KEY_Escape => {
+    static mut locked: bool = true;
+    static mut unlocking: bool = false;
+    match (sym,unsafe{locked},unsafe{squeak}) {
+        (XKB_KEY_Escape,false,None) => {
             wl_display_terminate(server.display);
         }
-        XKB_KEY_F1 => {
+        (XKB_KEY_F1,false,None) => {
             // Cycle to next view.
             if server.views.len() > 2 {
                 server.views_idx = (server.views_idx + 1) % server.views.len();
@@ -199,6 +202,16 @@ unsafe fn handle_keybinding(server: &mut Server, sym: xkb_keysym_t) -> bool {
                 let current_surface = (*current_view.xdg_surface).surface;
                 focus_view(current_view, &mut *current_surface);
             }
+        }
+        (XKB_KEY_F12,x,None) => {
+            if unsafe{unlocking}{
+            unsafe{locked = !x; unlocking = false}
+            }else{
+            unsafe{unlocking = true;}
+            }
+        }
+        (_,_,Some((s,s2))) => {
+            write(s, unsafe{std::mem::transmute([sym])});
         }
         _ => {
             return false;
@@ -712,7 +725,7 @@ unsafe extern "C" fn server_new_xdg_surface(listener: *mut wl_listener, data: *m
     (*server).views.push(view);
 }
 
-fn main() {
+fn main()  -> Result<(),()>{
     lazy_static::initialize(&START_TIME);
     // TODO: structopt or such, take a startup command.
     //let startup_command = "alacritty";
@@ -852,10 +865,12 @@ fn main() {
         // FUCKING MACROS
         //wlr_log(wlr_log_importance_WLR_INFO, Some(log_str.as_ptr()));
         _wlr_log(wlr_log_importance_WLR_INFO, log_str.as_ptr(), socket);
+        squeak = Some((open("/squeak.sock",O_WRONLY,Mode::empty()),open("/squeak.sock",O_RDONLY,Mode::empty())));
         wl_display_run(server.display);
 
         // Cleanup once wl_display_run() returns
         wl_display_destroy_clients(server.display);
         wl_display_destroy(server.display);
     }
+    Ok(())
 }
