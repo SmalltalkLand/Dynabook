@@ -1,6 +1,7 @@
 #[allow(unreachable_code)]
 extern crate nix;
 extern crate wayland_server;
+//extern crate dbus;
 #[cfg(feature = "web")]
 extern crate stdweb;
 #[cfg(feature = "web")]
@@ -16,6 +17,18 @@ use shared_memory::*;
 mod memm;
 mod lf;
 mod secure_struct;
+/*
+mod bus{
+    use dbus::{channel::*,blocking::{*,stdintf::org_freedesktop_dbus},strings::*};
+    use std::time::Duration;
+    static mut bus: Option<Proxy> = None;
+    pub fn bus_init(){
+        unsafe{
+            bus = Some(Proxy::<Connection>::new("dynabook",Path::from_slice(b"org.dynabook.booter"),Duration::new(10,0),Connection::new_system()));
+        }
+    }
+}
+*/
 fn create_child_proc(c: Option<Child>) -> Result<Option<Pid>,()>{
     Ok(match fork() {
         Ok(ForkResult::Parent { child, .. }) => {

@@ -19,3 +19,12 @@ export let it = eval(rusni(`джп => (еуые_тфьу,ат) => {
 }
 }`));
 hebes = eval(hebes(`ם => ס => ם(ס)`))(hebes);
+export let sandbox = sandboxDict => R.partial(new Function('_sd','i','with(sd)return eval(i)'),sandboxDict);
+export let koran = /*e*/ text => eval(`function k(c){ //disassembles a Hangul character into parts
+	if(c < 0xAC00 || c > 0xD7A3) return "";
+	c -= 0xAC00;
+	return new Array(Math.floor(c/28/21), Math.floor(c/28) % 21, c % 28);
+}`) && eval(`var kc1 = new Array("ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ");
+var kv = new Array("ㅏ", "ㅐ", "ㅑ", "ㅒ", "ㅓ", "ㅔ", "ㅕ", "ㅖ", "ㅗ", "ㅘ", "ㅙ", "ㅚ", "ㅛ", "ㅜ", "ㅝ", "ㅞ", "ㅟ", "ㅠ", "ㅡ", "ㅢ", "ㅣ");
+var kc0 = new Array(" ", "ㄱ", "ㄲ", "ㄳ", "ㄴ", "ㄵ", "ㄶ", "ㄷ", "ㄹ", "ㄺ", "ㄻ", "ㄼ", "ㄽ", "ㄾ", "ㄿ", "ㅀ", "ㅁ", "ㅂ", "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ");
+`) && text.split("").map(k).map(a => a.map((o,i) => i === 1 ? kv[o] : eval(`kc${i}`)[o]))

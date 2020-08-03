@@ -1,0 +1,1 @@
+{"rustc":16699087276250565111,"features":"[\"default\", \"std\"]","target":9863344317402520737,"profile":11677938664258541388,"path":3487436378863736434,"deps":[[6880116618428842180,"memchr",false,8899790757715554494]],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/aho-corasick-a42cd91590c29809/dep-lib-aho_corasick"}}],"rustflags":[],"metadata":13904389431191498124}

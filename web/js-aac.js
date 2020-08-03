@@ -1,4 +1,3 @@
-import * as utils from './utils.js'
 let isK = false;
 Function.prototype.constructor = (old => function(...args){
     if(isK)return old(this,...args);

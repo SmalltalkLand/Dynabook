@@ -11,6 +11,7 @@ nix = "0.18.0"
 shredder = "0.1.2"
 shared_memory = "0.11.1"
 wayland-server = "0.27.0"
+#dbus = "0.8.4"
 
 [target.'cfg(feature = "web")'.dependencies]
 stdweb = "0.4.20"

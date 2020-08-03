@@ -7,6 +7,7 @@ pub struct NonSecure<T>{
 pub trait Secure{
 
 }
+
 use std::{vec::*,cell::*,rc::*};
 impl<T> Secure for SecureStruct<T>{
 
